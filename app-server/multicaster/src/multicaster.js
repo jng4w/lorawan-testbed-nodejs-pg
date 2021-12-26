@@ -79,18 +79,23 @@ function network_server_mqtt_connect_handler()
     network_server_mqttclient.subscribe(sub_mqtt_topic);
 }
 
-//handle incoming message
+//MAIN CONTROL
 function network_server_mqtt_message_handler(topic, message, packet)
 {
-    //extract message into payload and metadata
-    //forward to appropriate topics at app MQTT broker
+    /*
+    extract message into payload and metadata
+    forward to appropriate topics at app MQTT broker
+    */
+
+    //parse msg
     let parsed_message = JSON.parse(message);
+    //extract
+    let dev_data = extract_dev_data(parsed_message);
+    //publish
     let dev_topics = {
         'metadata': 'devices/' + parsed_message['end_device_ids']['device_id'].toString() + '/up/metadata',
         'payload': 'devices/' + parsed_message['end_device_ids']['device_id'].toString() + '/up/payload'
     };
-    
-    let dev_data = extract_dev_data(parsed_message);
     //try..catch in case cannot connect to app server
     try {
         app_server_mqttclient.publish(dev_topics['metadata'], JSON.stringify(dev_data['metadata']));
