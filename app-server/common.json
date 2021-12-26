@@ -1,0 +1,21 @@
+{
+    "vps": {
+        "IP": "128.199.105.69"
+    },
+
+    "tts": {
+        "API_KEY_ID": "VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA",
+        "API_KEY_USERNAME": "bkiotlab-lorawtestbed@ttn",
+        "API_KEY_PASSWORD": "NNSXS.VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA.IBHAWN43GNZDJYM5EDINKFQI5SVEL5R3Z53SVPF45K5XFURL5BOA"
+    },
+
+    "postgre": {
+        "POSTGRES_USER": "root",
+        "POSTGRES_PASSWORD": "root"
+    },
+
+    "pgadmin": {
+        "PGADMIN_DEFAULT_EMAIL": "root@root.com",
+        "PGADMIN_DEFAULT_PASSWORD": "root"
+    }
+}
