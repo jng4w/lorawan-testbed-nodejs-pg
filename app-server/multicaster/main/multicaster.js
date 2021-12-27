@@ -10,21 +10,30 @@ const network_server_mqtt_options = {
     clean: true
 };
 
-const app_server_mqtt_options = {
+const streaming_broker_options = {
     clientId: "multicaster",
     clean: true
 }
 
 const network_server_mqtt_protocol = "mqtt";
 const network_server_mqtt_addr = common['tts']['SERVER_ADDR'];
-const network_server_mqtt_port = 1883;
+const network_server_mqtt_port = common['tts']['SERVER_PORT'];
 
-const app_server_mqtt_protocol = "mqtt";
-const app_server_mqtt_addr = "127.0.0.1";
-const app_server_mqtt_port = 1883;
+const streaming_broker_protocol = "mqtt";
+const streaming_broker_addr = common['emqx']['SERVER_ADDR'];
+const streaming_broker_port = common['emqx']['SERVER_PORT'];
 
 //get uplink messages of all devices
-const sub_mqtt_topic = "v3/bkiotlab-lorawtestbed@ttn/devices/+/up";
+const sub_mqtt_topic = `v3/${common['tts']['APPLICATION_ID']}@ttn/devices/+/up`;
+
+//topics levels of streaming brokers
+const dev_topic_levels = {
+    'DEVICES': common['emqx']['TOPIC_LEVEL_DEVICES'],
+    'UP': common['emqx']['TOPIC_LEVEL_UP'],
+    'METADATA': common['emqx']['TOPIC_LEVEL_METADATA'],
+    'PAYLOAD': common['emqx']['TOPIC_LEVEL_PAYLOAD']
+};
+
 
 /* ==============MESSAGE EXTRACTORS============== */
 function extract_dev_data(json_pkg) {
@@ -62,8 +71,8 @@ function extract_dev_data(json_pkg) {
 }
 
 /* ==============CONNECT TO NETWORK SERVER============== */
-var network_server_mqttclient = mqtt.connect(
-    network_server_mqtt_protocol + "://" + network_server_mqtt_addr + ":" + network_server_mqtt_port.toString(), 
+const network_server_mqttclient = mqtt.connect(
+    `${network_server_mqtt_protocol}://${network_server_mqtt_addr}:${network_server_mqtt_port}`, 
     network_server_mqtt_options
 );
 
@@ -75,11 +84,11 @@ network_server_mqttclient.on('message', network_server_mqtt_message_handler);
 //handle incoming connect
 function network_server_mqtt_connect_handler()
 {
-    console.log("network server mqtt connected? " + network_server_mqttclient.connected);
+    console.log(`network server mqtt connected? ${network_server_mqttclient.connected}`);
     network_server_mqttclient.subscribe(sub_mqtt_topic);
 }
 
-//MAIN CONTROL
+//CONTROL UPLINK
 function network_server_mqtt_message_handler(topic, message, packet)
 {
     /*
@@ -93,13 +102,14 @@ function network_server_mqtt_message_handler(topic, message, packet)
     let dev_data = extract_dev_data(parsed_message);
     //publish
     let dev_topics = {
-        'metadata': 'devices/' + parsed_message['end_device_ids']['device_id'].toString() + '/up/metadata',
-        'payload': 'devices/' + parsed_message['end_device_ids']['device_id'].toString() + '/up/payload'
+        'metadata': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['METADATA']}`,
+        'payload': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['PAYLOAD']}`
     };
+
     //try..catch in case cannot connect to app server
     try {
-        app_server_mqttclient.publish(dev_topics['metadata'], JSON.stringify(dev_data['metadata']));
-        app_server_mqttclient.publish(dev_topics['payload'], JSON.stringify(dev_data['payload']));
+        streaming_broker_mqttclient.publish(dev_topics['metadata'], JSON.stringify(dev_data['metadata']));
+        streaming_broker_mqttclient.publish(dev_topics['payload'], JSON.stringify(dev_data['payload']));
     } catch (err) {
         console.log(err);
     }
@@ -113,34 +123,31 @@ function network_server_mqtt_error_handler(error)
 }
 
 /* ==============CONNECT TO APP SERVER (STREAMING BROKER)============== */
-var app_server_mqttclient = mqtt.connect(
-    app_server_mqtt_protocol + "://" + app_server_mqtt_addr + ":" + app_server_mqtt_port.toString(), 
-    app_server_mqtt_options
+const streaming_broker_mqttclient = mqtt.connect(
+    `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}`, 
+    streaming_broker_options
 );
 
-app_server_mqttclient.on('connect', app_server_mqtt_connect_handler);
-app_server_mqttclient.on('error', app_server_mqtt_error_handler);
-app_server_mqttclient.on('message', app_server_mqtt_message_handler);
+streaming_broker_mqttclient.on('connect', streaming_broker_connect_handler);
+streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
+streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
 
 //handle incoming connect
-function app_server_mqtt_connect_handler()
+function streaming_broker_connect_handler()
 {
-    console.log("app server mqtt connected? " + app_server_mqttclient.connected);
-    //app_server_mqttclient.subscribe(['devices/+/up/metadata', 'devices/+/up/payload']);
+    console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
     
 }
 
-//handle incoming message
-function app_server_mqtt_message_handler(topic, message, packet)
+//CONTROL DOWNLINK
+function streaming_broker_message_handler(topic, message, packet)
 {
     //NOT BE USED YET
-    console.log(topic);
-    //console.log(message.toString());
 }
 
 // handle error
-function app_server_mqtt_error_handler(error)
+function streaming_broker_error_handler(error)
 {
-    console.log("Can't connect to app server" + error);
+    console.log("Can't connect to streaming broker" + error);
     process.exit(1);
 }
