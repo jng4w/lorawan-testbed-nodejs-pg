@@ -5,9 +5,11 @@
 
     "tts": {
         "SERVER_ADDR": "au1.cloud.thethings.network",
+        "SERVER_PORT": 1883,
         "API_KEY_ID": "VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA",
         "API_KEY_USERNAME": "bkiotlab-lorawtestbed@ttn",
-        "API_KEY_PASSWORD": "NNSXS.VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA.IBHAWN43GNZDJYM5EDINKFQI5SVEL5R3Z53SVPF45K5XFURL5BOA"
+        "API_KEY_PASSWORD": "NNSXS.VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA.IBHAWN43GNZDJYM5EDINKFQI5SVEL5R3Z53SVPF45K5XFURL5BOA",
+        "APPLICATION_ID": "bkiotlab-lorawtestbed"
     },
 
     "postgre": {
@@ -18,5 +20,14 @@
     "pgadmin": {
         "PGADMIN_DEFAULT_EMAIL": "root@root.com",
         "PGADMIN_DEFAULT_PASSWORD": "root"
+    },
+
+    "emqx": {
+        "SERVER_ADDR": "127.0.0.1",
+        "SERVER_PORT": 1883,
+        "TOPIC_LEVEL_DEVICES": "devices",
+        "TOPIC_LEVEL_UP": "up",
+        "TOPIC_LEVEL_METADATA": "metadata",
+        "TOPIC_LEVEL_PAYLOAD": "payload"
     }
 }
