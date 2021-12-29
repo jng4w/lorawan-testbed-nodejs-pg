@@ -5,7 +5,7 @@
 -- Dumped from database version 12.9
 -- Dumped by pg_dump version 12.9
 
--- Started on 2021-12-28 14:21:43 UTC
+-- Started on 2021-12-29 19:16:13 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,7 +27,7 @@ CREATE EXTENSION IF NOT EXISTS timescaledb WITH SCHEMA public;
 
 
 --
--- TOC entry 3593 (class 0 OID 0)
+-- TOC entry 3595 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION timescaledb; Type: COMMENT; Schema: -; Owner: -
 --
@@ -88,7 +88,7 @@ CREATE SEQUENCE public."BOARD__id_seq"
 
 
 --
--- TOC entry 3594 (class 0 OID 0)
+-- TOC entry 3596 (class 0 OID 0)
 -- Dependencies: 260
 -- Name: BOARD__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -153,7 +153,7 @@ CREATE SEQUENCE public."ENDDEV_PAYLOAD__id_seq"
 
 
 --
--- TOC entry 3595 (class 0 OID 0)
+-- TOC entry 3597 (class 0 OID 0)
 -- Dependencies: 272
 -- Name: ENDDEV_PAYLOAD__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -176,7 +176,7 @@ CREATE SEQUENCE public."ENDDEV__id_seq"
 
 
 --
--- TOC entry 3596 (class 0 OID 0)
+-- TOC entry 3598 (class 0 OID 0)
 -- Dependencies: 265
 -- Name: ENDDEV__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -223,7 +223,7 @@ CREATE SEQUENCE public."NOTIFICATION__id_seq"
 
 
 --
--- TOC entry 3597 (class 0 OID 0)
+-- TOC entry 3599 (class 0 OID 0)
 -- Dependencies: 257
 -- Name: NOTIFICATION__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -283,7 +283,7 @@ CREATE SEQUENCE public."PROFILE__id_seq"
 
 
 --
--- TOC entry 3598 (class 0 OID 0)
+-- TOC entry 3600 (class 0 OID 0)
 -- Dependencies: 254
 -- Name: PROFILE__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -318,7 +318,7 @@ CREATE SEQUENCE public."SENSOR__id_seq"
 
 
 --
--- TOC entry 3599 (class 0 OID 0)
+-- TOC entry 3601 (class 0 OID 0)
 -- Dependencies: 267
 -- Name: SENSOR__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -335,7 +335,7 @@ CREATE TABLE public."UNIT" (
     _id integer NOT NULL,
     sensor_key character varying NOT NULL,
     dev_type character varying NOT NULL,
-    uint character varying NOT NULL
+    unit character varying NOT NULL
 );
 
 
@@ -354,7 +354,7 @@ CREATE SEQUENCE public."UNIT__id_seq"
 
 
 --
--- TOC entry 3600 (class 0 OID 0)
+-- TOC entry 3602 (class 0 OID 0)
 -- Dependencies: 270
 -- Name: UNIT__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -390,7 +390,7 @@ CREATE SEQUENCE public."WIDGET__id_seq"
 
 
 --
--- TOC entry 3601 (class 0 OID 0)
+-- TOC entry 3603 (class 0 OID 0)
 -- Dependencies: 262
 -- Name: WIDGET__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -499,7 +499,7 @@ ALTER TABLE ONLY public."CUSTOMER"
 
 
 --
--- TOC entry 3434 (class 2606 OID 18493)
+-- TOC entry 3436 (class 2606 OID 18493)
 -- Name: ENDDEV_PAYLOAD ENDDEV_PAYLOAD_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -508,7 +508,16 @@ ALTER TABLE ONLY public."ENDDEV_PAYLOAD"
 
 
 --
--- TOC entry 3426 (class 2606 OID 18455)
+-- TOC entry 3426 (class 2606 OID 18769)
+-- Name: ENDDEV ENDDEV_dev_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ENDDEV"
+    ADD CONSTRAINT "ENDDEV_dev_id_key" UNIQUE (dev_id);
+
+
+--
+-- TOC entry 3428 (class 2606 OID 18455)
 -- Name: ENDDEV ENDDEV_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -517,7 +526,7 @@ ALTER TABLE ONLY public."ENDDEV"
 
 
 --
--- TOC entry 3430 (class 2606 OID 18471)
+-- TOC entry 3432 (class 2606 OID 18471)
 -- Name: HAS_UNIT HAS_UNIT_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -544,7 +553,7 @@ ALTER TABLE ONLY public."NOTIFY"
 
 
 --
--- TOC entry 3436 (class 2606 OID 18501)
+-- TOC entry 3438 (class 2606 OID 18501)
 -- Name: OWN OWN_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -562,7 +571,7 @@ ALTER TABLE ONLY public."PROFILE"
 
 
 --
--- TOC entry 3428 (class 2606 OID 18466)
+-- TOC entry 3430 (class 2606 OID 18466)
 -- Name: SENSOR SENSOR_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -571,7 +580,7 @@ ALTER TABLE ONLY public."SENSOR"
 
 
 --
--- TOC entry 3432 (class 2606 OID 18482)
+-- TOC entry 3434 (class 2606 OID 18482)
 -- Name: UNIT UNIT_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -589,7 +598,7 @@ ALTER TABLE ONLY public."WIDGET"
 
 
 --
--- TOC entry 3437 (class 2606 OID 18512)
+-- TOC entry 3439 (class 2606 OID 18512)
 -- Name: ADMIN ADMIN_profile_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -598,7 +607,7 @@ ALTER TABLE ONLY public."ADMIN"
 
 
 --
--- TOC entry 3443 (class 2606 OID 18537)
+-- TOC entry 3445 (class 2606 OID 18537)
 -- Name: BELONG_TO BELONG_TO_sensor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -607,7 +616,7 @@ ALTER TABLE ONLY public."BELONG_TO"
 
 
 --
--- TOC entry 3444 (class 2606 OID 18532)
+-- TOC entry 3446 (class 2606 OID 18532)
 -- Name: BELONG_TO BELONG_TO_widget_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -616,7 +625,7 @@ ALTER TABLE ONLY public."BELONG_TO"
 
 
 --
--- TOC entry 3441 (class 2606 OID 18522)
+-- TOC entry 3443 (class 2606 OID 18522)
 -- Name: BOARD BOARD_profile_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -625,7 +634,7 @@ ALTER TABLE ONLY public."BOARD"
 
 
 --
--- TOC entry 3438 (class 2606 OID 18517)
+-- TOC entry 3440 (class 2606 OID 18517)
 -- Name: CUSTOMER CUSTOMER_profile_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -634,7 +643,7 @@ ALTER TABLE ONLY public."CUSTOMER"
 
 
 --
--- TOC entry 3448 (class 2606 OID 18559)
+-- TOC entry 3450 (class 2606 OID 18559)
 -- Name: ENDDEV_PAYLOAD ENDDEV_PAYLOAD_enddev_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -643,7 +652,7 @@ ALTER TABLE ONLY public."ENDDEV_PAYLOAD"
 
 
 --
--- TOC entry 3446 (class 2606 OID 18549)
+-- TOC entry 3448 (class 2606 OID 18549)
 -- Name: HAS_UNIT HAS_UNIT_sensor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -652,7 +661,7 @@ ALTER TABLE ONLY public."HAS_UNIT"
 
 
 --
--- TOC entry 3447 (class 2606 OID 18554)
+-- TOC entry 3449 (class 2606 OID 18554)
 -- Name: HAS_UNIT HAS_UNIT_unit_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -661,7 +670,7 @@ ALTER TABLE ONLY public."HAS_UNIT"
 
 
 --
--- TOC entry 3439 (class 2606 OID 18507)
+-- TOC entry 3441 (class 2606 OID 18507)
 -- Name: NOTIFY NOTIFY_noti_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -670,7 +679,7 @@ ALTER TABLE ONLY public."NOTIFY"
 
 
 --
--- TOC entry 3440 (class 2606 OID 18502)
+-- TOC entry 3442 (class 2606 OID 18502)
 -- Name: NOTIFY NOTIFY_profile_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -679,7 +688,7 @@ ALTER TABLE ONLY public."NOTIFY"
 
 
 --
--- TOC entry 3449 (class 2606 OID 18569)
+-- TOC entry 3451 (class 2606 OID 18569)
 -- Name: OWN OWN_enddev_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -688,7 +697,7 @@ ALTER TABLE ONLY public."OWN"
 
 
 --
--- TOC entry 3450 (class 2606 OID 18564)
+-- TOC entry 3452 (class 2606 OID 18564)
 -- Name: OWN OWN_profile_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -697,7 +706,7 @@ ALTER TABLE ONLY public."OWN"
 
 
 --
--- TOC entry 3445 (class 2606 OID 18544)
+-- TOC entry 3447 (class 2606 OID 18544)
 -- Name: SENSOR SENSOR_enddev_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -706,7 +715,7 @@ ALTER TABLE ONLY public."SENSOR"
 
 
 --
--- TOC entry 3442 (class 2606 OID 18527)
+-- TOC entry 3444 (class 2606 OID 18527)
 -- Name: WIDGET WIDGET_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -714,7 +723,7 @@ ALTER TABLE ONLY public."WIDGET"
     ADD CONSTRAINT "WIDGET_board_id_fkey" FOREIGN KEY (board_id) REFERENCES public."BOARD"(_id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
 
 
--- Completed on 2021-12-28 14:21:43 UTC
+-- Completed on 2021-12-29 19:16:13 UTC
 
 --
 -- PostgreSQL database dump complete

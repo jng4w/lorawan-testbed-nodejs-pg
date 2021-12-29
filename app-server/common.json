@@ -12,9 +12,12 @@
         "APPLICATION_ID": "bkiotlab-lorawtestbed"
     },
 
-    "postgre": {
+    "pg": {
+        "SERVER_ADDR": "127.0.0.1",
+        "SERVER_PORT": 5432,
         "POSTGRES_USER": "root",
-        "POSTGRES_PASSWORD": "root"
+        "POSTGRES_PASSWORD": "root",
+        "DATABASE_NAME": "lorawan-db"
     },
 
     "pgadmin": {
@@ -28,6 +31,7 @@
         "TOPIC_LEVEL_DEVICES": "devices",
         "TOPIC_LEVEL_UP": "up",
         "TOPIC_LEVEL_METADATA": "metadata",
-        "TOPIC_LEVEL_PAYLOAD": "payload"
+        "TOPIC_LEVEL_PAYLOAD": "payload",
+        "TOPIC_LEVEL_MIXED": "mixed"
     }
 }
