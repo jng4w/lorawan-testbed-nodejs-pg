@@ -1,0 +1,5 @@
+outside > node emqx-tts-bridge-generator.js
+outside > docker cp ./emqx_bridge_mqtt.conf <emqx_docker_id>:/opt/emqx/etc/plugins
+outside > docker exec -it <emqx_docker_id> /bin/sh
+inside > emqx_ctl plugins load emqx_bridge_mqtt
+inside > emqx_ctl bridges start tts

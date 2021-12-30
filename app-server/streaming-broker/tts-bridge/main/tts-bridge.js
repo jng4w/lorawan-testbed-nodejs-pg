@@ -24,7 +24,7 @@ const streaming_broker_addr = common['emqx']['SERVER_ADDR'];
 const streaming_broker_port = common['emqx']['SERVER_PORT'];
 
 //get uplink messages of all devices
-const sub_mqtt_topic = `v3/${common['tts']['APPLICATION_ID']}@ttn/devices/+/up`;
+const sub_mqtt_topic = `v3/${common['tts']['API_KEY_USERNAME']}/devices/+/up`;
 
 //topics levels of streaming brokers
 const dev_topic_levels = {
