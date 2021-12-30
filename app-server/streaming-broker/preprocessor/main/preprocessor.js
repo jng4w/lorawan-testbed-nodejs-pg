@@ -22,7 +22,7 @@ const dev_topic_levels = {
 
 //get raw topic of all devices
 const sub_topics = [
-    `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/raw`
+    `v3/${common['tts']['API_KEY_USERNAME']}/devices/+/up`
 ];
 
 /* ==============MESSAGE EXTRACTORS============== */
