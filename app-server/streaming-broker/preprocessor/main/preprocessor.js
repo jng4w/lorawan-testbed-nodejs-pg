@@ -5,7 +5,13 @@ const common = JSON.parse(fs.readFileSync('./../../../common.json'));
 
 const streaming_broker_options = {
     clientId: "preprocessor",
-    clean: true
+    keepalive: 120,
+    protocolVersion: 5,
+    clean: false,
+    properties: {  // MQTT 5.0
+        sessionExpiryInterval: 30,
+        receiveMaximum: 100
+    }
 }
 
 const streaming_broker_protocol = "mqtt";
@@ -22,7 +28,12 @@ const dev_topic_levels = {
 
 //get raw topic of all devices
 const sub_topics = [
-    `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/raw`
+    {
+        'topic': `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/raw`,
+        'options': {
+            'qos': 1
+        }
+    }
 ];
 
 /* ==============MESSAGE EXTRACTORS============== */
@@ -71,11 +82,14 @@ streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
 streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
 
 //handle incoming connect
-function streaming_broker_connect_handler()
+function streaming_broker_connect_handler(connack)
 {
     console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
-    streaming_broker_mqttclient.subscribe(sub_topics);
-    
+    if (connack.sessionPresent == false) {
+        sub_topics.forEach((topic) => {
+            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+        });
+    }
 }
 
 //EXTRACT
@@ -85,17 +99,41 @@ function streaming_broker_message_handler(topic, message, packet)
     let parsed_message = JSON.parse(message);
     //extract
     let dev_data = extract_dev_data(parsed_message);
-    console.log(dev_data);
+    //console.log(dev_data);
 
-    let pub_topics = {
-        'mixed': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['MIXED']}`,
-        'payload': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['PAYLOAD']}`
-    };
+    let pub_topics = [
+        {
+            'topic': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['MIXED']}`,
+            'msg': JSON.stringify(dev_data),
+            'options': {
+                qos: 1,
+                dup: false,
+                retain: true,
+                properties: {
+                    messageExpiryInterval: 300
+                }
+            }
+        },
+
+        {
+            'topic': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['PAYLOAD']}`,
+            'msg': JSON.stringify(dev_data["payload"]),
+            'options': {
+                qos: 1,
+                dup: false,
+                retain: true,
+                properties: {
+                    messageExpiryInterval: 300
+                }
+            }
+        }
+    ];
 
     //publish extracted data to 2 different topics
     try {
-        streaming_broker_mqttclient.publish(pub_topics["payload"], JSON.stringify(dev_data["payload"]));
-        streaming_broker_mqttclient.publish(pub_topics["mixed"], JSON.stringify(dev_data));
+        pub_topics.forEach((topic) => {
+            streaming_broker_mqttclient.publish(topic['topic'], topic['msg'], topic['options']);
+        });
     } catch (err) {
         console.log(err);
     }
