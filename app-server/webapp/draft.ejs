@@ -1,0 +1,13 @@
+<h1>Devices</h1>
+
+<ul>
+    <% sensor_data.forEach(function(device){ %>
+      <li><%=device.name %>
+        <ul>
+          <% Object.keys(device).forEach(function(key){ %>
+              <li><%= device[key] %></li>
+          <% }); %>
+        </ul>
+      </li>
+    <% }); %>
+</ul>

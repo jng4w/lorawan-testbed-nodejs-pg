@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+
+<form action="/verify" method="post">
+  <div class="container">
+        <h1>Verify</h1>
+        <%if(register){%>
+        <p>Successfully register.</p>
+
+        <%} else {%>
+        <p><%=message%></p>
+        <hr>
+
+    <label for="request_code"><b>Verify Code</b></label>
+    <input type="text" placeholder="Enter code from your email" name="request_code" id="request_code" required>
+
+    <hr>
+    <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+
+    <button type="submit" class="registerbtn">Verify</button>
+    <%}%>
+  </div>
+  
+  <div class="container signin">
+    <p>Already have an account? <a href="/login">Sign in</a>.</p>
+    
+  </div>
+</form>
+
+</body>
+</html>
