@@ -89,7 +89,7 @@ async function streaming_broker_message_handler(topic, message, packet)
             );
         });
 
-        //mapp appropriate unit to sensor
+        //map appropriate unit to sensor
 
         //insert payload again
         await db_pool.query(

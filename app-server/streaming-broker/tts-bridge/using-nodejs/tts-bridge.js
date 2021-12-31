@@ -73,7 +73,7 @@ function network_server_mqtt_error_handler(error)
 }
 
 /* ==============CONNECT TO APP SERVER (STREAMING BROKER)============== */
-const streaming_broker_mqttclient = mqtt.connect(
+const streaming_broker_mqttclient = await mqtt.connect(
     `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}`, 
     streaming_broker_options
 );
