@@ -8,13 +8,15 @@
         "SERVER_PORT": 1883,
         "API_KEY_ID": "VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA",
         "API_KEY_USERNAME": "bkiotlab-lorawtestbed@ttn",
-        "API_KEY_PASSWORD": "NNSXS.VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA.IBHAWN43GNZDJYM5EDINKFQI5SVEL5R3Z53SVPF45K5XFURL5BOA",
-        "APPLICATION_ID": "bkiotlab-lorawtestbed"
+        "API_KEY_PASSWORD": "NNSXS.VWV55DUMB52MDEIRFVZA7PBMHXTQRON6SS3NPYA.IBHAWN43GNZDJYM5EDINKFQI5SVEL5R3Z53SVPF45K5XFURL5BOA"
     },
 
-    "postgre": {
+    "pg": {
+        "SERVER_ADDR": "127.0.0.1",
+        "SERVER_PORT": 5432,
         "POSTGRES_USER": "root",
-        "POSTGRES_PASSWORD": "root"
+        "POSTGRES_PASSWORD": "root",
+        "DATABASE_NAME": "lorawan-db"
     },
 
     "pgadmin": {
@@ -28,6 +30,7 @@
         "TOPIC_LEVEL_DEVICES": "devices",
         "TOPIC_LEVEL_UP": "up",
         "TOPIC_LEVEL_METADATA": "metadata",
-        "TOPIC_LEVEL_PAYLOAD": "payload"
+        "TOPIC_LEVEL_PAYLOAD": "payload",
+        "TOPIC_LEVEL_MIXED": "mixed"
     }
 }

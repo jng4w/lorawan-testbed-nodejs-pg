@@ -1,7 +1,7 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common = JSON.parse(fs.readFileSync('./../../common.json'));
+const common = JSON.parse(fs.readFileSync('./../../../common.json'));
 
 const network_server_mqtt_options = {
     clientId: common['tts']['API_KEY_ID'],
@@ -11,7 +11,7 @@ const network_server_mqtt_options = {
 };
 
 const streaming_broker_options = {
-    clientId: "multicaster",
+    clientId: "tts-bridge",
     clean: true
 }
 
@@ -24,51 +24,13 @@ const streaming_broker_addr = common['emqx']['SERVER_ADDR'];
 const streaming_broker_port = common['emqx']['SERVER_PORT'];
 
 //get uplink messages of all devices
-const sub_mqtt_topic = `v3/${common['tts']['APPLICATION_ID']}@ttn/devices/+/up`;
+const sub_mqtt_topic = `v3/${common['tts']['API_KEY_USERNAME']}/devices/+/up`;
 
 //topics levels of streaming brokers
 const dev_topic_levels = {
     'DEVICES': common['emqx']['TOPIC_LEVEL_DEVICES'],
-    'UP': common['emqx']['TOPIC_LEVEL_UP'],
-    'METADATA': common['emqx']['TOPIC_LEVEL_METADATA'],
-    'PAYLOAD': common['emqx']['TOPIC_LEVEL_PAYLOAD']
+    'UP': common['emqx']['TOPIC_LEVEL_UP']
 };
-
-
-/* ==============MESSAGE EXTRACTORS============== */
-function extract_dev_data(json_pkg) {
-    /*
-    extract metadata + payload data
-    parameter: JSON
-    return: JSON
-    */
-    let metadata_json_pkg = {
-        "dev_identifiers" : {
-            "dev_id" : json_pkg["end_device_ids"]["device_id"],
-            "dev_eui" : json_pkg["end_device_ids"]["dev_eui"],
-            "dev_addr" : json_pkg["end_device_ids"]["dev_addr"],
-            "join_eui" : json_pkg["end_device_ids"]["join_eui"]
-        },
-
-        "dev_version" : {
-            "dev_type" : null,
-            "dev_brand" : json_pkg["uplink_message"]["version_ids"]["brand_id"],
-            "dev_model" : json_pkg["uplink_message"]["version_ids"]["model_id"],
-            "dev_band" : json_pkg["uplink_message"]["version_ids"]["band_id"]
-        }
-    };
-
-    let payload_json_pkg = {
-        "recv_timestamp" : json_pkg["received_at"],
-        "payload_data" : json_pkg["uplink_message"]["decoded_payload"]
-    };
-
-    let dev_data = {
-        'metadata': metadata_json_pkg,
-        'payload': payload_json_pkg
-    };
-    return dev_data;
-}
 
 /* ==============CONNECT TO NETWORK SERVER============== */
 const network_server_mqttclient = mqtt.connect(
@@ -88,28 +50,16 @@ function network_server_mqtt_connect_handler()
     network_server_mqttclient.subscribe(sub_mqtt_topic);
 }
 
-//CONTROL UPLINK
+//FORWARD UPLINK
 function network_server_mqtt_message_handler(topic, message, packet)
 {
-    /*
-    extract message into payload and metadata
-    forward to appropriate topics at app MQTT broker
-    */
-
     //parse msg
     let parsed_message = JSON.parse(message);
-    //extract
-    let dev_data = extract_dev_data(parsed_message);
     //publish
-    let dev_topics = {
-        'metadata': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['METADATA']}`,
-        'payload': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['PAYLOAD']}`
-    };
-
+    let pub_topic = `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/raw`;
     //try..catch in case cannot connect to app server
     try {
-        streaming_broker_mqttclient.publish(dev_topics['metadata'], JSON.stringify(dev_data['metadata']));
-        streaming_broker_mqttclient.publish(dev_topics['payload'], JSON.stringify(dev_data['payload']));
+        streaming_broker_mqttclient.publish(pub_topic, message);
     } catch (err) {
         console.log(err);
     }

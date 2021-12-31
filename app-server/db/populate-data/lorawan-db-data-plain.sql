@@ -5,7 +5,7 @@
 -- Dumped from database version 12.9
 -- Dumped by pg_dump version 12.9
 
--- Started on 2021-12-28 14:22:52 UTC
+-- Started on 2021-12-29 19:17:07 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -230,7 +230,7 @@ COPY _timescaledb_config.bgw_job (id, application_name, schedule_interval, max_r
 
 
 --
--- TOC entry 3588 (class 0 OID 18367)
+-- TOC entry 3590 (class 0 OID 18367)
 -- Dependencies: 253
 -- Data for Name: PROFILE; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -240,7 +240,7 @@ COPY public."PROFILE" (email, phone_number, password, type, _id, display_name) F
 
 
 --
--- TOC entry 3590 (class 0 OID 18386)
+-- TOC entry 3592 (class 0 OID 18386)
 -- Dependencies: 255
 -- Data for Name: ADMIN; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -250,7 +250,7 @@ COPY public."ADMIN" (profile_id, title) FROM stdin;
 
 
 --
--- TOC entry 3591 (class 0 OID 18394)
+-- TOC entry 3593 (class 0 OID 18394)
 -- Dependencies: 256
 -- Data for Name: CUSTOMER; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -260,7 +260,7 @@ COPY public."CUSTOMER" (profile_id) FROM stdin;
 
 
 --
--- TOC entry 3596 (class 0 OID 18420)
+-- TOC entry 3598 (class 0 OID 18420)
 -- Dependencies: 261
 -- Data for Name: BOARD; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -270,27 +270,50 @@ COPY public."BOARD" (_id, display_name, profile_id) FROM stdin;
 
 
 --
--- TOC entry 3601 (class 0 OID 18447)
+-- TOC entry 3603 (class 0 OID 18447)
 -- Dependencies: 266
 -- Data for Name: ENDDEV; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public."ENDDEV" (_id, display_name, dev_id, dev_addr, join_eui, dev_eui, dev_type, dev_brand, dev_model, dev_band) FROM stdin;
+96	eui-a84041a54182a79f	eui-a84041a54182a79f	260DA742	A000000000000101	A84041A54182A79F	\N	dragino	lsn50-v2	AS_923
+97	eui-a84041739182dd05	eui-a84041739182dd05	260DBA92	A000000000000100	A84041739182DD05	\N	dragino	lsn50v2-s31	AS_923
+98	eui-a840416ea182a7a0	eui-a840416ea182a7a0	260D22DF	A000000000000101	A840416EA182A7A0	\N	dragino	lsn50-v2	AS_923
+99	eui-a8404194d1832e4b	eui-a8404194d1832e4b	260D5EF5	A000000000000101	A8404194D1832E4B	\N	dragino	lse01	AS_923
 \.
 
 
 --
--- TOC entry 3603 (class 0 OID 18458)
+-- TOC entry 3605 (class 0 OID 18458)
 -- Dependencies: 268
 -- Data for Name: SENSOR; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public."SENSOR" (enddev_id, _id, sensor_key) FROM stdin;
+96	1	ADC_CH0V
+96	2	BatV
+96	3	Work_mode
+96	4	AirHumid
+96	5	AirTemp
+97	6	ADC_CH0V
+97	7	AirHumid
+97	8	AirTemp
+97	9	BatV
+97	10	Work_mode
+98	11	ADC_CH0V
+98	12	BatV
+98	13	Illumi
+98	14	AirTemp
+98	15	Work_mode
+99	16	BatV
+99	17	SoilEC
+99	18	SoilHumid
+99	19	SoilTemp
 \.
 
 
 --
--- TOC entry 3598 (class 0 OID 18431)
+-- TOC entry 3600 (class 0 OID 18431)
 -- Dependencies: 263
 -- Data for Name: WIDGET; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -300,7 +323,7 @@ COPY public."WIDGET" (_id, display_name, config_dict, board_id) FROM stdin;
 
 
 --
--- TOC entry 3599 (class 0 OID 18440)
+-- TOC entry 3601 (class 0 OID 18440)
 -- Dependencies: 264
 -- Data for Name: BELONG_TO; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -310,27 +333,37 @@ COPY public."BELONG_TO" (widget_id, sensor_id) FROM stdin;
 
 
 --
--- TOC entry 3608 (class 0 OID 18485)
+-- TOC entry 3610 (class 0 OID 18485)
 -- Dependencies: 273
 -- Data for Name: ENDDEV_PAYLOAD; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public."ENDDEV_PAYLOAD" (_id, recv_timestamp, payload_data, enddev_id) FROM stdin;
+111	2021-12-29 19:04:42.542297	{"BatV": 3.38, "AirTemp": 24.9, "ADC_CH0V": 0.305, "AirHumid": 75.5, "Work_mode": "IIC"}	96
+113	2021-12-29 19:05:15.600822	{"BatV": 3.399, "AirTemp": 25, "ADC_CH0V": 0.342, "AirHumid": 73.9, "Work_mode": "IIC"}	97
+115	2021-12-29 19:06:02.78465	{"BatV": 3.396, "Illumi": 0, "AirTemp": 24.6, "ADC_CH0V": 0.324, "Work_mode": "IIC"}	98
+116	2021-12-29 19:06:42.524828	{"BatV": 3.38, "AirTemp": 24.9, "ADC_CH0V": 0.305, "AirHumid": 74.7, "Work_mode": "IIC"}	96
+118	2021-12-29 19:06:55.485299	{"BatV": 3.351, "SoilEC": 122, "SoilTemp": 25.98, "SoilHumid": 20.44}	99
+119	2021-12-29 19:08:15.593202	{"BatV": 3.399, "AirTemp": 24.8, "ADC_CH0V": 0.341, "AirHumid": 73.1, "Work_mode": "IIC"}	97
+120	2021-12-29 19:08:42.529956	{"BatV": 3.38, "AirTemp": 24.8, "ADC_CH0V": 0.305, "AirHumid": 73.9, "Work_mode": "IIC"}	96
+121	2021-12-29 19:10:42.525628	{"BatV": 3.38, "AirTemp": 24.7, "ADC_CH0V": 0.304, "AirHumid": 73.4, "Work_mode": "IIC"}	96
+122	2021-12-29 19:11:02.794559	{"BatV": 3.396, "Illumi": 0, "AirTemp": 24.2, "ADC_CH0V": 0.325, "Work_mode": "IIC"}	98
+123	2021-12-29 19:11:15.585782	{"BatV": 3.399, "AirTemp": 24.6, "ADC_CH0V": 0.341, "AirHumid": 72.3, "Work_mode": "IIC"}	97
 \.
 
 
 --
--- TOC entry 3606 (class 0 OID 18474)
+-- TOC entry 3608 (class 0 OID 18474)
 -- Dependencies: 271
 -- Data for Name: UNIT; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."UNIT" (_id, sensor_key, dev_type, uint) FROM stdin;
+COPY public."UNIT" (_id, sensor_key, dev_type, unit) FROM stdin;
 \.
 
 
 --
--- TOC entry 3604 (class 0 OID 18467)
+-- TOC entry 3606 (class 0 OID 18467)
 -- Dependencies: 269
 -- Data for Name: HAS_UNIT; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -340,7 +373,7 @@ COPY public."HAS_UNIT" (sensor_id, unit_id) FROM stdin;
 
 
 --
--- TOC entry 3593 (class 0 OID 18404)
+-- TOC entry 3595 (class 0 OID 18404)
 -- Dependencies: 258
 -- Data for Name: NOTIFICATION; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -350,7 +383,7 @@ COPY public."NOTIFICATION" (_id, title, content, updated_timestamp) FROM stdin;
 
 
 --
--- TOC entry 3594 (class 0 OID 18413)
+-- TOC entry 3596 (class 0 OID 18413)
 -- Dependencies: 259
 -- Data for Name: NOTIFY; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -360,7 +393,7 @@ COPY public."NOTIFY" (profile_id, noti_id) FROM stdin;
 
 
 --
--- TOC entry 3609 (class 0 OID 18497)
+-- TOC entry 3611 (class 0 OID 18497)
 -- Dependencies: 274
 -- Data for Name: OWN; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -370,7 +403,7 @@ COPY public."OWN" (profile_id, enddev_id) FROM stdin;
 
 
 --
--- TOC entry 3615 (class 0 OID 0)
+-- TOC entry 3617 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: chunk_constraint_name; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: -
 --
@@ -379,7 +412,7 @@ SELECT pg_catalog.setval('_timescaledb_catalog.chunk_constraint_name', 1, false)
 
 
 --
--- TOC entry 3616 (class 0 OID 0)
+-- TOC entry 3618 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: chunk_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: -
 --
@@ -388,7 +421,7 @@ SELECT pg_catalog.setval('_timescaledb_catalog.chunk_id_seq', 1, false);
 
 
 --
--- TOC entry 3617 (class 0 OID 0)
+-- TOC entry 3619 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: dimension_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: -
 --
@@ -397,7 +430,7 @@ SELECT pg_catalog.setval('_timescaledb_catalog.dimension_id_seq', 1, false);
 
 
 --
--- TOC entry 3618 (class 0 OID 0)
+-- TOC entry 3620 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: dimension_slice_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: -
 --
@@ -406,7 +439,7 @@ SELECT pg_catalog.setval('_timescaledb_catalog.dimension_slice_id_seq', 1, false
 
 
 --
--- TOC entry 3619 (class 0 OID 0)
+-- TOC entry 3621 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: hypertable_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: -
 --
@@ -415,7 +448,7 @@ SELECT pg_catalog.setval('_timescaledb_catalog.hypertable_id_seq', 1, false);
 
 
 --
--- TOC entry 3620 (class 0 OID 0)
+-- TOC entry 3622 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: bgw_job_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_config; Owner: -
 --
@@ -424,7 +457,7 @@ SELECT pg_catalog.setval('_timescaledb_config.bgw_job_id_seq', 1000, false);
 
 
 --
--- TOC entry 3621 (class 0 OID 0)
+-- TOC entry 3623 (class 0 OID 0)
 -- Dependencies: 260
 -- Name: BOARD__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -433,25 +466,25 @@ SELECT pg_catalog.setval('public."BOARD__id_seq"', 1, false);
 
 
 --
--- TOC entry 3622 (class 0 OID 0)
+-- TOC entry 3624 (class 0 OID 0)
 -- Dependencies: 272
 -- Name: ENDDEV_PAYLOAD__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."ENDDEV_PAYLOAD__id_seq"', 1, false);
+SELECT pg_catalog.setval('public."ENDDEV_PAYLOAD__id_seq"', 123, true);
 
 
 --
--- TOC entry 3623 (class 0 OID 0)
+-- TOC entry 3625 (class 0 OID 0)
 -- Dependencies: 265
 -- Name: ENDDEV__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."ENDDEV__id_seq"', 1, false);
+SELECT pg_catalog.setval('public."ENDDEV__id_seq"', 99, true);
 
 
 --
--- TOC entry 3624 (class 0 OID 0)
+-- TOC entry 3626 (class 0 OID 0)
 -- Dependencies: 257
 -- Name: NOTIFICATION__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -460,7 +493,7 @@ SELECT pg_catalog.setval('public."NOTIFICATION__id_seq"', 1, false);
 
 
 --
--- TOC entry 3625 (class 0 OID 0)
+-- TOC entry 3627 (class 0 OID 0)
 -- Dependencies: 254
 -- Name: PROFILE__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -469,25 +502,25 @@ SELECT pg_catalog.setval('public."PROFILE__id_seq"', 1, false);
 
 
 --
--- TOC entry 3626 (class 0 OID 0)
+-- TOC entry 3628 (class 0 OID 0)
 -- Dependencies: 267
 -- Name: SENSOR__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."SENSOR__id_seq"', 1, false);
+SELECT pg_catalog.setval('public."SENSOR__id_seq"', 19, true);
 
 
 --
--- TOC entry 3627 (class 0 OID 0)
+-- TOC entry 3629 (class 0 OID 0)
 -- Dependencies: 270
 -- Name: UNIT__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."UNIT__id_seq"', 1, false);
+SELECT pg_catalog.setval('public."UNIT__id_seq"', 1, true);
 
 
 --
--- TOC entry 3628 (class 0 OID 0)
+-- TOC entry 3630 (class 0 OID 0)
 -- Dependencies: 262
 -- Name: WIDGET__id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -495,7 +528,7 @@ SELECT pg_catalog.setval('public."UNIT__id_seq"', 1, false);
 SELECT pg_catalog.setval('public."WIDGET__id_seq"', 1, false);
 
 
--- Completed on 2021-12-28 14:22:52 UTC
+-- Completed on 2021-12-29 19:17:07 UTC
 
 --
 -- PostgreSQL database dump complete
