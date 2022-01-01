@@ -9,7 +9,7 @@ const streaming_broker_options = {
     protocolVersion: 5,
     clean: false,
     properties: {
-        sessionExpiryInterval: 30,
+        sessionExpiryInterval: 120,
         receiveMaximum: 100
     }
 }
@@ -28,7 +28,7 @@ const dev_topic_levels = {
 
 //get raw topic of all devices
 const sub_topics = [
-    `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/payload`
+    `${dev_topic_levels['DEVICES']}/eui-a84041a54182a79f/${dev_topic_levels['UP']}/payload`
 ];
 
 const streaming_broker_mqttclient = mqtt.connect(
@@ -45,7 +45,7 @@ function streaming_broker_connect_handler()
 {
     console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
     streaming_broker_mqttclient.subscribe(sub_topics, {
-        'qos': 1
+        'qos': 2
     });
     
 }

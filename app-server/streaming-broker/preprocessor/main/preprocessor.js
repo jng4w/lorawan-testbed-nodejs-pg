@@ -9,9 +9,10 @@ const streaming_broker_options = {
     protocolVersion: 5,
     clean: false,
     properties: {  // MQTT 5.0
-        sessionExpiryInterval: 30,
-        receiveMaximum: 100
-    }
+        sessionExpiryInterval: 300,
+        //receiveMaximum: 100
+    },
+    resubscribe: false
 }
 
 const streaming_broker_protocol = "mqtt";
@@ -31,7 +32,7 @@ const sub_topics = [
     {
         'topic': `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/raw`,
         'options': {
-            'qos': 1
+            'qos': 0
         }
     }
 ];
@@ -99,32 +100,37 @@ function streaming_broker_message_handler(topic, message, packet)
     let parsed_message = JSON.parse(message);
     //extract
     let dev_data = extract_dev_data(parsed_message);
-    //console.log(dev_data);
 
     let pub_topics = [
         {
+            //for db cache
             'topic': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['MIXED']}`,
             'msg': JSON.stringify(dev_data),
             'options': {
-                qos: 1,
+                qos: 0,
                 dup: false,
-                retain: true,
+                retain: false,
+                /*
                 properties: {
                     messageExpiryInterval: 300
                 }
+                */
             }
         },
 
         {
+            //for customer
             'topic': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['PAYLOAD']}`,
             'msg': JSON.stringify(dev_data["payload"]),
             'options': {
-                qos: 1,
+                qos: 2,
                 dup: false,
                 retain: true,
+                /*
                 properties: {
                     messageExpiryInterval: 300
                 }
+                */
             }
         }
     ];

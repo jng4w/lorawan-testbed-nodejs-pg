@@ -10,7 +10,8 @@ const network_server_mqtt_options = {
     keepalive: 120,
     protocolVersion: 3,
     queueQoSZero: true,
-    clean: false
+    clean: false,
+    resubscribe: false
 };
 
 const streaming_broker_options = {
@@ -19,8 +20,9 @@ const streaming_broker_options = {
     protocolVersion: 5,
     clean: false,
     properties: {  // MQTT 5.0
-        sessionExpiryInterval: 30
-    }
+        sessionExpiryInterval: 300
+    },
+    resubscribe: false
 }
 
 const network_server_mqtt_protocol = "mqtt";
@@ -79,12 +81,14 @@ function network_server_mqtt_message_handler(topic, message, packet)
     //try..catch in case cannot connect to app server
     try {
         streaming_broker_mqttclient.publish(pub_topic, message, {
-            qos: 1,
+            qos: 0,
             dup: false,
-            retain: true,
+            retain: false,
+            /*
             properties: {
                 messageExpiryInterval: 300
             }
+            */
         });
     } catch (err) {
         console.log(err);

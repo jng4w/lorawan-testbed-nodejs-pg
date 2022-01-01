@@ -5,7 +5,14 @@ const common = JSON.parse(fs.readFileSync('./../../../common.json'));
 
 const streaming_broker_options = {
     clientId: "db-connector",
-    clean: true
+    keepalive: 120,
+    protocolVersion: 5,
+    clean: false,
+    properties: {  // MQTT 5.0
+        sessionExpiryInterval: 300,
+        //receiveMaximum: 100
+    },
+    resubscribe: false
 }
 
 const streaming_broker_protocol = "mqtt";
@@ -21,7 +28,12 @@ const dev_topic_levels = {
 
 //get topics of all devices
 const sub_topics = [
-    `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/${dev_topic_levels['MIXED']}`
+    {
+        'topic': `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/${dev_topic_levels['MIXED']}`,
+        'options': {
+            'qos': 0
+        }
+    }
 ];
 
 /* ==============CONNECT TO STREAMING BROKER============== */
@@ -35,11 +47,14 @@ streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
 streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
 
 //handle incoming connect
-function streaming_broker_connect_handler()
+function streaming_broker_connect_handler(connack)
 {
     console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
-    streaming_broker_mqttclient.subscribe(sub_topics);
-    
+    if (connack.sessionPresent == false) {
+        sub_topics.forEach((topic) => {
+            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+        });
+    }
 }
 
 //STORE TO DB
