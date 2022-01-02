@@ -1,7 +1,7 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common = JSON.parse(fs.readFileSync('./../../../common.json'));
+const common_emqx = JSON.parse(fs.readFileSync('./../../../common/emqx.json'));
 
 const streaming_broker_options = {
     clientId: "preprocessor",
@@ -16,15 +16,15 @@ const streaming_broker_options = {
 }
 
 const streaming_broker_protocol = "mqtt";
-const streaming_broker_addr = common['emqx']['SERVER_ADDR'];
-const streaming_broker_port = common['emqx']['SERVER_PORT'];
+const streaming_broker_addr = common_emqx['SERVER_ADDR'];
+const streaming_broker_port = common_emqx['SERVER_PORT'];
 
 //topics levels of streaming brokers
 const dev_topic_levels = {
-    'DEVICES': common['emqx']['TOPIC_LEVEL_DEVICES'],
-    'UP': common['emqx']['TOPIC_LEVEL_UP'],
-    'PAYLOAD': common['emqx']['TOPIC_LEVEL_PAYLOAD'],
-    'MIXED': common['emqx']['TOPIC_LEVEL_MIXED']
+    'DEVICES': common_emqx['TOPIC_LEVEL_DEVICES'],
+    'UP': common_emqx['TOPIC_LEVEL_UP'],
+    'PAYLOAD': common_emqx['TOPIC_LEVEL_PAYLOAD'],
+    'MIXED': common_emqx['TOPIC_LEVEL_MIXED']
 };
 
 //get raw topic of all devices
