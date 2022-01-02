@@ -1,12 +1,11 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-const session = require('express-session')
-
-
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const { body } = require('express-validator');
 
 const indexRouter = require('./routes/index.route');
 const dashboardRouter = require('./routes/dashboard.route');
@@ -20,9 +19,14 @@ const logoutRouter = require('./routes/logout.route');
 // var usersRouter = require('./routes/users');
 // var diaryRouter = require('./routes/diary.route');
 
-var app = express();
+const app = express();
 
 // view engine setup
+app.use(express.static('public'))
+app.use('/css',express.static(__dirname + 'public/css'))
+app.use('/img',express.static(__dirname + 'public/img'))
+app.use('/js',express.static(__dirname + 'public/js'))
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 

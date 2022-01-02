@@ -16,3 +16,5 @@
 </body>
 
 </html> -->
+
+<%- include ('../partials/libs') %>
