@@ -18,6 +18,8 @@ services:
   environment:
    PGADMIN_DEFAULT_EMAIL: root@root.com
    PGADMIN_DEFAULT_PASSWORD: root
+   PGADMIN_LISTEN_ADDRESS: 127.0.0.1
    PGADMIN_LISTEN_PORT: 5050
   ports:
    - "5050:5050"
+

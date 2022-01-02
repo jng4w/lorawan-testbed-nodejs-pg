@@ -1,12 +1,13 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common = JSON.parse(fs.readFileSync('./../../../common.json'));
+const common_tts = JSON.parse(fs.readFileSync('./../../../common/tts.json'));
+const common_emqx = JSON.parse(fs.readFileSync('./../../../common/emqx.json'));
 
 const network_server_mqtt_options = {
-    clientId: common['tts']['API_KEY_ID'],
-    username: `${common['tts']['APPLICATION_ID']}@${common['tts']['TENANT_ID']}`,
-    password: common['tts']['API_KEY_PASSWORD'],
+    clientId: common_tts['API_KEY_ID'],
+    username: `${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}`,
+    password: common_tts['API_KEY_PASSWORD'],
     keepalive: 120,
     protocolVersion: 3,
     queueQoSZero: true,
@@ -26,17 +27,17 @@ const streaming_broker_options = {
 }
 
 const network_server_mqtt_protocol = "mqtt";
-const network_server_mqtt_addr = common['tts']['SERVER_ADDR'];
-const network_server_mqtt_port = common['tts']['SERVER_PORT'];
+const network_server_mqtt_addr = common_tts['SERVER_ADDR'];
+const network_server_mqtt_port = common_tts['SERVER_PORT'];
 
 const streaming_broker_protocol = "mqtt";
-const streaming_broker_addr = common['emqx']['SERVER_ADDR'];
-const streaming_broker_port = common['emqx']['SERVER_PORT'];
+const streaming_broker_addr = common_emqx['SERVER_ADDR'];
+const streaming_broker_port = common_emqx['SERVER_PORT'];
 
 //get uplink messages of all devices
 const sub_topics = [
     {
-        'topic': `v3/${common['tts']['APPLICATION_ID']}@${common['tts']['TENANT_ID']}/devices/+/up`,
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/up`,
         'options': {
             'qos': 0
         }
@@ -45,8 +46,8 @@ const sub_topics = [
 
 //topics levels of streaming brokers
 const dev_topic_levels = {
-    'DEVICES': common['emqx']['TOPIC_LEVEL_DEVICES'],
-    'UP': common['emqx']['TOPIC_LEVEL_UP']
+    'DEVICES': common_emqx['TOPIC_LEVEL_DEVICES'],
+    'UP': common_emqx['TOPIC_LEVEL_UP']
 };
 
 /* ==============CONNECT TO NETWORK SERVER============== */

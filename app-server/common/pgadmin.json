@@ -1,0 +1,6 @@
+{
+    "SERVER_ADDR": "127.0.0.1",
+    "SERVER_PORT": 5050,
+    "PGADMIN_DEFAULT_EMAIL": "root@root.com",
+    "PGADMIN_DEFAULT_PASSWORD": "root"
+}

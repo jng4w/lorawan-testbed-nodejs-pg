@@ -1,0 +1,9 @@
+{
+    "SERVER_ADDR": "127.0.0.1",
+    "MQTT_PORT": 1883,
+    "TOPIC_LEVEL_DEVICES": "devices",
+    "TOPIC_LEVEL_UP": "up",
+    "TOPIC_LEVEL_METADATA": "metadata",
+    "TOPIC_LEVEL_PAYLOAD": "payload",
+    "TOPIC_LEVEL_MIXED": "mixed"
+}

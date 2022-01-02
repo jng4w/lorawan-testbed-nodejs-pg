@@ -1,0 +1,7 @@
+{
+    "SERVER_ADDR": "127.0.0.1",
+    "SERVER_PORT": 5432,
+    "POSTGRES_USER": "root",
+    "POSTGRES_PASSWORD": "root",
+    "DATABASE_NAME": "lorawan-db"
+}

@@ -1,7 +1,8 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common = JSON.parse(fs.readFileSync('./../../../common.json'));
+const common_emqx = JSON.parse(fs.readFileSync('./../../../common/emqx.json'));
+const common_pg = JSON.parse(fs.readFileSync('./../../../common/pg.json'));
 
 const streaming_broker_options = {
     clientId: "db-connector",
@@ -16,14 +17,14 @@ const streaming_broker_options = {
 }
 
 const streaming_broker_protocol = "mqtt";
-const streaming_broker_addr = common['emqx']['SERVER_ADDR'];
-const streaming_broker_port = common['emqx']['SERVER_PORT'];
+const streaming_broker_addr = common_emqx['SERVER_ADDR'];
+const streaming_broker_port = common_emqx['SERVER_PORT'];
 
 //topics levels of streaming brokers
 const dev_topic_levels = {
-    'DEVICES': common['emqx']['TOPIC_LEVEL_DEVICES'],
-    'UP': common['emqx']['TOPIC_LEVEL_UP'],
-    'MIXED': common['emqx']['TOPIC_LEVEL_MIXED']
+    'DEVICES': common_emqx['TOPIC_LEVEL_DEVICES'],
+    'UP': common_emqx['TOPIC_LEVEL_UP'],
+    'MIXED': common_emqx['TOPIC_LEVEL_MIXED']
 };
 
 //get topics of all devices
@@ -131,10 +132,10 @@ const {Pool} = require("pg");
 
 
 const db_pool = new Pool({
-    user: common["pg"]["POSTGRES_USER"],
-    password: common["pg"]["POSTGRES_PASSWORD"],
-    host: common["pg"]["SERVER_ADDR"],
-    port: common["pg"]["SERVER_PORT"],
-    database: common["pg"]["DATABASE_NAME"]
+    user: common_pg["POSTGRES_USER"],
+    password: common_pg["POSTGRES_PASSWORD"],
+    host: common_pg["SERVER_ADDR"],
+    port: common_pg["SERVER_PORT"],
+    database: common_pg["DATABASE_NAME"]
 })
 
