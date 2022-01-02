@@ -33,5 +33,10 @@
         "TOPIC_LEVEL_METADATA": "metadata",
         "TOPIC_LEVEL_PAYLOAD": "payload",
         "TOPIC_LEVEL_MIXED": "mixed"
+    },
+
+    "webapp": {
+        "SERVER_ADDR": "localhost",
+        "SERVER_PORT": 80
     }
 }
