@@ -165,3 +165,48 @@ INSERT INTO public."UNIT"(
 END;
 $$
 LANGUAGE PLPGSQL;
+-----------------------------------------------------
+
+
+-----------------------------------------------------
+-- process new payload
+CREATE PROCEDURE public.process_new_payload(new_metadata json, new_payload json)
+    LANGUAGE plpgsql
+    AS $$
+
+DECLARE 
+	enddev_id integer;
+	_key text;
+
+BEGIN
+INSERT INTO public."ENDDEV_PAYLOAD" (recv_timestamp, payload_data, enddev_id)
+VALUES (new_payload->'recv_timestamp', 
+	new_payload->'payload_data', 
+	(SELECT _id FROM public."ENDDEV" WHERE dev_id = new_metadata->'dev_identifiers'->'dev_id') 
+);
+
+-- there is no enddev exists -> insert new enddev
+EXCEPTION
+INSERT INTO public."ENDDEV" (display_name, dev_id, dev_addr, join_eui, dev_eui, dev_type, dev_brand, dev_model, dev_band)
+VALUES (new_metadata->'dev_identifiers'->'dev_id', 
+	new_metadata->'dev_identifiers'->'dev_id', 
+	new_metadata->'dev_identifiers'->'dev_addr',
+	new_metadata->'dev_identifiers'->'join_eui', 
+	new_metadata->'dev_identifiers'->'dev_eui', 
+	(SELECT _id FROM public."DEVTYPE" WHERE dev_type = new_metadata->'dev_version'->'dev_type'), 
+	new_metadata->'dev_version'->'dev_brand', 
+	new_metadata->'dev_version'->'dev_model', 
+	new_metadata->'dev_version'->'dev_band'
+) RETURNING _id INTO enddev_id;
+
+-- insert new sensor
+FOR _key IN 
+	SELECT key FROM json_each(new_payload)
+LOOP
+	INSERT INTO public."SENSOR" (sensor_key, enddev_id)\
+                VALUES (_key, enddev_id);
+END LOOP;
+
+END;
+$$;
+

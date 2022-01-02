@@ -62,6 +62,12 @@ function streaming_broker_connect_handler(connack)
 async function streaming_broker_message_handler(topic, message, packet)
 {
     const parsed_message = JSON.parse(message);
+    await db_pool.query(
+        "CALL public.process_new_payload($1, $2)",
+        [parsed_message['metadata'], parsed_message['payload']]
+    );
+
+    /*
     try {
         //insert enddev payload
         await db_pool.query(
@@ -118,6 +124,7 @@ async function streaming_broker_message_handler(topic, message, packet)
             ]
         );
     }
+    */
 }
 
 // handle error
