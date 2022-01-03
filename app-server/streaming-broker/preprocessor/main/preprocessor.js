@@ -53,12 +53,14 @@ function extract_dev_data(json_pkg) {
         },
 
         "dev_version" : {
-            "dev_type" : json_pkg["uplink_message"]["dev_type"],
+            "dev_type" : json_pkg["uplink_message"]["decoded_payload"]["dev_type"],
             "dev_brand" : json_pkg["uplink_message"]["version_ids"]["brand_id"],
             "dev_model" : json_pkg["uplink_message"]["version_ids"]["model_id"],
             "dev_band" : json_pkg["uplink_message"]["version_ids"]["band_id"]
         }
     };
+
+    delete json_pkg["uplink_message"]["decoded_payload"]["dev_type"];
 
     let payload_json_pkg = {
         "recv_timestamp" : json_pkg["received_at"],
