@@ -62,10 +62,26 @@ function streaming_broker_connect_handler(connack)
 async function streaming_broker_message_handler(topic, message, packet)
 {
     const parsed_message = JSON.parse(message);
-    await db_pool.query(
-        "CALL public.process_new_payload($1, $2)",
-        [parsed_message['metadata'], parsed_message['payload']]
-    );
+
+    try {
+        await db_pool.query(
+            "CALL public.process_new_payload($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
+            [
+                parsed_message['payload']['recv_timestamp'],
+                parsed_message['payload']['payload_data'],
+                parsed_message['metadata']['dev_identifiers']['dev_id'],
+                parsed_message['metadata']['dev_identifiers']['dev_eui'],
+                parsed_message['metadata']['dev_identifiers']['dev_addr'],
+                parsed_message['metadata']['dev_identifiers']['join_eui'],
+                parsed_message['metadata']['dev_version']['dev_type'],
+                parsed_message['metadata']['dev_version']['dev_brand'],
+                parsed_message['metadata']['dev_version']['dev_model'],
+                parsed_message['metadata']['dev_version']['dev_band']
+            ]
+        );
+    } catch (err) {
+        console.log(err.stack);
+    }
 
     /*
     try {
