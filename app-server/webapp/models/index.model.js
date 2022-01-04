@@ -2,14 +2,14 @@ const { Pool } = require('pg')
 const fs = require('fs');
 
 
-const common = JSON.parse(fs.readFileSync('./../common.json'));
+const common = JSON.parse(fs.readFileSync('./../common/pg.json'));
 
 const client = new Pool({
-  user: common['pg']["POSTGRES_USER"],
-  host: common['pg']["SERVER_ADDR"],
-  database: common['pg']["DATABASE_NAME"],
-  password: common['pg']["POSTGRES_PASSWORD"],
-  port: common['pg']["SERVER_PORT"]
+  user: common["POSTGRES_USER"],
+  host: common["SERVER_ADDR"],
+  database: common["DATABASE_NAME"],
+  password: common["POSTGRES_PASSWORD"],
+  port: common["SERVER_PORT"]
 })
 
 client.connect(function(err) {
@@ -91,7 +91,7 @@ function customerAdd(username, email){
         values: [username, email],
     }
 
-    return client.query(
+    client.query(
         query,
         (err, db_res) => {
             try {
@@ -139,6 +139,20 @@ function customerAdd(username, email){
     );
 }
 
+function retriveData(){
+    const query = {
+        // give the query a unique name
+        text: `select * from profile where _id = $1 or email = '$2';`,
+        values: [username, email],
+    }
+
+    client.query(
+        query,
+        (err, db_res) => {
+            console.log(err);
+        }
+    );
+}
 module.exports = {
     customerAdd
 }
