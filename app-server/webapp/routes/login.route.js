@@ -6,11 +6,14 @@ const { validator } = require('../controllers/validator.controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  
-    // Show form dang nhap => loginProcessing
-    let message = "";
-    res.render('main/login', {message: message});
-    //res.render('index', {result: result});
+    // if(!req.session.login){
+        // Show form dang nhap => loginProcessing
+        
+        res.render('main/login', {error_flag: 0});
+        //res.render('index', {result: result});
+    // }
+    
+
 });
 
 router.post('/', 

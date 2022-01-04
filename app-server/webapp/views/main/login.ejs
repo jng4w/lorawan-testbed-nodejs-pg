@@ -27,9 +27,11 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">LoraWAN TestBed</h1>
                                     </div>
+                                    <% if(error_flag) { %>
                                     <div class="alert alert-danger text-danger text-center small">
-                                        Wrong EMail or Phone Number!
+                                        Wrong Email/Phone number or Password
                                     </div>
+                                    <% } %>
                                     
                                     <!-- <div class="form-group">
                                         <span class="badge badge-danger text-center">Wrong EMail or Phone Number</span>
