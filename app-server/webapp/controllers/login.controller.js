@@ -1,11 +1,15 @@
 const Index = require('../models/index.model');
+const {validationResult } = require('express-validator');
 
-exports.loginProcessing = async (client_req, client_res, next) => {
-    var username = client_req.body.uname;
-	var password = client_req.body.psw;
-    
-    
+exports.loginProcessing = async (req, res, next) => {
+    console.log(req.body.uname, req.body.psw);
+    // console.log(Index.checkProfileExist(req.body.uname, req.body.psw));
+
+    console.log(await Index.checkProfileExist(req.body.uname, req.body.psw));
+
 }
+
+
 
 
 

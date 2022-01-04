@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
   
     // Show dashboard & modify
 
-    res.render('main/dashboard', {result: 1});
+    res.render('main/dashboard');
     //res.render('index', {result: result});
 });
 
