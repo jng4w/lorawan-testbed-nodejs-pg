@@ -1,45 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="css/register.css">
+
+    <title>Register</title>
+    
+    <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
+    <%- include ('../partials/libs') %>
+
 </head>
-<body>
 
-<form action="/reg_auth" method="post">
-  <div class="container">
-    <h1>Register</h1>
-    <p><%= e%></p>
-    <hr>
+<body class="bg-gradient-primary">
 
-    <label for="uname"><b>User Name</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
+    <div class="container">
 
-    <label for="dname"><b>Display Name</b></label>
-    <input type="text" placeholder="Enter Display Name" name="dname" id="dname" required>
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
 
-    <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Enter Email" name="email" id="email" required>
+            <div class="col-xl-6 col-lg-6 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                                    </div>
+                                    <form class="user">
+                                        <div class="form-group row">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <input type="text" class="form-control form-control-user"
+                                                    id="exampleFirstName" placeholder="First Name">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-user"
+                                                    id="exampleLastName" placeholder="Last Name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-user"
+                                                id="exampleInputEmail" placeholder="Phone Number">
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <input type="password" class="form-control form-control-user"
+                                                    id="exampleInputPassword" placeholder="Password">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="password" class="form-control form-control-user"
+                                                    id="exampleRepeatPassword" placeholder="Repeat Password">
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn btn-primary btn-user btn-block">
+                                            Register Account
+                                        </a>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" href="#">Forgot Password?</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a class="small" href="#">Already have an account? Login!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
-
-    <label for="psw-repeat"><b>Repeat Password</b></label>
-    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
-
-    <label for="phone"><b>Phone Number</b></label>
-    <input type="text" placeholder="Enter Phone Number" name="phone" id="phone" required>
-
-    <hr>
-    <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-
-    <button type="submit" class="registerbtn">Register</button>
-  </div>
-  
-  <div class="container signin">
-    <p>Already have an account? <a href="#">Sign in</a>.</p>
-  </div>
-</form>
+    </div>
 
 </body>
+
 </html>
