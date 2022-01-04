@@ -77,6 +77,7 @@ function network_server_mqtt_message_handler(topic, message, packet)
 {
     //parse msg
     let parsed_message = JSON.parse(message);
+    console.log(parsed_message);
     //publish
     let pub_topic = `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/raw`;
     //try..catch in case cannot connect to app server

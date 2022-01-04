@@ -170,7 +170,18 @@ LANGUAGE PLPGSQL;
 
 -----------------------------------------------------
 -- process new payload
-CREATE PROCEDURE public.process_new_payload(new_metadata json, new_payload json)
+CREATE PROCEDURE public.process_new_payload(
+	new_recv_timestamp timestamp without time zone, 
+	new_payload_data jsonb,
+	new_dev_id character varying,
+	new_dev_eui character varying,
+	new_dev_addr character varying,
+	new_join_eui character varying,
+	new_dev_type character varying,
+	new_dev_brand character varying,
+	new_dev_model character varying,
+	new_dev_band character varying
+	)
     LANGUAGE plpgsql
     AS $$
 
@@ -179,34 +190,41 @@ DECLARE
 	_key text;
 
 BEGIN
-INSERT INTO public."ENDDEV_PAYLOAD" (recv_timestamp, payload_data, enddev_id)
-VALUES (new_payload->'recv_timestamp', 
-	new_payload->'payload_data', 
-	(SELECT _id FROM public."ENDDEV" WHERE dev_id = new_metadata->'dev_identifiers'->'dev_id') 
-);
+	INSERT INTO public."ENDDEV_PAYLOAD" (recv_timestamp, payload_data, enddev_id)
+	VALUES (new_recv_timestamp, 
+		new_payload_data, 
+		(SELECT _id FROM public."ENDDEV" WHERE dev_id = new_dev_id) 
+	);
 
--- there is no enddev exists -> insert new enddev
 EXCEPTION
-INSERT INTO public."ENDDEV" (display_name, dev_id, dev_addr, join_eui, dev_eui, dev_type, dev_brand, dev_model, dev_band)
-VALUES (new_metadata->'dev_identifiers'->'dev_id', 
-	new_metadata->'dev_identifiers'->'dev_id', 
-	new_metadata->'dev_identifiers'->'dev_addr',
-	new_metadata->'dev_identifiers'->'join_eui', 
-	new_metadata->'dev_identifiers'->'dev_eui', 
-	(SELECT _id FROM public."DEVTYPE" WHERE dev_type = new_metadata->'dev_version'->'dev_type'), 
-	new_metadata->'dev_version'->'dev_brand', 
-	new_metadata->'dev_version'->'dev_model', 
-	new_metadata->'dev_version'->'dev_band'
-) RETURNING _id INTO enddev_id;
+	-- there is no enddev exists -> insert new enddev
+	WHEN not_null_violation THEN
+		INSERT INTO public."ENDDEV" (display_name, dev_id, dev_addr, join_eui, dev_eui, dev_type_id, dev_brand, dev_model, dev_band)
+		VALUES (new_dev_id, 
+			new_dev_id, 
+			new_dev_addr,
+			new_join_eui, 
+			new_dev_eui, 
+			(SELECT _id FROM public."DEV_TYPE" WHERE dev_type = new_dev_type), 
+			new_dev_brand, 
+			new_dev_model, 
+			new_dev_band
+		) RETURNING _id INTO enddev_id;
 
--- insert new sensor
-FOR _key IN 
-	SELECT key FROM json_each(new_payload)
-LOOP
-	INSERT INTO public."SENSOR" (sensor_key, enddev_id)\
-                VALUES (_key, enddev_id);
-END LOOP;
+		-- insert new sensor
+		FOR _key IN 
+			SELECT key FROM jsonb_each(new_payload_data)
+		LOOP
+			INSERT INTO public."SENSOR" (sensor_key, enddev_id)
+    		VALUES (_key, enddev_id);
+		END LOOP;
 
+		-- if come to here -> enddev is inserted -> insert payload again
+		INSERT INTO public."ENDDEV_PAYLOAD" (recv_timestamp, payload_data, enddev_id)
+		VALUES (new_recv_timestamp, 
+			new_payload_data, 
+			enddev_id
+		);
 END;
 $$;
 
