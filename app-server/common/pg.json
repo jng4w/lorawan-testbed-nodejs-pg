@@ -1,5 +1,5 @@
 {
-    "SERVER_ADDR": "127.0.0.1",
+    "SERVER_ADDR": "128.199.105.69",
     "SERVER_PORT": 5432,
     "POSTGRES_USER": "root",
     "POSTGRES_PASSWORD": "root",
