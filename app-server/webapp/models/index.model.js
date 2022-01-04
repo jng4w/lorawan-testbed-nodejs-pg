@@ -29,10 +29,10 @@ client.connect(function(err) {
 async function checkProfileExist(email_or_phone, password){
 
     const res = await client.query(
-        `SELECT * FROM public."PROFILE" WHERE (email=$1 OR phone_number = $1) AND password = crypt($2,password)`,
+        `SELECT _id, display_name, phone_number, email, type FROM public."PROFILE" WHERE (email=$1 OR phone_number = $1) AND password = crypt($2,password)`,
         [email_or_phone, password]
     );
-    return res.rows;
+    return res;
 }
 
 function customerAdd(username, email){
@@ -105,6 +105,7 @@ function retriveData(){
         }
     );
 }
+
 module.exports = {
     checkProfileExist: checkProfileExist
 }
