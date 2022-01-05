@@ -8,13 +8,19 @@ const { validator } = require('../controllers/validator.controller');
 router.get('/', function(req, res, next) {
   
     // Show form dang nhap => loginProcessing
-    let message = "";
-    res.render('main/register', {message: message});
+    
+    res.render('main/register', {
+        error_flag: 0,
+        message: ""
+    });
     //res.render('index', {result: result});
 });
 
 router.post('/', 
-    validator.validateRegister(),
+    validator.validateRegisterPhone(),
     registerController.registerProcessing); 
+
+    router.post('/verify', 
+    registerController.verifyProcessing); 
 
 module.exports = router;

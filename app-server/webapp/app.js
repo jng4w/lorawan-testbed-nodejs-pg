@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const { body } = require('express-validator');
 
 const indexRouter = require('./routes/index.route');
 const dashboardRouter = require('./routes/dashboard.route');

@@ -3,16 +3,18 @@
 /**
  * Module dependencies.
  */
-require('dotenv').config()
+// require('dotenv').config()
 var app = require('../app');
 var debug = require('debug')('diaramapp:server');
 var http = require('http');
+const fs = require('fs');
+const web = JSON.parse(fs.readFileSync('./../common/webapp.json'));
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(web["SERVER_PORT"] || '3000');
 app.set('port', port);
 
 /**

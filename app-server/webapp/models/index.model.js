@@ -35,6 +35,21 @@ async function checkProfileExist(email_or_phone, password){
     return res;
 }
 
+async function insertProfile(email, phone, password, type, name){
+
+    const res = await client.query(
+        `CALL public.insert_profile(
+            $1, 
+            $2, 
+            $3, 
+            $4, 
+            $5
+        )`,
+        [email, phone, password, type, name]
+    );
+    return res;
+}
+
 function customerAdd(username, email){
 
     const query = {
@@ -107,5 +122,6 @@ function retriveData(){
 }
 
 module.exports = {
-    checkProfileExist: checkProfileExist
+    checkProfileExist: checkProfileExist,
+    insertProfile: insertProfile
 }
