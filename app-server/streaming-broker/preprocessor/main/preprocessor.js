@@ -1,7 +1,7 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common_emqx = JSON.parse(fs.readFileSync('./../../../common/emqx.json'));
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/emqx.json`));
 
 const streaming_broker_options = {
     clientId: "preprocessor",

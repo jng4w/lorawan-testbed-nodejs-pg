@@ -25,6 +25,7 @@
                 resubscribe: false
             }
 
+<<<<<<< main
             const sub_topics = [];
             devices.forEach((device_id) => {
                 sub_topics.push({
@@ -44,6 +45,15 @@
             streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
             streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
             
+=======
+            //handle incoming message
+            function mqtt_message_handler(topic, message, packet)
+            {
+                var data = JSON.parse(message).payload_data;
+                document.getElementById("data-payload").innerHTML = data.ADC_CH0V;
+            }
+            // {"recv_timestamp":"2022-01-05T16:34:41.599283418Z","payload_data":{"ADC_CH0V":0.303,"AirHumid":76.5,"AirTemp":29,"BatV":3.385,"Work_mode":"IIC"}}
+>>>>>>> main
             //handle incoming connect
             function streaming_broker_connect_handler(connack)
             {

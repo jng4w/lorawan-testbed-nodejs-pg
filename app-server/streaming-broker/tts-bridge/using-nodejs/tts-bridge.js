@@ -1,8 +1,8 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common_tts = JSON.parse(fs.readFileSync('./../../../common/tts.json'));
-const common_emqx = JSON.parse(fs.readFileSync('./../../../common/emqx.json'));
+const common_tts = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/tts.json`));
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/emqx.json`));
 
 const network_server_mqtt_options = {
     clientId: common_tts['API_KEY_ID'],

@@ -16,8 +16,6 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.post('/', 
-    validator.validateLogin(),
-    loginController.loginProcessing); 
+router.post('/', loginController.loginProcessing); 
 
 module.exports = router;
