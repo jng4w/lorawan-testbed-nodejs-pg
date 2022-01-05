@@ -74,9 +74,8 @@ exports.registerProcessing = async (req, res, next) => {
     }
 
     var body = req.body;
-    // var db_res = (await Index.checkProfileExist(body.email, body.psw)).rowCount || 
-    //             (await Index.checkProfileExist(body.phone, body.psw)).rowCount;
-    var db_res = 0;
+    var db_res = (await Index.checkProfileExist(body.email, body.psw)).rowCount || 
+                (await Index.checkProfileExist(body.phone, body.psw)).rowCount;
     if(!db_res){
 
         req.session.vcode = generate_code();
