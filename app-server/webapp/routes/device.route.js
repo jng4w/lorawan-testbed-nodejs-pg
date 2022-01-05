@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
   
     // Show device & modify
 
-  
+    res.render('main/device');
     //res.render('index', {result: result});
 });
 
