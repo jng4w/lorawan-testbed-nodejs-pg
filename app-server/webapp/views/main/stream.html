@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Client Browser MQTT sub</title>
+        <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
+        <script>
+            var mqtt_server_ip = "127.0.0.1";
+            var mqtt_server_port = 8083;
+            var client_id = "enduser-1";
+
+            const devices = [
+                "eui-a84041a54182a79f"
+            ];
+            var mqtt_topic_prefix = "devices/";
+            var mqtt_topics_list = [];
+            options = {
+                clientId: "enduser-1",
+                clean: true
+            }
+
+            //handle incoming message
+            function mqtt_message_handler(topic, message, packet)
+            {
+                document.getElementById("data-payload").innerHTML = message.toString();
+            }
+
+            //handle incoming connect
+            function mqtt_connect_handler()
+            {
+                console.log("user mqtt connected  " + mqtt_client.connected);
+            }
+
+            //handle error
+            function mqtt_error_handler()
+            {
+                console.log("Can't connect to broker" + error);
+            }
+
+        </script>
+    </head>
+
+    <body>
+        <div id="data-payload"></div>
+
+        <script>
+            mqtt_client = mqtt.connect("ws://" + mqtt_server_ip + ":" + mqtt_server_port.toString() + "/mqtt", options);
+            devices.forEach(device => mqtt_topics_list.push(mqtt_topic_prefix + device + "/up/payload"));
+            mqtt_client.subscribe(mqtt_topics_list);
+            mqtt_client.on('connect', mqtt_connect_handler);
+            mqtt_client.on('message', mqtt_message_handler);
+            mqtt_client.on('error', mqtt_error_handler);
+        </script>
+    </body>
+</html>
