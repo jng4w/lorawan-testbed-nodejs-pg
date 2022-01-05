@@ -39,8 +39,11 @@
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-                        <div class="card-header py-3">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary">Device List</h6>
+                            <span class="float-right">
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addDeviceModal">Add device</button>
+                            </span>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -141,11 +144,41 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-    
+    <!-- Add Device Modal-->
+    <div class="modal fade" id="addDeviceModal" tabindex="-1" role="dialog" aria-labelledby="addDeviceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add device</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="user">
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user"
+                                id="InputDeviceID" aria-describedby="emailHelp"
+                                placeholder="Enter Device ID...">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control form-control-user"
+                                id="InputDevicePassword" placeholder="Enter activation code...">
+                        </div>
+                        <a href="#" class="btn btn-primary btn-user btn-block">
+                            Add device
+                        </a>
+                        <hr>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -166,6 +199,11 @@
         </div>
     </div>
 
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
     <!-- Global level plugins --> 
     <%- include('../partials/script.ejs') %>
 
@@ -174,7 +212,7 @@
     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
+    <script src="js/visuals/datatables-demo.js"></script>
 
 </body>
 
