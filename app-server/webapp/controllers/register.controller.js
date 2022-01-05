@@ -4,12 +4,13 @@ const nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var handlebars = require('handlebars');
 const fs = require('fs');
+const mail = JSON.parse(fs.readFileSync('./../common/mail.json'));
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: mail["TRANSPORTER_SERVICE"],
   auth: {
-    user: 'jingnguyen10@gmail.com',
-    pass: 'Zxcvbnm200'
+    user: mail["TRANSPORTER_EMAIL"],
+    pass: mail["TRANSPORTER_PASSWORD"]
   }
 });
 
@@ -38,7 +39,7 @@ function sendmail(email, code){
         });
     };
     
-    readHTMLFile('./views/extra/mail.ejs', function(err, html) {
+    readHTMLFile(mail["PATH"], function(err, html) {
         var template = handlebars.compile(html);
         var replacements = {
             //  username: "John Doe"
@@ -47,8 +48,8 @@ function sendmail(email, code){
         var htmlToSend = template(replacements);
         var mailOptions = {
             to: email, //to: client_req.session.email,
-            from: 'jingnuyen10@gmail.com',
-            subject: 'BKLORAWAN: EMAIL VERIFICATION',
+            from: mail["TRANSPORTER_EMAIL"],
+            subject: mail["EMAIL_HEADER"],
             // text: 'Your code is: ' + code
             html: htmlToSend
         };
@@ -91,16 +92,6 @@ exports.registerProcessing = async (req, res, next) => {
             error_flag: 0,
             message: ""
         });
-        // db_res = await Index.insertProfile(body.email, body.phone, body.psw, 'CUSTOMER', body.fname + " " + body.lname);
-        // console.log(db_res);
-        // req.session.login = 1;
-        // req.session.id = db_res.rows[0]._id;
-        // req.session.display_name = db_res.rows[0].display_name;
-        // req.session.phone_number = db_res.rows[0].phone_number;
-        // req.session.email = db_res.rows[0].email;
-        // req.session.type = db_res.rows[0].type;
-
-        // res.redirect('/verify');
     }
     else {
         res.render('main/register', {

@@ -47,14 +47,17 @@ async function checkProfileExistRegister(email, phone, password){
 async function insertProfile(email, phone, password, type, name){
 
     const res = await client.query(
-        `CALL public.insert_profile(
-            $1, 
-            $2, 
-            $3, 
-            $4, 
-            $5
-        )`,
+        `CALL public.insert_profile($1, $2, $3, $4, $5)`,
         [email, phone, password, type, name]
+    );
+    return res;
+}
+
+async function insertDeviceToCustomer(email, phone, password){
+
+    const res = await client.query(
+        `SELECT _id, display_name, phone_number, email, type FROM public."PROFILE" WHERE (email=$1 OR phone_number = $2) AND password = crypt($3,password)`,
+        [email, phone, password]
     );
     return res;
 }

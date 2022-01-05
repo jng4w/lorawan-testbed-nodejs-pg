@@ -2,3 +2,4 @@ node_modules/
 
 tts-bridge/using-emqx-bridge/emqx_bridge_mqtt.conf
 test.js
+exercute.bat

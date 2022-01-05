@@ -21,9 +21,10 @@
             //handle incoming message
             function mqtt_message_handler(topic, message, packet)
             {
-                document.getElementById("data-payload").innerHTML = message.toString();
+                var data = JSON.parse(message).payload_data;
+                document.getElementById("data-payload").innerHTML = data.ADC_CH0V;
             }
-
+            // {"recv_timestamp":"2022-01-05T16:34:41.599283418Z","payload_data":{"ADC_CH0V":0.303,"AirHumid":76.5,"AirTemp":29,"BatV":3.385,"Work_mode":"IIC"}}
             //handle incoming connect
             function mqtt_connect_handler()
             {
