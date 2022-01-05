@@ -35,11 +35,11 @@ async function checkProfileExist(email_or_phone, password){
     return res;
 }
 
-async function checkProfileExistRegister(email, phone, password){
+async function checkProfileExistRegister(email_or_phone, password){
 
     const res = await client.query(
-        `SELECT _id, display_name, phone_number, email, type FROM public."PROFILE" WHERE (email=$1 OR phone_number = $2) AND password = crypt($3,password)`,
-        [email, phone, password]
+        `SELECT _id, display_name, phone_number, email, type FROM public."PROFILE" WHERE (email=$1 OR phone_number = $1) AND password = crypt($2,password)`,
+        [email_or_phone, password]
     );
     return res;
 }
@@ -61,6 +61,5 @@ async function insertProfile(email, phone, password, type, name){
 
 module.exports = {
     checkProfileExist: checkProfileExist,
-    checkProfileExistRegister: checkProfileExistRegister,
     insertProfile: insertProfile
 }
