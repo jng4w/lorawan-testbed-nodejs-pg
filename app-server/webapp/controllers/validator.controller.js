@@ -2,9 +2,9 @@ const {body} = require('express-validator');
 const EMAIL_TYPE = "^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 const PHONE_TYPE = "^[0-9]{10,11}$";
 
-let validateRegister = () => {
+let validateRegisterPhone = () => {
     return [
-            body('uname').matches(EMAIL_TYPE) || body('uname').matches(PHONE_TYPE)
+            body('phone').matches(PHONE_TYPE)
         
     ]; 
 };
@@ -17,7 +17,7 @@ let validateLogin = () => {
 };
 
 let validator = {
-    validateRegister: validateRegister,
+    validateRegisterPhone: validateRegisterPhone,
     validateLogin: validateLogin
   };
 
