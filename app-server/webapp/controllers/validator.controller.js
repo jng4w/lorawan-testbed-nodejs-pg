@@ -4,21 +4,12 @@ const PHONE_TYPE = "^[0-9]{10,11}$";
 
 let validateRegisterPhone = () => {
     return [
-            body('phone').matches(PHONE_TYPE)
-        
-    ]; 
-};
-
-let validateLogin = () => {
-    return [
-            body('uname').matches(PHONE_TYPE) || body('uname').matches(EMAIL_TYPE) 
-        
+            body('phone').matches(PHONE_TYPE)    
     ]; 
 };
 
 let validator = {
-    validateRegisterPhone: validateRegisterPhone,
-    validateLogin: validateLogin
+    validateRegisterPhone: validateRegisterPhone
   };
 
 module.exports = {
