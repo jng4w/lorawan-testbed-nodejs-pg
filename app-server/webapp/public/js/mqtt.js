@@ -1,3 +1,5 @@
+const Index = require('../models/index.model');
+
 var mqtt_server_ip = "127.0.0.1";
 var mqtt_server_port = 8083;
 var client_id = "enduser-1";
