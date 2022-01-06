@@ -53,6 +53,22 @@ async function insertProfile(email, phone, password, type, name){
     return res;
 }
 
+async function selectDevicesFromCustomer(id){
+
+    const res = await client.query(
+        `select *
+        from
+        public."OWN" as O, public."ENDDEV" as E
+        where
+        O.enddev_id = E._id and
+        O.profile_id = $1;
+        `,
+        [id]
+    );
+    return res;
+}
+
+
 async function insertDeviceToCustomer(email, phone, password){
 
     const res = await client.query(
@@ -65,5 +81,6 @@ async function insertDeviceToCustomer(email, phone, password){
 module.exports = {
     checkProfileExist: checkProfileExist,
     checkProfileExistRegister: checkProfileExistRegister,
-    insertProfile: insertProfile
+    insertProfile: insertProfile,
+    selectDevicesFromCustomer: selectDevicesFromCustomer
 }

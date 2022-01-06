@@ -6,6 +6,73 @@
     
     <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
     <!-- Global level stylesheet -->
+    <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
+    <script>
+        const streaming_broker_protocol = "ws"; //pass from server
+        const streaming_broker_addr = "127.0.0.1"; //pass from server
+        const streaming_broker_port = 8083; //pass from server
+
+        //pass from server
+        const devices = "<%=devices%>";
+
+        //pass from server
+        const streaming_broker_options = {
+            clientId: "enduser-1",
+            keepalive: 120,
+            protocolVersion: 5,
+            clean: false,
+            properties: {  // MQTT 5.0
+                sessionExpiryInterval: 300
+            },
+            resubscribe: false
+        }
+
+        const sub_topics = [];
+        devices.forEach((device_id) => {
+            sub_topics.push({
+                'topic': `devices/${device_id}/up/payload`,
+                'options': {
+                    'qos': 0
+                }
+            });
+        });
+            
+        const streaming_broker_mqttclient = mqtt.connect(
+            `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}`, 
+            streaming_broker_options
+        );
+
+        streaming_broker_mqttclient.on('connect', streaming_broker_connect_handler);
+        streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
+        streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
+        
+        //handle incoming connect
+        function streaming_broker_connect_handler(connack)
+        {
+            console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
+            if (connack.sessionPresent == false) {
+                sub_topics.forEach((topic) => {
+                    streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+                });
+            }
+        }
+        
+        //MESSAGE SEND HERE
+        function streaming_broker_message_handler(topic, message, packet)
+        {
+            //parse msg
+            let parsed_message = JSON.parse(message);
+            //CONTINUE
+            document.getElementById("data-payload").innerHTML = parsed_message;
+        }
+
+        // handle error
+        function streaming_broker_error_handler(error)
+        {
+            console.log("Can't connect to streaming broker" + error);
+            process.exit(1);
+        }
+    </script>
     <%- include('../partials/libs.ejs') %>
 
 </head>
@@ -114,227 +181,10 @@
                         </div>
                     </div>
 
-                    <!-- Content Row -->
-
-                    <div class="row">
-
-                        <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Chart 1</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Chart 2</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="myPieChart"></canvas>
-                                    </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="row">
-
-                        <div class="col-lg-4 mb-4">
-                            
-                            <!-- Progress Tab -->
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="mb-1 small">Temperature</div>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 62.4%"
-                                            aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
-                                    </div>
-                                    <div class="mb-1 small">Humidity</div>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 58.5%"
-                                            aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- Content Column -->
-                        <div class="col-lg-4 mb-4">
-
-                            <!-- Statistics Table -->
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Statistics</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <p class="small font-weight-bold">Average Air Temperature<span class="float-right">29.5&#176;C</span></p>
-                                    <hr class="sidebar-divider">
-                                    <p class="small font-weight-bold">Average Air Humidity<span class="float-right">55.1%</span></p>
-                                    <hr class="sidebar-divider">
-                                    <p class="small font-weight-bold">Average Soil Temperature<span class="float-right">28.5&#176;C</span></p>
-                                    <hr class="sidebar-divider">
-                                    <p class="small font-weight-bold">Average Soil Humidity<span class="float-right">68%</span></p>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-                        <!-- Content Column -->
-                        <div class="col-lg-3 mb-4">
-
-                            <!-- Control Table -->
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Control</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <p class="small font-weight-bold">
-                                        <i class="fas fa-lightbulb fa-lg fa-fw text-gray-500"></i>&nbsp;&nbsp;Light Trigger
-                                        <span class="float-right">
-                                            <span class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                                <label class="custom-control-label" for="customSwitches"></label>
-                                            </span>
-                                        </span>
-                                    </p>
-                                    <hr class="sidebar-divider">
-                                    <p class="small font-weight-bold">
-                                        <i class="fas fa-sun fa-lg fa-fw text-gray-500"></i>&nbsp;&nbsp;Light Intensity
-                                        <span class="float-right">
-                                            <input type="range" class="custom-range" min="0" max="4" step="1" id="customRange3">
-                                            <label for="customRange3" class="form-label"></label>
-                                        </span>
-                                    </p>
-                                    <hr class="sidebar-divider">
-                                    <p class="small font-weight-bold">
-                                        <i class="fas fa-power-off fa-lg fa-fw text-gray-500"></i>&nbsp;&nbsp;Toggle 1
-                                        <span class="float-right">
-                                            <button type="button" class="btn btn-light btn-sm">Toggle</button>
-                                        </span>
-                                    </p>
-                                    <hr class="sidebar-divider">
-                                    <p class="small font-weight-bold">
-                                        <i class="fas fa-power-off fa-lg fa-fw text-gray-500"></i>&nbsp;&nbsp;Toggle 2
-                                        <span class="float-right">
-                                            <button type="button" class="btn btn-light btn-sm">Toggle</button>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-                    </div>
+                   
 
                 </div>
+
                 <!-- /.container-fluid -->
 
             </div>

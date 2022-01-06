@@ -1,7 +1,8 @@
 const Index = require('../models/index.model');
 
 exports.indexProcessing = async (req, res, next) => {
-    res.render('main/stream2');
+    res.redirect('/dashboard');
+    // res.render('main/stream2');
     // res.redirect('/login'); 
     // if(req.session.login){
     //     res.redirect('/dashboard');
