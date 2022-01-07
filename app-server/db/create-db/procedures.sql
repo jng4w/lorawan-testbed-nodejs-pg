@@ -227,4 +227,26 @@ EXCEPTION
 		);
 END;
 $$;
+-----------------------------------------------------
 
+
+-----------------------------------------------------
+-- ADD DEV TO CUSTOMER
+CREATE PROCEDURE insert_device_to_customer
+(ref_profile_id integer, ref_enddev_id character varying)
+AS $$
+DECLARE ref_id integer;
+
+
+BEGIN
+SELECT COALESCE(_id, 0) INTO ref_id
+	FROM public."ENDDEV"
+	WHERE dev_id = ref_enddev_id;
+
+INSERT INTO public."OWN"(
+	profile_id, enddev_id)
+	VALUES (ref_profile_id, ref_id);
+
+END;
+$$
+LANGUAGE PLPGSQL;

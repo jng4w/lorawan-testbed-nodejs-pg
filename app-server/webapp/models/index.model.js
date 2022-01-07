@@ -53,15 +53,53 @@ async function insertProfile(email, phone, password, type, name){
     return res;
 }
 
-async function selectDevicesFromCustomer(id){
+// async function selectDeviceFromCustomer(id){
+
+//     const res = await client.query(
+//         `select dev_id, count(*) as no_sensor
+//         from
+//         public."OWN" as O, public."ENDDEV" as E, public."SENSOR" as S
+//         where
+//         O.enddev_id = E._id and
+//         E._id = S.enddev_id and
+//         O.profile_id = $1
+//         group by
+//         profile_id, dev_id;
+//         `,
+//         [id]
+//     );
+//     return res;
+// }
+
+async function selectDeviceSensorFromCustomer(id){
+
+    const res = await client.query(
+        `select dev_id, array_agg(sensor_key) as sensor_key_arr
+        from
+        public."OWN" as O, public."ENDDEV" as E, public."SENSOR" as S
+        where
+        O.enddev_id = E._id and
+        E._id = S.enddev_id and
+        O.profile_id = $1
+        group by
+        dev_id;    
+        `,
+        [id]
+    );
+    return res;
+}
+
+async function selectBoardWidgetFromCustomer(id){
 
     const res = await client.query(
         `select *
         from
-        public."OWN" as O, public."ENDDEV" as E
+        public."BOARD" as B, public."WIDGET" as W, public."BELONG_TO" as BT, public."SENSOR" as S
         where
-        O.enddev_id = E._id and
-        O.profile_id = $1;
+        B._id = W.board_id and
+        W._id = BT.widget_id and
+        BT.sensor_id = S._id and
+		B.profile_id = $1;  
         `,
         [id]
     );
@@ -69,11 +107,15 @@ async function selectDevicesFromCustomer(id){
 }
 
 
-async function insertDeviceToCustomer(email, phone, password){
+async function insertDeviceToCustomer(id, dev_id){
 
     const res = await client.query(
-        `SELECT _id, display_name, phone_number, email, type FROM public."PROFILE" WHERE (email=$1 OR phone_number = $2) AND password = crypt($3,password)`,
-        [email, phone, password]
+        `CALL public.insert_device_to_customer(
+            $1, 
+            $2
+        );  
+        `,
+        [id, dev_id]
     );
     return res;
 }
@@ -82,5 +124,8 @@ module.exports = {
     checkProfileExist: checkProfileExist,
     checkProfileExistRegister: checkProfileExistRegister,
     insertProfile: insertProfile,
-    selectDevicesFromCustomer: selectDevicesFromCustomer
+    // selectDeviceFromCustomer: selectDeviceFromCustomer,
+    selectDeviceSensorFromCustomer: selectDeviceSensorFromCustomer,
+    selectBoardWidgetFromCustomer: selectBoardWidgetFromCustomer,
+    insertDeviceToCustomer: insertDeviceToCustomer
 }
