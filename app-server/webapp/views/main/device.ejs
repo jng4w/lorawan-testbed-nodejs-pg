@@ -167,19 +167,20 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form class="user">
+                    <form method="post" action="device/add" class="user">
                         <div class="form-group">
                             <input type="text" class="form-control form-control-user"
                                 id="InputDeviceID" aria-describedby="emailHelp"
-                                placeholder="Enter Device ID...">
+                                placeholder="Enter Device ID..." name="enddev_id">
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control form-control-user"
-                                id="InputDevicePassword" placeholder="Enter activation code...">
+                                id="InputDevicePassword" placeholder="Enter activation code..." name="act_code">
                         </div>
-                        <a href="#" class="btn btn-primary btn-user btn-block">
+                        <!-- <a href="#" class="btn btn-primary btn-user btn-block">
                             Add device
-                        </a>
+                        </a> -->
+                        <input type="submit" value="Add device" class="btn btn-primary btn-user btn-block">
                         <hr>
                     </form>
                 </div>
