@@ -107,11 +107,15 @@ async function selectBoardWidgetFromCustomer(id){
 }
 
 
-async function insertDeviceToCustomer(email, phone, password){
+async function insertDeviceToCustomer(id, dev_id){
 
     const res = await client.query(
-        `SELECT _id, display_name, phone_number, email, type FROM public."PROFILE" WHERE (email=$1 OR phone_number = $2) AND password = crypt($3,password)`,
-        [email, phone, password]
+        `CALL public.insert_device_to_customer(
+            $1, 
+            $2
+        );  
+        `,
+        [id, dev_id]
     );
     return res;
 }
@@ -122,5 +126,6 @@ module.exports = {
     insertProfile: insertProfile,
     // selectDeviceFromCustomer: selectDeviceFromCustomer,
     selectDeviceSensorFromCustomer: selectDeviceSensorFromCustomer,
-    selectBoardWidgetFromCustomer: selectBoardWidgetFromCustomer
+    selectBoardWidgetFromCustomer: selectBoardWidgetFromCustomer,
+    insertDeviceToCustomer: insertDeviceToCustomer
 }

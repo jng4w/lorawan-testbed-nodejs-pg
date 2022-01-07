@@ -1,10 +1,15 @@
 const Index = require('../models/index.model');
 const {validationResult } = require('express-validator');
+let client_id = 1000;
+
+function generateClientBrokerId(){
+    return (`uid-${(client_id++).toString(16)}-${(new Date()).getTime()}`);
+}
 
 exports.loginProcessing = async (req, res, next) => {
     // console.log(req.body.uname, req.body.psw);
     // console.log(Index.checkProfileExist(req.body.uname, req.body.psw));
-    
+    console.log(generateClientBrokerId());
     var db_res = await Index.checkProfileExist(req.body.uname, req.body.psw);
     
     if(db_res.rowCount){
@@ -17,6 +22,8 @@ exports.loginProcessing = async (req, res, next) => {
         req.session.user.phone_number = db_res.rows[0].phone_number;
         req.session.user.email = db_res.rows[0].email;
         req.session.user.type = db_res.rows[0].type;
+        req.session.dev = {};
+        req.session.dev.id = generateClientBrokerId();
         // console.log(req.session.user);
 
         //retrive enddev metadata
