@@ -59,26 +59,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
+                                        <% for(let i=0; i< sensor.length; i++){%>
                                         <tr>
-                                            <td class="align-middle">Device 1</td>
+                                            
+                                            <td class="align-middle"><%=sensor[i].dev_id%></td>
+                                            
                                             <td class="align-middle">Garden 1</td>
-                                            <td class="align-middle">4</td>
+                                            <td class="align-middle"><%=sensor[i].sensor_key_arr.length%></td>
                                             <td class="align-middle">     
-                                                <table class="table table-borderless">
-                                                    <th colspan="2" style="display: none;"></th>
-                                                    <tr>
-                                                        <td class="align-middle">Temperature: 29.5&#176;C</td>
-                                                        <td class="align-middle">Humidity: 50%</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="align-middle">Soil EC: 426 uS/cm</td>
-                                                        <td class="align-middle">Illumination: 1200 Lux</td>
-                                                    </tr>
-                                                </table></td>
-                                            <td class="align-middle" id="battery">100%</td>
+                                                <div class="row row-cols-2 no-gutters">
+                                                <% let ss_key = sensor[i].sensor_key_arr;%>
+                                                    <% for(let j=0; j< ss_key.length; j++){%>
+                
+                                                    <div class="col-md-5"><%=ss_key[j]%>: 345 unit</div>
+                                                      
+                                                    <%}%>
+                                                </div>
+                                            <td class="align-middle" id="battery">5V</td>
                                             <td class="align-middle"><button type="button" class="btn btn-light btn-sm">Configure</button></td>
                                         </tr>
-                                        <tr>
+                                        <%};%>
+                                        <!-- <tr>
                                             <td class="align-middle">Device 2</td>
                                             <td class="align-middle">Garden 1</td>
                                             <td class="align-middle">4</td>
@@ -115,7 +117,7 @@
                                                 </table></td>
                                             <td class="align-middle" id="battery">87%</td>
                                             <td class="align-middle"><button type="button" class="btn btn-light btn-sm">Configure</button></td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
@@ -156,19 +158,20 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form class="user">
+                    <form method="post" action="device/add" class="user">
                         <div class="form-group">
                             <input type="text" class="form-control form-control-user"
                                 id="InputDeviceID" aria-describedby="emailHelp"
-                                placeholder="Enter Device ID...">
+                                placeholder="Enter Device ID..." name="enddev_id">
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control form-control-user"
-                                id="InputDevicePassword" placeholder="Enter activation code...">
+                                id="InputDevicePassword" placeholder="Enter activation code..." name="act_code">
                         </div>
-                        <a href="#" class="btn btn-primary btn-user btn-block">
+                        <!-- <a href="#" class="btn btn-primary btn-user btn-block">
                             Add device
-                        </a>
+                        </a> -->
+                        <input type="submit" value="Add device" class="btn btn-primary btn-user btn-block">
                         <hr>
                     </form>
                 </div>
