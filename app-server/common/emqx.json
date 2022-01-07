@@ -1,6 +1,13 @@
 {
     "SERVER_ADDR": "127.0.0.1",
     "MQTT_PORT": 1883,
+    "WEBSOCKET_PORT": 8083,
+    "HTTP_API_PORT": 8081,
+    "ADMIN_USERNAME": "admin",
+    "ADMIN_PASSWORD": "public", 
+    "TTS_BRIDGE_CLIENT_ID": "tss-bridge",
+    "DB_CONNECTOR_CLIENT_ID": "db-connector",
+    "PREPROCESSOR_CLIENT_ID": "preprocessor",
     "TOPIC_LEVEL_DEVICES": "devices",
     "TOPIC_LEVEL_UP": "up",
     "TOPIC_LEVEL_METADATA": "metadata",

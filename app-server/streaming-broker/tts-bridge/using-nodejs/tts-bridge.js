@@ -16,7 +16,7 @@ const network_server_mqtt_options = {
 };
 
 const streaming_broker_options = {
-    clientId: "tts-bridge",
+    clientId: common_emqx["TTS_BRIDGE_CLIENT_ID"],
     keepalive: 120,
     protocolVersion: 5,
     clean: false,
