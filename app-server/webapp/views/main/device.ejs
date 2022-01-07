@@ -59,26 +59,37 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
+                                        <% for(let i=0; i< sensor.length; i++){%>
                                         <tr>
-                                            <td class="align-middle">Device 1</td>
+                                            
+                                            <td class="align-middle"><%=sensor[i].dev_id%></td>
+                                            
                                             <td class="align-middle">Garden 1</td>
-                                            <td class="align-middle">4</td>
+                                            <td class="align-middle"><%=sensor[i].sensor_key_arr.length%></td>
                                             <td class="align-middle">     
                                                 <table class="table table-borderless">
                                                     <th colspan="2" style="display: none;"></th>
+                                                    <% let ss_key = sensor[i].sensor_key_arr;%>
+                                                        <% for(let j=0; j< ss_key.length; j++){%>
                                                     <tr>
-                                                        <td class="align-middle">Temperature: 29.5&#176;C</td>
-                                                        <td class="align-middle">Humidity: 50%</td>
+                                                        
+                                                        <!-- <td class="align-middle">Temperature: 29.5&#176;C</td> -->
+                                                        
+                                                        <td class="align-middle"><%=ss_key[j]%>: 345 unit</td>
+                                                        
                                                     </tr>
-                                                    <tr>
+                                                    <%}%>
+                                                    <!-- <tr>
                                                         <td class="align-middle">Soil EC: 426 uS/cm</td>
                                                         <td class="align-middle">Illumination: 1200 Lux</td>
-                                                    </tr>
+                                                    </tr> -->
                                                 </table></td>
-                                            <td class="align-middle" id="battery">100%</td>
+                                            <td class="align-middle" id="battery">5V</td>
                                             <td class="align-middle"><button type="button" class="btn btn-light btn-sm">Configure</button></td>
                                         </tr>
-                                        <tr>
+                                        <%};%>
+                                        <!-- <tr>
                                             <td class="align-middle">Device 2</td>
                                             <td class="align-middle">Garden 1</td>
                                             <td class="align-middle">4</td>
@@ -115,7 +126,7 @@
                                                 </table></td>
                                             <td class="align-middle" id="battery">87%</td>
                                             <td class="align-middle"><button type="button" class="btn btn-light btn-sm">Configure</button></td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>

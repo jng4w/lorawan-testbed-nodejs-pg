@@ -109,25 +109,29 @@
                     <div class="row">
 
                         <!-- Temperature Card Example -->
+                        <%for(let i=0; i< boardWidget.length ; i++){ %>
+                        <%if(boardWidget[i].board_id == 1) {%>
+                        <%var config = boardWidget[i].config_dict; %>
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-left-<%=config.view.color%> shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Temperature</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">31.2&#176;C</div>
+                                            <div class="text-xs font-weight-bold text-<%=config.view.color%> text-uppercase mb-1">
+                                                <%=boardWidget[i].display_name%></div>
+                                             <div class="h5 mb-0 font-weight-bold text-gray-800">345 unit</div>  <!--31.2&#176;C -->
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            <i class="fas fa-<%=config.view.icon%> fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                        <%}%>
+                        <%}%>
                         <!-- Air Humidity Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <!-- <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -142,10 +146,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Soil Temperature Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <!-- <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -160,10 +164,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Soil Humidity Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <!-- <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -178,7 +182,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                    

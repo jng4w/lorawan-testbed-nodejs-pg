@@ -1,20 +1,24 @@
 const Index = require('../models/index.model');
 
+exports.deviceProcessing = async (req, res, next) => {
+
+    if(req.session.login){
+        console.log(req.session.sensor);
+        res.render('main/device', {
+            // device: req.session.dev,
+            user: req.session.user,
+            sensor: req.session.sensor
+        });
+    }
+    else {
+        res.redirect('login');
+    }
+    
+
+}
+
 exports.addDeviceProcessing = async (req, res, next) => {
-    // console.log(req.body.uname, req.body.psw);
-    // console.log(Index.checkProfileExist(req.body.uname, req.body.psw));
 
-    // if(req.session.login){
-
-    //     res.render('main/user', {
-    //         error_flag: 0,
-    //         message: "",
-    //         user: req.session
-    //     })
-    // }
-    // else {
-    //     res.redirect('login');
-    // }
     
     
 
