@@ -4,7 +4,7 @@ const fs = require('fs');
 const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/emqx.json`));
 
 const streaming_broker_options = {
-    clientId: "preprocessor",
+    clientId: common_emqx["PREPROCESSOR_CLIENT_ID"],
     keepalive: 120,
     protocolVersion: 5,
     clean: false,

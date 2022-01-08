@@ -5,7 +5,7 @@ const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/e
 const common_pg = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/pg.json`));
 
 const streaming_broker_options = {
-    clientId: "db-connector",
+    clientId: common_emqx["DB_CONNECTOR_CLIENT_ID"],
     keepalive: 120,
     protocolVersion: 5,
     clean: false,

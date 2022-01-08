@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const common_tts = JSON.parse(fs.readFileSync('./../../../common/tts.json'));
+const common_tts = JSON.parse(fs.readFileSync(`${__dirname}../../../common/tts.json`));
 
 const content = 
 `##--------------------------------------------------------------------

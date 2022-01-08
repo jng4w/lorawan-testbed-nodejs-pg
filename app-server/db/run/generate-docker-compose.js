@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-const common_pg = JSON.parse(fs.readFileSync('./../../common/pg.json'));
-const common_pgadmin = JSON.parse(fs.readFileSync('./../../common/pgadmin.json'));
+const common_pg = JSON.parse(fs.readFileSync(`${__dirname}../../common/pg.json`));
+const common_pgadmin = JSON.parse(fs.readFileSync(`${__dirname}../../common/pgadmin.json`));
 
 const content = 
 `version: \'3.8\'

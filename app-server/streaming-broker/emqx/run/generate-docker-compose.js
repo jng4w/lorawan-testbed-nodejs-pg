@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const common_emqx = JSON.parse(fs.readFileSync('./../../../common/emqx.json'));
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}../../../common/emqx.json`));
 
 const content = 
 `version: \'3\'
@@ -19,8 +19,8 @@ services:
         - ${common_emqx['SERVER_ADDR']}
     ports:
       - \"${common_emqx['MQTT_PORT']}:${common_emqx['MQTT_PORT']}\" 
-      - \"8081:8081\" 
-      - \"8083:8083\" 
+      - \"${common_emqx['HTTP_API_PORT']}:${common_emqx['HTTP_API_PORT']}\" 
+      - \"${common_emqx['WEBSOCKET_PORT']}:${common_emqx['WEBSOCKET_PORT']}\" 
       - \"8883:8883\" 
       - \"8084:8084\" 
       - \"18083:18083\"
