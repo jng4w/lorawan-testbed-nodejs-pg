@@ -9,7 +9,7 @@ exports.userProcessing = async (req, res, next) => {
         res.render('main/user', {
             error_flag: 0,
             message: "",
-            user: req.session
+            user: req.session.user
         })
     }
     else {
@@ -21,6 +21,16 @@ exports.userProcessing = async (req, res, next) => {
 }
 
 
+exports.editProfileProcessing = async (req, res, next) => {
 
+    // if(req.session.login){
+    //     try {
+    //     }
+    //     catch(err) {
+    //         console.log(err.detail);
+    //     }
+    // }
+
+}
 
 

@@ -3,14 +3,8 @@ var router = express.Router();
 const userController = require('../controllers/user.controller');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  
-    // Show user
+router.get('/', userController.userProcessing);
 
-    res.render('main/user');
-    //res.render('index', {result: result});
-});
-
-router.post('/edit', userController.userProcessing);
+router.post('user/edit', userController.editProfileProcessing);
 
 module.exports = router;

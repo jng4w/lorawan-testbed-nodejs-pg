@@ -50,7 +50,7 @@
                                         <i class="fas fa-user fa-sm text-gray-700"></i>
                                         <span class="ml-2">Name</span>
                                     </div>
-                                    <input type="text" class="form-control col-lg-6 classname" value="Duy Tinh Nguyen" readonly />
+                                    <input type="text" class="form-control col-lg-6 classname" value="<%=user.display_name%>" readonly />
 
                                     <hr class="w-50" style="margin-left: 0">
                                     <!-- Phone number -->
@@ -58,7 +58,7 @@
                                         <i class="fas fa-phone fa-sm text-gray-700"></i>
                                         <span class="ml-2">Phone Number</span>
                                     </div>
-                                    <input type="text" class="form-control col-lg-6 classname" value="0903530262" readonly />
+                                    <input type="text" class="form-control col-lg-6 classname" value="<%=user.phone_number%>" readonly />
 
                                     <hr class="w-50" style="margin-left: 0">
                                     <!-- Email -->
@@ -66,7 +66,7 @@
                                         <i class="fas fa-envelope fa-sm text-gray-700"></i>
                                         <span class="ml-2">Email</span>
                                     </div>
-                                    <input type="text" class="form-control col-lg-6 classname" value="jingnguyen10@gmail.com" readonly />
+                                    <input type="text" class="form-control col-lg-6 classname" value="<%=user.email%>" readonly />
                                     
                                     <div class="mb-4 mt-4">
                                         <span class="float-left">
@@ -106,6 +106,49 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+
+    <!-- Add Device Modal-->
+    <div class="modal fade" id="editProfile" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit profile</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="user/edit" class="user">
+                        <label for="user_name">User Name</label>
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user"
+                                id="InputUserName" aria-describedby="user_name" placeholder="<%=user.display_name%>" name="user_name">
+                        </div>
+
+                        <label for="user_phone_number">Phone Number</label>
+                        <div class="form-group">
+                            <input type="tel" class="form-control form-control-user" pattern="[0-9]+"
+                                id="InputUserPhoneNumber" aria-describedby="user_phone_number" placeholder="<%=user.phone_number%>" name="user_phone_number">
+                        </div>
+
+                        <label for="user_email">Email</label>
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-user"
+                                id="InputUserPhoneNumber" aria-describedby="user_email" placeholder="<%=user.email%>" name="user_email"
+                                pattern="[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*"/>
+                        </div>
+                        <!-- Submit button to add device to database-->
+                        <input type="submit" id="edit_profile" value="Edit profile" class="btn btn-primary btn-user btn-block">
+                        <hr>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

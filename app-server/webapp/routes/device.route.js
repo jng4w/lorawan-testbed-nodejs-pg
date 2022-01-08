@@ -7,4 +7,6 @@ router.get('/', deviceController.deviceProcessing);
 
 router.post('/add', deviceController.addDeviceProcessing);
 
+router.post('/configure', deviceController.configureDeviceProcessing);
+
 module.exports = router;

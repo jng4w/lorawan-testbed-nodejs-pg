@@ -77,7 +77,11 @@
                                                     <%}%>
                                                 </div>
                                             <td class="align-middle" id="battery">5V</td>
-                                            <td class="align-middle"><button type="button" class="btn btn-light btn-sm">Configure</button></td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#<%=sensor[i].dev_id%>">
+                                                    Configure
+                                                </button>
+                                            </td>
                                         </tr>
                                         <%};%>
                                         <!-- <tr>
@@ -129,7 +133,7 @@
 
             </div>
             <!-- End of Main Content -->
-
+            
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -146,13 +150,60 @@
     </div>
     <!-- End of Page Wrapper -->
 
+    <!-- Phần configure device này sẽ để sẵn các ô input và select, sẽ tùy cơ ứng biến mà chỉnh lại sau-->
+    
+    <!-- Configure Device Modal-->
+    <!-- Iteration to create multiple unique modals for each device's configure button (unique dev_id) -->
+    <% for(let i=0; i< sensor.length; i++){%>
+    <div class="modal fade" id="<%=sensor[i].dev_id%>" tabindex="-1" role="dialog" aria-labelledby="configureDeviceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="configureDeviceModalLabel">Configure device</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Device ID: <%=sensor[i].dev_id%></p>
+                    <hr>
+                    <!-- action="device/configure" -->
+                    <form method="post" action="" class="user">
+                        <label for="device_name">Device Name</label>
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user"
+                                id="configureDeviceName" aria-describedby="device_name"
+                                placeholder="Enter Device name" name="enddev_name">
+                        </div>
+                        <!-- Nếu có làm option đổi board, thì ở controller trả về thêm biến board
+                        trước khi render page device, sau đó list các board ra ở tag select này-->
+                    
+                        <label for="configureDeviceGroup">Dashboard</label>
+                        <select class="form-control mb-4" id="configureDeviceGroup">
+                            <option selected value="1">Garden 1</option>
+                            <option value="2">Garden 2</option>
+                            <option value="3">Garden 3</option>
+                        </select>
+                        <input type="submit" id="configure_device" value="Confirm changes" class="btn btn-primary btn-user btn-block">
+                        <hr>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%};%>
+
     <!-- Add Device Modal-->
     <div class="modal fade" id="addDeviceModal" tabindex="-1" role="dialog" aria-labelledby="addDeviceModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add device</h5>
+                    <h5 class="modal-title" id="addDeviceModalLabel">Add device</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -161,17 +212,15 @@
                     <form method="post" action="device/add" class="user">
                         <div class="form-group">
                             <input type="text" class="form-control form-control-user"
-                                id="InputDeviceID" aria-describedby="emailHelp"
+                                id="InputDeviceID" aria-describedby="device_ID"
                                 placeholder="Enter Device ID..." name="enddev_id">
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control form-control-user"
                                 id="InputDevicePassword" placeholder="Enter activation code..." name="act_code">
                         </div>
-                        <!-- <a href="#" class="btn btn-primary btn-user btn-block">
-                            Add device
-                        </a> -->
-                        <input type="submit" value="Add device" class="btn btn-primary btn-user btn-block">
+                        <!-- Submit button to add device to database-->
+                        <input type="submit" id="add_device" value="Add device" class="btn btn-primary btn-user btn-block">
                         <hr>
                     </form>
                 </div>
@@ -183,12 +232,12 @@
     </div>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="logoutModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
