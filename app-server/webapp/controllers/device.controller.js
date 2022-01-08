@@ -33,6 +33,18 @@ exports.addDeviceProcessing = async (req, res, next) => {
 
 }
 
+exports.configureDeviceProcessing = async (req, res, next) => {
+
+    // if(req.session.login){
+    //     try {
+    //     }
+    //     catch(err) {
+    //         console.log(err.detail);
+    //     }
+    // }
+
+}
+
 
 
 

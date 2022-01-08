@@ -3,98 +3,175 @@
 
 <head>
 
-    <title>Register</title>
+    <title>LoraWAN TestBed - User</title>
     
     <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
-    <%- include ('../partials/libs') %>
+    <!-- Global level stylesheet -->
+    <%- include('../partials/libs.ejs') %>
 
 </head>
 
-<body class="bg-gradient-primary">
+<body id="page-top">
 
-    <div class="container">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
 
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
+        <%- include('../partials/navbar.ejs') %>
 
-            <div class="col-xl-6 col-lg-6 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Your profile</h1>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include('../partials/header.ejs') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-1 text-gray-800">User</h1>
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <!-- Grow In Utility -->
+                        <div class="col-lg-6">
+
+                            <div class="card position-relative">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Profile</h6>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Name -->
+                                    <div class="large mb-1 align-bottom">
+                                        <i class="fas fa-user fa-sm text-gray-700"></i>
+                                        <span class="ml-2">Name</span>
                                     </div>
-                                    <% if(error_flag) { %>
-                                    <div class="alert alert-danger text-danger text-center small">
-                                        <%= message %>
+                                    <input type="text" class="form-control col-lg-6 classname" value="<%=user.display_name%>" readonly />
+
+                                    <hr class="w-50" style="margin-left: 0">
+                                    <!-- Phone number -->
+                                    <div class="large mb-1 align-bottom">
+                                        <i class="fas fa-phone fa-sm text-gray-700"></i>
+                                        <span class="ml-2">Phone Number</span>
                                     </div>
-                                    <% } %>
-                                    <form method="post" class="user">
-                                        <div class="form-group row">
-                                            <div class="col-sm-2 mb-3 mb-sm-0">
-                                                <label for="name"><h5>Name: </h5></label>
-                                                
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control form-control-user"
-                                                    id="exampleLastName" value="<%=user.display_name%>" name="lname">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-2 mb-3 mb-sm-0">
-                                                <label for="name"><h5>Email: </h5></label>
-                                                
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" value="<%=user.email%>" name="email">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-2 mb-3 mb-sm-0">
-                                                <label for="name"><h5>Phone: </h5></label>
-                                                
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control form-control-user"
-                                                id="exampleInputPhone" value="<%=user.phone_number%>" name="phone">
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- <div class="form-group row">
-                                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                                <input type="password" class="form-control form-control-user"
-                                                    id="exampleInputPassword" placeholder="Password" name="psw">
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <input type="password" class="form-control form-control-user"
-                                                    id="exampleRepeatPassword" placeholder="Repeat Password">
-                                            </div>
-                                        </div> -->
-                                        <!-- <a href="#" class="btn btn-primary btn-user btn-block">
-                                            Register Account
-                                        </a> -->
-                                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Edit">
-                                    </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="#">Forgot Password?</a>
+                                    <input type="text" class="form-control col-lg-6 classname" value="<%=user.phone_number%>" readonly />
+
+                                    <hr class="w-50" style="margin-left: 0">
+                                    <!-- Email -->
+                                    <div class="large mb-1 align-bottom">
+                                        <i class="fas fa-envelope fa-sm text-gray-700"></i>
+                                        <span class="ml-2">Email</span>
                                     </div>
-                                    <!-- <div class="text-center">
-                                        <a class="small" href="../login">Already have an account? Login!</a>
-                                    </div> -->
+                                    <input type="text" class="form-control col-lg-6 classname" value="<%=user.email%>" readonly />
+                                    
+                                    <div class="mb-4 mt-4">
+                                        <span class="float-left">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#editProfile">Edit profile</button>
+                                        </span>
+                                    </div>  
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Add Device Modal-->
+    <div class="modal fade" id="editProfile" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit profile</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="user/edit" class="user">
+                        <label for="user_name">User Name</label>
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user"
+                                id="InputUserName" aria-describedby="user_name" placeholder="<%=user.display_name%>" name="user_name">
+                        </div>
+
+                        <label for="user_phone_number">Phone Number</label>
+                        <div class="form-group">
+                            <input type="tel" class="form-control form-control-user" pattern="[0-9]+"
+                                id="InputUserPhoneNumber" aria-describedby="user_phone_number" placeholder="<%=user.phone_number%>" name="user_phone_number">
+                        </div>
+
+                        <label for="user_email">Email</label>
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-user"
+                                id="InputUserPhoneNumber" aria-describedby="user_email" placeholder="<%=user.email%>" name="user_email"
+                                pattern="[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*"/>
+                        </div>
+                        <!-- Submit button to add device to database-->
+                        <input type="submit" id="edit_profile" value="Edit profile" class="btn btn-primary btn-user btn-block">
+                        <hr>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
-
     </div>
+    
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="../login">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Global level plugins --> 
+    <%- include('../partials/script.ejs') %>
 
 </body>
 
