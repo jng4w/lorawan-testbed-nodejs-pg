@@ -22,10 +22,13 @@ exports.addDeviceProcessing = async (req, res, next) => {
     if(req.session.login){
         try {
             (await Index.insertDeviceToCustomer(req.session.user.id, req.body.enddev_id)).rows;
-            res.redirect('device');
+            var sensorQuery = (await Index.selectDeviceSensorFromCustomer(db_res.rows[0]._id)).rows;
+            req.session.sensor = sensorQuery;
+            res.redirect('/device');
         }
         catch(err) {
             console.log(err.detail);
+            res.redirect('/device');
         }
     }
     

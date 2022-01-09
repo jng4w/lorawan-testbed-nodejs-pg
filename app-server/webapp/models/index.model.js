@@ -70,6 +70,21 @@ async function insertProfile(email, phone, password, type, name){
 //     );
 //     return res;
 // }
+async function selectDeviceFromCustomer(id){
+
+    const res = await client.query(
+        `select dev_id
+        public."OWN" as O, public."ENDDEV" as E
+        where
+        O.enddev_id = E._id and
+        O.profile_id = $1
+        group by
+        dev_id;    
+        `,
+        [id]
+    );
+    return res;
+}
 
 async function selectDeviceSensorFromCustomer(id){
 
@@ -124,7 +139,7 @@ module.exports = {
     checkProfileExist: checkProfileExist,
     checkProfileExistRegister: checkProfileExistRegister,
     insertProfile: insertProfile,
-    // selectDeviceFromCustomer: selectDeviceFromCustomer,
+    selectDeviceFromCustomer: selectDeviceFromCustomer,
     selectDeviceSensorFromCustomer: selectDeviceSensorFromCustomer,
     selectBoardWidgetFromCustomer: selectBoardWidgetFromCustomer,
     insertDeviceToCustomer: insertDeviceToCustomer
