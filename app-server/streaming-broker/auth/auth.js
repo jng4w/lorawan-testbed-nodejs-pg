@@ -84,7 +84,7 @@ function streaming_broker_message_handler(topic, message, packet)
                 result.rows.forEach((item)=>{
                 dev_list.push(item.dev_id);
             });
-            emqx_http.del_client_acl_on_dev_topic(client_info[2], dev_list);
+            emqx_http.del_client_acl_on_dev_topic(parsed_message['clientid'], dev_list);
         })
         .catch((err) => {
             console.log(err);

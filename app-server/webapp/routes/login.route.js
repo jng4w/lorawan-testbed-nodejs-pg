@@ -8,8 +8,11 @@ const { validator } = require('../controllers/validator.controller');
 router.get('/', function(req, res, next) {
     // if(!req.session.login){
         // Show form dang nhap => loginProcessing
+        if(!req.session.login){
+            res.render('main/login', {error_flag: 0});
+        }
+        else res.redirect('/dashboard');
         
-        res.render('main/login', {error_flag: 0});
         //res.render('index', {result: result});
     // }
     
