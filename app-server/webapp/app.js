@@ -40,7 +40,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
 	secret: 'secret',
 	resave: true,
-	saveUninitialized: true
+	saveUninitialized: true,
+  rolling: true,
+  cookie: {
+ 
+    // Session expires after a time of inactivity.
+    
+    // maxAge: 10000
+}
 }));
 
 app.use(bodyParser.urlencoded({ extended: true }));
