@@ -1,40 +1,66 @@
-const Index = require('../models/index.model');
+const streaming_broker_protocol = "ws"; //pass from server
+const streaming_broker_addr = "127.0.0.1"; //pass from server
+const streaming_broker_port = 8083; //pass from server
 
-var mqtt_server_ip = "127.0.0.1";
-var mqtt_server_port = 8083;
-var client_id = "enduser-1";
-
+//pass from server
 const devices = [
     "eui-a84041a54182a79f"
 ];
-var mqtt_topic_prefix = "devices/";
-var mqtt_topics_list = [];
-options = {
+
+//pass from server
+const streaming_broker_options = {
     clientId: "enduser-1",
-    clean: true
+    keepalive: 120,
+    protocolVersion: 5,
+    clean: false,
+    properties: {  // MQTT 5.0
+        sessionExpiryInterval: 5
+    },
+    resubscribe: false
 }
 
-//handle incoming message
-function mqtt_message_handler(topic, message, packet)
-{
-    var data = JSON.parse(message).payload_data;
-    // console.log(Object.keys(data));
-
-    for(var k in data) {
-        // console.log(k, data[k]);
-        document.getElementById(k).innerHTML = data[k];
-     }
+const sub_topics = [];
+devices.forEach((device_id) => {
+    sub_topics.push({
+        'topic': `devices/${device_id}/up/payload`,
+        'options': {
+            'qos': 0
+        }
+    });
+});
     
-}
+const streaming_broker_mqttclient = mqtt.connect(
+    `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}/mqtt`, 
+    streaming_broker_options
+);
+
+streaming_broker_mqttclient.on('connect', streaming_broker_connect_handler);
+streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
+streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
 
 //handle incoming connect
-function mqtt_connect_handler()
+function streaming_broker_connect_handler(connack)
 {
-    console.log("user mqtt connected  " + mqtt_client.connected);
+    console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
+    if (connack.sessionPresent == false) {
+        sub_topics.forEach((topic) => {
+            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+        });
+    }
 }
 
-//handle error
-function mqtt_error_handler()
+//MESSAGE SEND HERE
+function streaming_broker_message_handler(topic, message, packet)
 {
-    console.log("Can't connect to broker" + error);
+    //parse msg
+    let parsed_message = JSON.parse(message);
+    //CONTINUE
+    document.getElementById("data-payload").innerHTML = parsed_message;
+}
+
+// handle error
+function streaming_broker_error_handler(error)
+{
+    console.log("Can't connect to streaming broker" + error);
+    process.exit(1);
 }

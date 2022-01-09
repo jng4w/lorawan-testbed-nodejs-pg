@@ -11,7 +11,7 @@ function generateClientBrokerId(id){
 exports.loginProcessing = async (req, res, next) => {
     // console.log(req.body.uname, req.body.psw);
     // console.log(Index.checkProfileExist(req.body.uname, req.body.psw));
-    console.log(generateClientBrokerId());
+    
     var db_res = await Index.checkProfileExist(req.body.uname, req.body.psw);
     
     if(db_res.rowCount){
@@ -21,6 +21,7 @@ exports.loginProcessing = async (req, res, next) => {
         req.session.login = 1;
         req.session.user = {};
         req.session.user.id = db_res.rows[0]._id;
+        
         req.session.user.display_name = db_res.rows[0].display_name;
         req.session.user.phone_number = db_res.rows[0].phone_number;
         req.session.user.email = db_res.rows[0].email;
@@ -45,7 +46,7 @@ exports.loginProcessing = async (req, res, next) => {
 
         var sensorQuery = (await Index.selectDeviceSensorFromCustomer(db_res.rows[0]._id)).rows;
         req.session.sensor = sensorQuery;
-        req.session.dev.client_id = generateClientBrokerId(req.session.user.id);
+        req.session.dev.client_id = (await generateClientBrokerId(req.session.user.id));
         
         let dev_list = []
         sensorQuery.forEach((item)=>{
@@ -62,7 +63,7 @@ exports.loginProcessing = async (req, res, next) => {
         //         console.log(index, 'Object');
         //     }
         // })
-        // emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
         res.redirect('/dashboard');
     }
     else {
