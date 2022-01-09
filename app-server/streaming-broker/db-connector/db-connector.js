@@ -1,11 +1,13 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/emqx.json`));
-const common_pg = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/pg.json`));
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../common/emqx.json`));
+const common_pg = JSON.parse(fs.readFileSync(`${__dirname  }/../../common/pg.json`));
 
 const streaming_broker_options = {
     clientId: common_emqx["DB_CONNECTOR_CLIENT_ID"],
+    username: common_emqx["SYSTEM_USERNAME"],
+    password: common_emqx["SYSTEM_PASSWORD"],
     keepalive: 120,
     protocolVersion: 5,
     clean: false,
@@ -82,65 +84,6 @@ async function streaming_broker_message_handler(topic, message, packet)
     } catch (err) {
         console.log(err.stack);
     }
-
-    /*
-    try {
-        //insert enddev payload
-        await db_pool.query(
-            "INSERT INTO public.\"ENDDEV_PAYLOAD\" (recv_timestamp, payload_data, enddev_id)\
-            VALUES ($1, $2, (SELECT _id FROM public.\"ENDDEV\" WHERE dev_id = $3) )",
-            [
-                parsed_message['payload']['recv_timestamp'],
-                parsed_message['payload']['payload_data'],
-                parsed_message['metadata']['dev_identifiers']['dev_id']
-            ]
-        );
-    }
-    catch (err) {
-        //console.log(err.stack);
-        //if insert payload failed -> not exist enddev, then insert enddev
-        let res = await db_pool.query(
-            "INSERT INTO public.\"ENDDEV\" (display_name, dev_id, dev_addr, join_eui, dev_eui, dev_type, dev_brand, dev_model, dev_band)\
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING _id",
-            [
-                parsed_message['metadata']['dev_identifiers']['dev_id'],
-                parsed_message['metadata']['dev_identifiers']['dev_id'],
-                parsed_message['metadata']['dev_identifiers']['dev_addr'],
-                parsed_message['metadata']['dev_identifiers']['join_eui'],
-                parsed_message['metadata']['dev_identifiers']['dev_eui'],
-                parsed_message['metadata']['dev_version']['dev_type'],
-                parsed_message['metadata']['dev_version']['dev_brand'],
-                parsed_message['metadata']['dev_version']['dev_model'],
-                parsed_message['metadata']['dev_version']['dev_band']
-            ]
-        );
-        //get enddev_id for later used
-        const enddev_id = res.rows[0]['_id'];
-
-        //insert sensor_key
-        Object.keys(parsed_message['payload']['payload_data'])
-        .forEach(async (sensor_key) => {
-            await db_pool.query(
-                "INSERT INTO public.\"SENSOR\" (sensor_key, enddev_id)\
-                VALUES ($1, $2)",
-                [sensor_key, enddev_id]
-            );
-        });
-
-        //map appropriate unit to sensor
-
-        //insert payload again
-        await db_pool.query(
-            "INSERT INTO public.\"ENDDEV_PAYLOAD\" (recv_timestamp, payload_data, enddev_id)\
-            VALUES ($1, $2, (SELECT _id FROM public.\"ENDDEV\" WHERE dev_id = $3) )",
-            [
-                parsed_message['payload']['recv_timestamp'],
-                parsed_message['payload']['payload_data'],
-                parsed_message['metadata']['dev_identifiers']['dev_id']
-            ]
-        );
-    }
-    */
 }
 
 // handle error

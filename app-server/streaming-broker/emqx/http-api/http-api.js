@@ -17,7 +17,7 @@ async function add_client_acl_on_dev_topic(client_id, dev_list) {
         })
         .catch((err) => {
             console.log(err);
-        })
+        });
 }
 
 async function del_client_acl_on_dev_topic(client_id, dev_list) {

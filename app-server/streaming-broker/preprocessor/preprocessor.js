@@ -1,10 +1,12 @@
 const mqtt = require('mqtt');
 const fs = require('fs');
 
-const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../../common/emqx.json`));
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../common/emqx.json`));
 
 const streaming_broker_options = {
     clientId: common_emqx["PREPROCESSOR_CLIENT_ID"],
+    username: common_emqx["SYSTEM_USERNAME"],
+    password: common_emqx["SYSTEM_PASSWORD"],
     keepalive: 120,
     protocolVersion: 5,
     clean: false,

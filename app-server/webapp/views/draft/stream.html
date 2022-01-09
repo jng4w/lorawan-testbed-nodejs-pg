@@ -20,7 +20,7 @@
                 protocolVersion: 5,
                 clean: false,
                 properties: {  // MQTT 5.0
-                    sessionExpiryInterval: 300
+                    sessionExpiryInterval: 5
                 },
                 resubscribe: false
             }
@@ -36,7 +36,7 @@
             });
                 
             const streaming_broker_mqttclient = mqtt.connect(
-                `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}`, 
+                `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}/mqtt`, 
                 streaming_broker_options
             );
 

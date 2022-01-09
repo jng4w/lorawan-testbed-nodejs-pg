@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}../../../common/emqx.json`));
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}/../../../common/emqx.json`));
 
 const content = 
 `version: \'3\'

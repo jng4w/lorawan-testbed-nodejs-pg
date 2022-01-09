@@ -17,6 +17,8 @@ const network_server_mqtt_options = {
 
 const streaming_broker_options = {
     clientId: common_emqx["TTS_BRIDGE_CLIENT_ID"],
+    username: common_emqx["SYSTEM_USERNAME"],
+    password: common_emqx["SYSTEM_PASSWORD"],
     keepalive: 120,
     protocolVersion: 5,
     clean: false,
