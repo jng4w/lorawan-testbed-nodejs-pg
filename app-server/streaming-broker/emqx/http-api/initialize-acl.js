@@ -44,7 +44,32 @@ emqx_http.post('api/v4/acl', [
         topic: `devices/+/up/payload`,
         action: `pub`,
         access: `allow`
+    },
+    {
+        clientid: `${common_emqx["AUTH_CLIENT_ID"]}`,
+        topic: `$SYS/brokers/+/clients/+/disconnected`,
+        action: `sub`,
+        access: `allow`
     }
+
+])
+.then((res) => {
+    console.log(res);
+})
+.catch((err) => {
+    console.log(err);
+});
+
+emqx_http.post('api/v4/auth_username', [
+    {
+        username: common_emqx['ENDUSER_USERNAME'],
+        password: common_emqx['ENDUSER_PASSWORD'],
+    },
+
+    {
+        username: common_emqx['SYSTEM_USERNAME'],
+        password: common_emqx['SYSTEM_PASSWORD'],
+    },
 ])
 .then((res) => {
     console.log(res);
