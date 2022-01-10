@@ -15,21 +15,21 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item <%= title === 'Dashboard' && 'active' %>">
         <a class="nav-link" href="../dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
+    <li class="nav-item <%= title === 'Device' && 'active' %>">
         <a class="nav-link" href="../device">
             <i class="fas fa-fw fa-microchip"></i>
             <span>Device</span></a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
+    <li class="nav-item <%= title === 'User' && 'active' %>">
         <a class="nav-link" href="../user">
             <i class="fas fa-fw fa-user"></i>
             <span>User</span>
@@ -45,8 +45,8 @@
     </div>
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+    <li class="nav-item <%= title === 'Setting' && 'active' %>">
+        <a class="nav-link" href="#">
             <i class="fas fa-fw fa-cog"></i>
             <span>Setting</span></a>
     </li>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 
-    <title>LoraWAN TestBed - Dashboard</title>
+    <title>LoraWAN TestBed - <%=title%></title>
     
     <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
     <!-- Global level stylesheet -->
@@ -109,7 +109,7 @@
 
 </head>
 
-<body>
+<body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -131,8 +131,21 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
+                    <!-- Change Dashboard dropdown menu -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <div class="nav-item dropdown">
+                            <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
+                                role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                Board 1
+                        </button>
+                            <div class="dropdown-menu dropdown-menu-left animated--fade-in"
+                            aria-labelledby="changeDashboard">
+                                <a class="dropdown-item" href="#" onclick="">Board 1</a>
+                                <a class="dropdown-item" href="#" onclick="">Board 2</a>
+                                <a class="dropdown-item" href="#" onclick="">Board 3</a>
+                            </div>
+                        </div>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>
@@ -140,7 +153,7 @@
                     <!-- Content Row -->
                     <div class="row">
 
-                        <!-- Temperature Card Example -->
+                        <!-- Widget Card Example -->
                         <%for(let i=0; i< boardWidget.length ; i++){ %>
                         <%if(boardWidget[i].board_id == 8) {%>
                         <%var config = boardWidget[i].config_dict; %>
@@ -154,70 +167,96 @@
                                              <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>">[blank]</div>  <!--31.2&#176;C -->
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-<%=config.view.icon%> fa-2x text-gray-300"></i>
+                                            <div class="dropdown no-arrow">
+                                                <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-configure"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                                </a>
+                                                <!-- Configure dropdown menu -->
+                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                    aria-labelledby="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-configure">
+
+                                                    <a class="dropdown-item" href="#" data-toggle="modal"
+                                                    data-target="#<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-edit">Edit widget</a>
+
+                                                    <a class="dropdown-item" href="#" data-toggle="modal"
+                                                    data-target="#<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-delete">Delete widget</a>
+
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!------------------------------------------------------------------------------------------------------------------------>
+                        <!-- Configure Widget Modals for unique Widgets -->
+                        <div class="modal fade" id="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-edit"
+                            tabindex="-1" role="dialog" aria-labelledby="configureSensorModalLabel" aria-hidden="true">
+
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="configureSensorModalLabel">Configure Widget</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Widget ID: <%=boardWidget[i].sensor_key%></p>
+                                        <hr>
+                                        <!-- action="device/configure" -->
+                                        <form method="post" action="" class="user">
+                                            <!-- Input type Text -->
+                                            <label for="widget_name">Widget Name</label>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                    id="configureWidgetName" aria-describedby="widget_name"
+                                                    placeholder="Enter Widget name" name="widget_name">
+                                            </div>
+                                            <!-- Input type Select -->
+                                            <label for="configureSensorData">Display Data</label>
+                                            <select class="form-control mb-4" id="configureSensorData">
+                                                <option selected value="1">Temperature</option>
+                                                <option value="2">Hudmidity</option>
+                                                <option value="3">Bat5V</option>
+                                            </select>
+                                            <input type="submit" id="sensor" value="Confirm changes" class="btn btn-primary btn-user btn-block">
+                                            <hr>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delete Widget Modals for unique Widgets -->
+                        <div class="modal fade" id="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-delete"
+                            tabindex="-1" role="dialog" aria-labelledby="deleteSensorModalLabel" aria-hidden="true">
+
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteSensorModalLabel">Delete this widget?</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">Select <b style="color: #2F69CA">Delete</b> button to remove this widget from the board.</div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                        <button class="btn btn-primary" type="button" action="">Delete</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <%}%>
                         <%}%>
-                        <!-- Air Humidity Card Example -->
-                        <!-- <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Air Humidity</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">58.5%</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
 
-                        <!-- Soil Temperature Card Example -->
-                        <!-- <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Soil Temperature</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">29.5&#176;C</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <!-- Soil Humidity Card Example -->
-                        <!-- <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Soil Humidity</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">71.9%</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
-
-                   
 
                 </div>
 
@@ -236,11 +275,7 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-    
+    <!-- Global Modals-->
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -260,7 +295,12 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
     <!-- Global level plugins --> 
     <%- include('../partials/script.ejs') %>
 
