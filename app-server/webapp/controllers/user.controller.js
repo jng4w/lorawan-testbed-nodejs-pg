@@ -9,7 +9,8 @@ exports.userProcessing = async (req, res, next) => {
         res.render('main/user', {
             error_flag: 0,
             message: "",
-            user: req.session.user
+            user: req.session.user,
+            title: "User"
         })
     }
     else {

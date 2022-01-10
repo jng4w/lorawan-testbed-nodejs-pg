@@ -11,7 +11,7 @@
   });
 
   // Close any open menu accordions when window is resized below 768px
-  $(window).resize(function() {
+  $(window).on('resize', function() {
     if ($(window).width() < 768) {
       $('.sidebar .collapse').collapse('hide');
     };
@@ -52,5 +52,21 @@
     }, 1000, 'easeInOutExpo');
     e.preventDefault();
   });
+
+  $('.navbar-nav .nav-item').on('click', function(){
+    $('.navbar-nav .nav-item').removeClass('active');
+    $(this).addClass('active');
+})
+
+  // $(document).on('ready', function() {
+  //     $(".navbar-nav .nav-link").on("click", function(event) {
+  //         event.preventDefault();
+  //         var clickedItem = $( this );
+  //         $(".navbar-nav .nav-link").each( function() {
+  //             $( this ).removeClass( "active" );
+  //         });
+  //         clickedItem.addClass( "active" );
+  //     });
+  // });
 
 })(jQuery); // End of use strict

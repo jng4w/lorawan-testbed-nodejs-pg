@@ -20,7 +20,8 @@ exports.deviceProcessing = async (req, res, next) => {
             sensor: req.session.sensor,
             dev_list: dev_list,
             client_id: req.session.dev.client_id,
-            broker: broker
+            broker: broker,
+            title: "Device"
         });
     }
     else {

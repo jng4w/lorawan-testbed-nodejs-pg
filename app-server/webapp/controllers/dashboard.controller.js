@@ -24,7 +24,8 @@ exports.dashboardProcessing = async (req, res, next) => {
             boardWidget: (await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows,
             dev_list: dev_list,
             client_id: req.session.dev.client_id,
-            broker: broker
+            broker: broker,
+            title: "Dashboard"
         });
     }
     else {
