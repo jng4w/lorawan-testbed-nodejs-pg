@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./tts-bridge/using-nodejs/tts-bridge.js & node ./preprocessor/preprocessor.js & node ./db-connector/db-connector.js & node ./auth/auth.js &",
+    "stop": "pkill --signal SIGINT tts-bridge && pkill --signal SIGINT preprocessor && pkill --signal SIGINT db-connector && pkill --signal SIGINT auth"
   },
   "author": "",
   "license": "ISC",

@@ -9,7 +9,7 @@
     "SYSTEM_PASSWORD": "xgeVOB89kyEVpHTfgKGg",
     "ENDUSER_USERNAME": "bz7AaQzqSnfWeicreBQz",
     "ENDUSER_PASSWORD": "YuBnmreoWUUtZK5j1o1w",
-    "TTS_BRIDGE_CLIENT_ID": "tss-bridge",
+    "TTS_BRIDGE_CLIENT_ID": "tts-bridge",
     "DB_CONNECTOR_CLIENT_ID": "db-connector",
     "PREPROCESSOR_CLIENT_ID": "preprocessor",
     "AUTH_CLIENT_ID": "auth-client",

@@ -1,3 +1,7 @@
+process.title = "auth";
+
+/* ============================= */
+
 const mqtt = require('mqtt');
 const { Pool } = require('pg');
 const fs = require('fs');

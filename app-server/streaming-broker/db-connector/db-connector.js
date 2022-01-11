@@ -1,3 +1,7 @@
+process.title = "db-connector";
+
+/* ============================= */
+
 const mqtt = require('mqtt');
 const fs = require('fs');
 
