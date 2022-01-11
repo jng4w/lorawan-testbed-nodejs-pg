@@ -49,21 +49,13 @@ exports.loginProcessing = async (req, res, next) => {
         req.session.dev.client_id = (await generateClientBrokerId(req.session.user.id));
         
         let dev_list = []
-        sensorQuery.forEach((item)=>{
+        req.session.sensor.forEach((item)=>{
             dev_list.push(item.dev_id);
         });
-        // console.log(sensorQuery);
         
-        // console.log(client_list[0]);
-        // client_list.forEach((item, index)=>{
-        //     if(item == null) {
-        //         console.log(index, 'NULL');
-        //     }
-        //     else {
-        //         console.log(index, 'Object');
-        //     }
-        // })
         await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        
+        
         res.redirect('/dashboard');
     }
     else {

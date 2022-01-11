@@ -107,7 +107,7 @@ async function selectDeviceSensorFromCustomer(id){
 async function selectBoardWidgetFromCustomer(id){
 
     const res = await client.query(
-        `select E.dev_id as e_dev_id, W.display_name as w_display_name, *
+        `select E.dev_id as e_dev_id, W.display_name as w_display_name, B.display_name as b_display_name, *
         from
         public."BOARD" as B, public."WIDGET" as W, 
 		public."BELONG_TO" as BT, public."SENSOR" as S, public."ENDDEV" as E

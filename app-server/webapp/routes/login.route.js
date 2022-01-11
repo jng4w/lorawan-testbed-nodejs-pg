@@ -21,4 +21,8 @@ router.get('/', function(req, res, next) {
 
 router.post('/', loginController.loginProcessing); 
 
+router.post('/logout', (req, res, next) => {
+    req.session.destroy();
+}); 
+
 module.exports = router;

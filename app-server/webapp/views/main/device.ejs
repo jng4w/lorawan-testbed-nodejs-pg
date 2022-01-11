@@ -15,14 +15,14 @@
         //     }
         
         const streaming_broker_protocol = "ws"; //pass from server
-        const streaming_broker_addr = "127.0.0.1"; //pass from server
-        const streaming_broker_port = 8083; //pass from server
+        const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
+        const streaming_broker_port = '<%= broker.port %>'; //pass from server
 
         //pass from server
         // const devices = [
         //     "eui-a84041a54182a79f"
         // ];
-        const devices = ['<%= dev_list %>'];
+        const devices = '<%= dev_list %>'.split(",");
         //pass from server
         const streaming_broker_options = {
             clientId: '<%= client_id %>',
@@ -60,10 +60,12 @@
         function streaming_broker_connect_handler(connack)
         {
             console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
-           
-            sub_topics.forEach((topic) => {
-                streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
-            });
+        //    if(connack.sessionPresent==false){
+                sub_topics.forEach((topic) => {
+                    streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+                });
+        //    }
+            
             
         }
         
@@ -150,7 +152,7 @@
                                     <thead>
                                         <tr>
                                             <th>Device name</th>
-                                            <th>Dashboard</th>
+                                            <!-- <th>Dashboard</th> -->
                                             <th>No. sensors</th>
                                             <th>Data</th>
                                             <th id="battery"><i class="fas fa-battery-three-quarters fa-lg fa-fw mr-2"></i></th>
@@ -164,7 +166,7 @@
                                             
                                             <td class="align-middle"><%=sensor[i].dev_id%></td>
                                             
-                                            <td class="align-middle">Garden 1</td>
+                                            <!-- <td class="align-middle">Garden 1</td> -->
                                             <td class="align-middle"><%=sensor[i].sensor_key_arr.length%></td>
                                             <td class="align-middle">     
                                                 <div class="row row-cols-md-2 no-gutters">
