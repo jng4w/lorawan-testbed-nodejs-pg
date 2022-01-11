@@ -135,19 +135,109 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div class="nav-item dropdown">
                             <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
-                                role="button" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
+                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Board 1
-                        </button>
+                            </button>
                             <div class="dropdown-menu dropdown-menu-left animated--fade-in"
                             aria-labelledby="changeDashboard">
                                 <a class="dropdown-item" href="#" onclick="">Board 1</a>
                                 <a class="dropdown-item" href="#" onclick="">Board 2</a>
                                 <a class="dropdown-item" href="#" onclick="">Board 3</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" role="button" data-toggle="modal" data-target="#addBoardModal">
+                                    <i class="fas fa-plus fa-sm text-gray-600"></i>&nbsp;Add board
+                                </a>
                             </div>
                         </div>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                            role="button" data-toggle="modal" data-target="#addWidgetModal">
+                        
+                            <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;Add widget
+                        </a>
+                        
+                        <!-- Add Board Modal-->
+                        <div class="modal fade" id="addBoardModal" tabindex="-1" role="dialog" aria-labelledby="addBoardModalLabel"
+                        aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addBoardModalLabel">Add board</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- action="device/configure" -->
+                                        <form method="post" action="dashboard/add-board" class="user">
+                                            <!-- Input type Text -->
+                                            <label for="board_name">Board Name</label>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                    id="addWidgetName" aria-describedby="board_name"
+                                                    placeholder="Enter Board name" name="addboard_name">
+                                            </div>
+                                            <!-- Select type Select -->
+                                            <label for="addBoardDevice">Device</label>
+                                            <select class="form-control mb-4" id="addBoardDevice">
+                                                <option selected value="1">Device 1</option>
+                                                <option value="2">Device 2</option>
+                                                <option value="3">Device 3</option>
+                                            </select>
+                                            <input type="submit" id="add_board" value="Add board" class="btn btn-primary btn-user btn-block">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Widget Modal-->
+                        <div class="modal fade" id="addWidgetModal" tabindex="-1" role="dialog" aria-labelledby="addWidgetModalLabel"
+                        aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addWidgetModalLabel">Add widget</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- action="device/configure" -->
+                                        <form method="post" action="dashboard/add-widget" class="user">
+                                            <!-- Input type Text -->
+                                            <label for="widget_name">Widget Name</label>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                    id="addWidgetName" aria-describedby="widget_name"
+                                                    placeholder="Enter Widget name" name="endwidget_name">
+                                            </div>
+                                            <!-- Select type Select -->
+                                            <label for="addWidgetType">Widget Type</label>
+                                            <select class="form-control mb-4" id="addWidgetType">
+                                                <option selected value="1">Card</option>
+                                                <option value="2">Chart</option>
+                                                <option value="3">Table</option>
+                                            </select>
+                                            <!-- Select type Select -->
+                                            <label for="addWidgetData">Data</label>
+                                            <select class="form-control mb-4" id="addWidgetData">
+                                                <option selected value="1">AIRTEMP</option>
+                                                <option value="2">AIRHUMID</option>
+                                                <option value="3">ADC_CH0V</option>
+                                            </select>
+                                            <input type="submit" id="add_widget" value="Confirm changes" class="btn btn-primary btn-user btn-block">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
               
                     <!-- Content Row -->
