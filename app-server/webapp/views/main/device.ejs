@@ -150,7 +150,6 @@
                                     <thead>
                                         <tr>
                                             <th>Device name</th>
-                                            <th>Dashboard</th>
                                             <th>No. sensors</th>
                                             <th>Data</th>
                                             <th id="battery"><i class="fas fa-battery-three-quarters fa-lg fa-fw mr-2"></i></th>
@@ -161,11 +160,11 @@
                                         
                                         <% for(let i=0; i< sensor.length; i++){%>
                                         <tr>
-                                            
+                                            <!-- Device name -->
                                             <td class="align-middle"><%=sensor[i].dev_id%></td>
-                                            
-                                            <td class="align-middle">Garden 1</td>
+                                            <!-- Number of sensors -->
                                             <td class="align-middle"><%=sensor[i].sensor_key_arr.length%></td>
+                                            <!-- Data -->
                                             <td class="align-middle">     
                                                 <div class="row row-cols-md-2 no-gutters">
                                                 <% let ss_key = sensor[i].sensor_key_arr;%>
@@ -175,7 +174,9 @@
                                                       
                                                     <%}%>
                                                 </div>
+                                            <!-- Battery -->
                                             <td class="align-middle" id="battery">5V</td>
+                                            <!-- Configure button -->
                                             <td class="align-middle">
                                                 <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#<%=sensor[i].dev_id%>">
                                                     Configure
