@@ -138,27 +138,31 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div class="nav-item dropdown">
 
-                            <button class="btn btn-primary dropdown-toggle" id="changeDashboard"
+                            <!-- <button class="btn btn-primary dropdown-toggle" id="changeDashboard"
                                 role="button" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 <%= board[0].value%>
-                        </button>
+                            </button>
                             <div class="dropdown-menu dropdown-menu-left animated--fade-in"
                             aria-labelledby="changeDashboard">
                                 <% for(let i =0; i < board.length; i++){%>
                                 <a class="dropdown-item"  onclick="selectBoard('<%=board[i].key%>', '<%=board[i].value%>')"><%=board[i].value%></a>
                                 
                                 <%}%>
+                                <a class="dropdown-item" href="#" role="button" data-toggle="modal" data-target="#addBoardModal">
+                                    <i class="fas fa-plus fa-sm text-gray-600"></i>&nbsp;Add board
+                                </a> -->
 
-                            <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
+                                <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Board 1
+                                <%= board[0].value%>
                             </button>
                             <div class="dropdown-menu dropdown-menu-left animated--fade-in"
                             aria-labelledby="changeDashboard">
-                                <a class="dropdown-item" href="#" onclick="">Board 1</a>
-                                <a class="dropdown-item" href="#" onclick="">Board 2</a>
-                                <a class="dropdown-item" href="#" onclick="">Board 3</a>
+                                <% for(let i =0; i < board.length; i++){%>
+                                <a class="dropdown-item"  onclick="selectBoard('<%=board[i].key%>', '<%=board[i].value%>')"><%=board[i].value%></a>
+                                
+                                <%}%>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" role="button" data-toggle="modal" data-target="#addBoardModal">
                                     <i class="fas fa-plus fa-sm text-gray-600"></i>&nbsp;Add board
@@ -205,12 +209,12 @@
                                                     placeholder="Enter Board name" name="addboard_name">
                                             </div>
                                             <!-- Select type Select -->
-                                            <label for="addBoardDevice">Device</label>
+                                            <!-- <label for="addBoardDevice">Device</label>
                                             <select class="form-control mb-4" id="addBoardDevice">
                                                 <option selected value="1">Device 1</option>
                                                 <option value="2">Device 2</option>
                                                 <option value="3">Device 3</option>
-                                            </select>
+                                            </select> -->
                                             <input type="submit" id="add_board" value="Add board" class="btn btn-primary btn-user btn-block">
                                         </form>
                                     </div>
