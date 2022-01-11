@@ -1,18 +1,23 @@
 const Index = require('../models/index.model');
 const fs = require('fs');
 const emqx_data = JSON.parse(fs.readFileSync(`./../common/emqx.json`));
-
+const emqxHttp = require(`${__dirname}/../../streaming-broker/emqx/http-api/http-api.js`)
 exports.deviceProcessing = async (req, res, next) => {
 
     if(req.session.login){
         // console.log(req.session.sensor);
-        let dev_list = [];
+        let dev_list = []
         req.session.sensor.forEach((item)=>{
             dev_list.push(item.dev_id);
         });
+        
+        // await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+
         var broker = {};
         broker.id = emqx_data["ENDUSER_USERNAME"];
         broker.psw = emqx_data["ENDUSER_PASSWORD"];
+        broker.addr = emqx_data["SERVER_ADDR"];
+        broker.port = emqx_data["WEBSOCKET_PORT"];
 
         res.render('main/device', {
             // device: req.session.dev,

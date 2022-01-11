@@ -18,14 +18,15 @@
             //     }
             
             const streaming_broker_protocol = "ws"; //pass from server
-            const streaming_broker_addr = "127.0.0.1"; //pass from server
-            const streaming_broker_port = 8083; //pass from server
+            const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
+            const streaming_broker_port = '<%= broker.port %>'; //pass from server
 
             //pass from server
             // const devices = [
             //     "eui-a84041a54182a79f"
             // ];
-            const devices = ['<%= dev_list %>'];
+            const devices = '<%= dev_list %>'.split(",");
+            console.log(devices);
             //pass from server
             const streaming_broker_options = {
                 clientId: '<%= client_id %>',
@@ -64,9 +65,11 @@
             {
                 console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
                 
+                // if(connack.sessionPresent==false){
                 sub_topics.forEach((topic) => {
                     streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
                 });
+                // }
                 
             }
             
@@ -119,7 +122,7 @@
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
+            
             <!-- Main Content -->
             <div id="content">
                 
@@ -134,6 +137,19 @@
                     <!-- Change Dashboard dropdown menu -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div class="nav-item dropdown">
+
+                            <button class="btn btn-primary dropdown-toggle" id="changeDashboard"
+                                role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <%= board[0].value%>
+                        </button>
+                            <div class="dropdown-menu dropdown-menu-left animated--fade-in"
+                            aria-labelledby="changeDashboard">
+                                <% for(let i =0; i < board.length; i++){%>
+                                <a class="dropdown-item"  onclick="selectBoard('<%=board[i].key%>', '<%=board[i].value%>')"><%=board[i].value%></a>
+                                
+                                <%}%>
+
                             <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Board 1
@@ -147,7 +163,19 @@
                                 <a class="dropdown-item" href="#" role="button" data-toggle="modal" data-target="#addBoardModal">
                                     <i class="fas fa-plus fa-sm text-gray-600"></i>&nbsp;Add board
                                 </a>
+
                             </div>
+                            <script>
+                                function selectBoard(board_id, board_name){
+                                    document.getElementById("changeDashboard").innerHTML = board_name;
+                                    let row = $('[id^="board-"]');
+                                    for(let i=0; i < row.length; i++){
+                                        row[i].style = "display: none;";
+                                    }
+                                    
+                                    document.getElementById(`board-${board_id}`).style = "display: visibility;";
+                                }
+                            </script>
                         </div>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                             role="button" data-toggle="modal" data-target="#addWidgetModal">
@@ -239,38 +267,44 @@
                         </div>
 
                     </div>
-              
-                    <!-- Content Row -->
-                    <div class="row">
+                    
 
+                    <!-- Content Row -->
+                    <%for(let i=0; i< board.length ; i++){ %>
+                        <%if(i==0){%>
+                    <div class="row" id="board-<%=board[i].key%>">
+                        <%}else{%>
+                    <div class="row" id="board-<%=board[i].key%>" style="display: none;">
+                        <%}%>
                         <!-- Widget Card Example -->
-                        <%for(let i=0; i< boardWidget.length ; i++){ %>
-                        <%if(boardWidget[i].board_id == 8) {%>
-                        <%var config = boardWidget[i].config_dict; %>
+                        
+                        <%for(let j=0; j< boardWidget.length; j++){ %>
+                            <%if(boardWidget[j].board_id == board[i].key){%>
+                        <%var config = boardWidget[j].config_dict; %>
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-<%=config.view.color%> shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-<%=config.view.color%> text-uppercase mb-1">
-                                                <%=boardWidget[i].w_display_name%></div>
-                                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>">[blank]</div>  <!--31.2&#176;C -->
+                                                <%=boardWidget[j].w_display_name%></div>
+                                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>">[blank]</div>  <!--31.2&#176;C -->
                                         </div>
                                         <div class="col-auto">
                                             <div class="dropdown no-arrow">
-                                                <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-configure"
+                                                <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                                 </a>
                                                 <!-- Configure dropdown menu -->
                                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                    aria-labelledby="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-configure">
+                                                    aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure">
 
                                                     <a class="dropdown-item" href="#" data-toggle="modal"
-                                                    data-target="#<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-edit">Edit widget</a>
+                                                    data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-edit">Edit widget</a>
 
                                                     <a class="dropdown-item" href="#" data-toggle="modal"
-                                                    data-target="#<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-delete">Delete widget</a>
+                                                    data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-delete">Delete widget</a>
 
                                                 </div>
                                             </div>
@@ -282,7 +316,7 @@
 
                         <!------------------------------------------------------------------------------------------------------------------------>
                         <!-- Configure Widget Modals for unique Widgets -->
-                        <div class="modal fade" id="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-edit"
+                        <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-edit"
                             tabindex="-1" role="dialog" aria-labelledby="configureSensorModalLabel" aria-hidden="true">
 
                             <div class="modal-dialog" role="document">
@@ -294,7 +328,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Widget ID: <%=boardWidget[i].sensor_key%></p>
+                                        <p>Widget ID: <%=boardWidget[j].sensor_key%></p>
                                         <hr>
                                         <!-- action="device/configure" -->
                                         <form method="post" action="" class="user">
@@ -324,7 +358,7 @@
                         </div>
 
                         <!-- Delete Widget Modals for unique Widgets -->
-                        <div class="modal fade" id="<%=boardWidget[i].e_dev_id%>-<%=boardWidget[i].sensor_key%>-delete"
+                        <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-delete"
                             tabindex="-1" role="dialog" aria-labelledby="deleteSensorModalLabel" aria-hidden="true">
 
                             <div class="modal-dialog" role="document">
@@ -347,7 +381,7 @@
                         <%}%>
 
                     </div>
-
+                    <%}%>
                 </div>
 
                 <!-- /.container-fluid -->
