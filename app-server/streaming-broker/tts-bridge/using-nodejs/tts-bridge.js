@@ -1,3 +1,7 @@
+process.title = "tts-bridge";
+
+/* ============================= */
+
 const mqtt = require('mqtt');
 const fs = require('fs');
 
