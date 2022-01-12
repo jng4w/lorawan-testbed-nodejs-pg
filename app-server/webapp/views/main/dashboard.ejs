@@ -3,10 +3,13 @@
 <head>
 
     <title>LoraWAN TestBed - <%=title%></title>
+ 
+
     
     <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
     <!-- Global level stylesheet -->
     <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
+    
     <script>
             // var payload_data = JSON.parse(window.localStorage.getItem('payload-data')) ;
             
@@ -138,21 +141,6 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div class="nav-item dropdown">
 
-                            <!-- <button class="btn btn-primary dropdown-toggle" id="changeDashboard"
-                                role="button" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <%= board[0].value%>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-left animated--fade-in"
-                            aria-labelledby="changeDashboard">
-                                <% for(let i =0; i < board.length; i++){%>
-                                <a class="dropdown-item"  onclick="selectBoard('<%=board[i].key%>', '<%=board[i].value%>')"><%=board[i].value%></a>
-                                
-                                <%}%>
-                                <a class="dropdown-item" href="#" role="button" data-toggle="modal" data-target="#addBoardModal">
-                                    <i class="fas fa-plus fa-sm text-gray-600"></i>&nbsp;Add board
-                                </a> -->
-
                                 <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <%= board[0].value%>
@@ -176,12 +164,12 @@
                                     for(let i=0; i < row.length; i++){
                                         row[i].style = "display: none;";
                                     }
-                                    
                                     document.getElementById(`board-${board_id}`).style = "display: visibility;";
+                                    document.getElementById(`add-widget-board_id`).value = board_id;
                                 }
                             </script>
                         </div>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                             role="button" data-toggle="modal" data-target="#addWidgetModal">
                         
                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;Add widget
@@ -202,11 +190,13 @@
                                         <!-- action="device/configure" -->
                                         <form method="post" action="dashboard/add-board" class="user">
                                             <!-- Input type Text -->
+                                            
                                             <label for="board_name">Board Name</label>
+                                
                                             <div class="form-group">
                                                 <input type="text" class="form-control form-control-user"
                                                     id="addWidgetName" aria-describedby="board_name"
-                                                    placeholder="Enter Board name" name="addboard_name">
+                                                    placeholder="Enter Board name" name="board_name">
                                             </div>
                                             <!-- Select type Select -->
                                             <!-- <label for="addBoardDevice">Device</label>
@@ -242,10 +232,12 @@
                                             <!-- Input type Text -->
                                             <label for="widget_name">Widget Name</label>
                                             <div class="form-group">
+                                                <input type="hidden" id='add-widget-board_id' value="<%=board[0].value%>">
                                                 <input type="text" class="form-control form-control-user"
                                                     id="addWidgetName" aria-describedby="widget_name"
                                                     placeholder="Enter Widget name" name="endwidget_name">
                                             </div>
+                                            <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
                                             <label for="addWidgetType">Widget Type</label>
                                             <select class="form-control mb-4" id="addWidgetType">
@@ -253,13 +245,25 @@
                                                 <option value="2">Chart</option>
                                                 <option value="3">Table</option>
                                             </select>
+                                            <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
                                             <label for="addWidgetData">Data</label>
+                                            
                                             <select class="form-control mb-4" id="addWidgetData">
                                                 <option selected value="1">AIRTEMP</option>
                                                 <option value="2">AIRHUMID</option>
                                                 <option value="3">ADC_CH0V</option>
                                             </select>
+                                            <select class="form-control mb-4" id="addWidgetData">
+                                                <option selected value="1">AIRTEMP</option>
+                                                <option value="2">AIRHUMID</option>
+                                                <option value="3">ADC_CH0V</option>
+                                            </select>
+                                            <a onclick="" class="btn btn-primary btn-user btn-block">Add more sensor ...</a>
+                                            <script>
+                                                function add_sensor()
+                                            </script>
+                                            <hr class="mt-2 mb-3"/>
                                             <input type="submit" id="add_widget" value="Confirm changes" class="btn btn-primary btn-user btn-block">
                                         </form>
                                     </div>
@@ -317,7 +321,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <!------------------------------------------------------------------------------------------------------------------------>
                         <!-- Configure Widget Modals for unique Widgets -->
                         <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-edit"
@@ -386,6 +390,68 @@
 
                     </div>
                     <%}%>
+                    <div class="card shadow mb-4">
+                        
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Dropdown Header:</div>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="mb-1 small">Temperature</div>
+                            <div class="progress mb-4">
+                                <div class="progress-bar" role="progressbar" style="width: 62.4%"
+                                    aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
+                            </div>
+                            <div class="mb-1 small">Humidity</div>
+                            <div class="progress mb-4">
+                                <div class="progress-bar" role="progressbar" style="width: 58.5%"
+                                    aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        
+                        <div
+                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Chart 1</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Dropdown Header:</div>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="myAreaChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- /.container-fluid -->
@@ -418,7 +484,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="../login">Logout</a>
+                    <a class="btn btn-primary" href="../login/logout">Logout</a>
                 </div>
             </div>
         </div>

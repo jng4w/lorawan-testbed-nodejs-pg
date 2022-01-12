@@ -53,23 +53,6 @@ async function insertProfile(email, phone, password, type, name){
     return res;
 }
 
-// async function selectDeviceFromCustomer(id){
-
-//     const res = await client.query(
-//         `select dev_id, count(*) as no_sensor
-//         from
-//         public."OWN" as O, public."ENDDEV" as E, public."SENSOR" as S
-//         where
-//         O.enddev_id = E._id and
-//         E._id = S.enddev_id and
-//         O.profile_id = $1
-//         group by
-//         profile_id, dev_id;
-//         `,
-//         [id]
-//     );
-//     return res;
-// }
 async function selectDeviceFromCustomer(id){
 
     const res = await client.query(
@@ -104,6 +87,20 @@ async function selectDeviceSensorFromCustomer(id){
     return res;
 }
 
+async function selectBoardFromCustomer(id){
+
+    const res = await client.query(
+        `select B._id as key, B.display_name as value 
+        from
+        public."BOARD" as B
+        where
+		B.profile_id = $1;  
+        `,
+        [id]
+    );
+    return res;
+}
+
 async function selectBoardWidgetFromCustomer(id){
 
     const res = await client.query(
@@ -123,7 +120,6 @@ async function selectBoardWidgetFromCustomer(id){
     return res;
 }
 
-
 async function insertDeviceToCustomer(id, dev_id){
 
     const res = await client.query(
@@ -137,12 +133,38 @@ async function insertDeviceToCustomer(id, dev_id){
     return res;
 }
 
+async function insertBoardToCustomer(id, board_name){
+    console.log(id, board_name);
+    const res = await client.query(
+        `INSERT INTO public."BOARD"(
+            display_name, profile_id)
+           VALUES ( $2, $1);  
+        `,
+        [id, board_name]
+    );
+    return res;
+}
+
+async function selectWidgetType(){
+
+    const res = await client.query(
+        `select *
+        from
+        public."WIDGET_TYPE" as WT;  
+        `
+    );
+    return res;
+}
+
 module.exports = {
     checkProfileExist: checkProfileExist,
     checkProfileExistRegister: checkProfileExistRegister,
     insertProfile: insertProfile,
     selectDeviceFromCustomer: selectDeviceFromCustomer,
     selectDeviceSensorFromCustomer: selectDeviceSensorFromCustomer,
+    selectBoardFromCustomer: selectBoardFromCustomer,
     selectBoardWidgetFromCustomer: selectBoardWidgetFromCustomer,
-    insertDeviceToCustomer: insertDeviceToCustomer
+    insertDeviceToCustomer: insertDeviceToCustomer,
+    insertBoardToCustomer: insertBoardToCustomer,
+    selectWidgetType: selectWidgetType
 }
