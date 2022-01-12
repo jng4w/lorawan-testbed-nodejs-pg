@@ -5,5 +5,6 @@ const dashboardController = require('../controllers/dashboard.controller');
 
 /* GET home page. */
 router.get('/', dashboardController.dashboardProcessing);
+router.post('/add-board', dashboardController.addBoardDashboardProcessing);
 
 module.exports = router;

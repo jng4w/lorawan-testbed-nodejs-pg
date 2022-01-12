@@ -31,13 +31,11 @@ exports.dashboardProcessing = async (req, res, next) => {
         broker.port = emqx_data["WEBSOCKET_PORT"];
 
         var boardWidget = (await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows;
-        console.log(boardWidget);
-        // console.log(uniqueByKey(boardWidget, 'board_id', 'b_display_name'));
-        // console.log((await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows);
+        console.log((await Index.selectWidgetType()).rows);
         res.render('main/dashboard', {
             
             user: req.session.user,
-            board: uniqueByKey(boardWidget, 'board_id', 'b_display_name'),
+            board: (await Index.selectBoardFromCustomer(req.session.user.id)).rows,
             boardWidget: boardWidget,
             dev_list: dev_list,
             client_id: req.session.dev.client_id,
@@ -46,7 +44,29 @@ exports.dashboardProcessing = async (req, res, next) => {
         });
     }
     else {
-        res.redirect('login');
+        res.redirect('../login');
+    }
+    
+    
+    
+
+}
+
+exports.addBoardDashboardProcessing = async (req, res, next) => {
+    
+    
+    if(req.session.login){
+        try {
+            (await Index.insertBoardToCustomer(req.session.user.id, req.body.board_name));
+            res.redirect('../dashboard');
+        }
+        catch(err) {
+            console.log(err.detail);
+            res.redirect('../dashboard');
+        }
+    }
+    else {
+        res.redirect('../login');
     }
     
     
