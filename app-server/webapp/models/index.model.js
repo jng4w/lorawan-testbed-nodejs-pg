@@ -145,15 +145,29 @@ async function insertBoardToCustomer(id, board_name){
     return res;
 }
 
-async function selectWidgetType(){
-
-    const res = await client.query(
-        `select *
-        from
-        public."WIDGET_TYPE" as WT;  
-        `
-    );
-    return res;
+async function selectWidgetType(id){
+    if(id){
+        const res = await client.query(
+            `select *
+            from
+            public."WIDGET_TYPE" as WT
+            where _id = $1;  
+            `,
+            [id]
+        );
+        return res;
+    }
+    else {
+        const res = await client.query(
+            `select *
+            from
+            public."WIDGET_TYPE" as WT;  
+            `
+        );
+        return res;
+    }
+    
+    
 }
 
 module.exports = {

@@ -31,12 +31,14 @@ exports.dashboardProcessing = async (req, res, next) => {
         broker.port = emqx_data["WEBSOCKET_PORT"];
 
         var boardWidget = (await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows;
-        console.log((await Index.selectWidgetType()).rows);
+        // console.log((await Index.selectBoardFromCustomer(req.session.user.id)).rows.length);
         res.render('main/dashboard', {
             
             user: req.session.user,
             board: (await Index.selectBoardFromCustomer(req.session.user.id)).rows,
             boardWidget: boardWidget,
+            widgetType: (await Index.selectWidgetType()).rows,
+            sensor: req.session.sensor,
             dev_list: dev_list,
             client_id: req.session.dev.client_id,
             broker: broker,
@@ -54,7 +56,6 @@ exports.dashboardProcessing = async (req, res, next) => {
 
 exports.addBoardDashboardProcessing = async (req, res, next) => {
     
-    
     if(req.session.login){
         try {
             (await Index.insertBoardToCustomer(req.session.user.id, req.body.board_name));
@@ -68,9 +69,46 @@ exports.addBoardDashboardProcessing = async (req, res, next) => {
     else {
         res.redirect('../login');
     }
+}
+
+exports.addWidgetDashboardProcessing = async (req, res, next) => {
     
-    
-    
+    if(req.session.login){
+        console.log('zxczxc', req.body);
+        let body = req.body;
+        let no_sensor_data = body.no_sensor_data;
+        let deviceSensor = [];
+        for(let i=0; i < no_sensor_data; i++){
+            deviceSensor.push({
+                device: JSON.parse(body[`DeviceData-${i}`]).dev_id,
+                sensor: body[`SensorData-${i}`]
+            });
+            body[`DeviceData-${i}`] = null;
+            body[`SensorData-${i}`] = null;
+        }
+        for(let i in body){
+            if(i.startsWith(`addWidgetType-${body.WidgetType}`)){
+                var data = i.split('-');
+                var ui_config = (await Index.selectWidgetType(data[1])).rows[0].ui_config;
+                console.log(ui_config);
+                ui_config.view[data[2]] = body[i];
+                ui_config.numberOfDataSource.number = parseInt(body.no_sensor_data);
+                console.log(ui_config);
+            }
+        }
+        
+        // try {
+        //     (await Index.insertBoardToCustomer(req.session.user.id, req.body.board_name));
+             res.redirect('../dashboard');
+        // }
+        // catch(err) {
+        //     console.log(err.detail);
+        //     res.redirect('../dashboard');
+        // }
+    }
+    else {
+        res.redirect('../login');
+    }
 
 }
 

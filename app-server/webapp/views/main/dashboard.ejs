@@ -141,9 +141,13 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div class="nav-item dropdown">
 
-                                <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
+                                <button class="btn btn-primary dropdown-toggle" id="changeDashboard"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <%if(board.length){%>
                                 <%= board[0].value%>
+                                <%}else{%>
+                                    <%= 'No board yet'%>
+                                <%}%>
                             </button>
                             <div class="dropdown-menu dropdown-menu-left animated--fade-in"
                             aria-labelledby="changeDashboard">
@@ -169,12 +173,15 @@
                                 }
                             </script>
                         </div>
+                        <%if(board.length){%>
+                            
+                        
                         <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                             role="button" data-toggle="modal" data-target="#addWidgetModal">
                         
                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;Add widget
                         </a>
-                        
+                        <%}%>
                         <!-- Add Board Modal-->
                         <div class="modal fade" id="addBoardModal" tabindex="-1" role="dialog" aria-labelledby="addBoardModalLabel"
                         aria-hidden="true">
@@ -232,7 +239,7 @@
                                             <!-- Input type Text -->
                                             <label for="widget_name">Widget Name</label>
                                             <div class="form-group">
-                                                <input type="hidden" id='add-widget-board_id' value="<%=board[0].value%>">
+                                                <input type="hidden" id='add-widget-board_id' value="<%=board.length?board[0].value:''%>">
                                                 <input type="text" class="form-control form-control-user"
                                                     id="addWidgetName" aria-describedby="widget_name"
                                                     placeholder="Enter Widget name" name="endwidget_name">
@@ -240,28 +247,88 @@
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
                                             <label for="addWidgetType">Widget Type</label>
-                                            <select class="form-control mb-4" id="addWidgetType">
-                                                <option selected value="1">Card</option>
-                                                <option value="2">Chart</option>
-                                                <option value="3">Table</option>
+                                            <select class="form-control mb-4" id="addWidgetType" name="WidgetType" onchange="widgetTypeTrigger(this.value);">
+                                                <%for(let i =0; i < widgetType.length; i++){%>
+                                                <option value="<%=widgetType[i]._id%>"><%=widgetType[i].ui_config.type%></option>
+                                                <%}%>
                                             </select>
+                                            <%for(let i in widgetType){%>
+                                                <%let jMax = widgetType[i].ui_config%>
+                                                <%if(i!=0){%>
+                                                    <div class="form-group" id="addWidgetType-group-<%=widgetType[i]._id%>" hidden>
+                                                <%}else{%>
+                                                    <div class="form-group" id="addWidgetType-group-<%=widgetType[i]._id%>">
+                                                <%}%>
+                                                <%for(let j in jMax.view){%>
+                                                    
+                                                    <%let kMax = jMax.view[j].domain%>
+                                                    <label for="addWidgetType-<%=jMax.type%>-<%=j%>"><%=j%></label>
+                                                    <select class="form-control mb-4" id="addWidgetType-<%=jMax.type%>-<%=j%>" name="addWidgetType-<%=widgetType[i]._id%>-<%=j%>">
+                                                        <option selected value="">--Select <%=j%>--</option>
+                                                    <%for(let k in kMax){%>
+                                                        <option value="<%=kMax[k]%>"><%=kMax[k]%></option>
+                                                    <%}%>
+                                                    </select>
+                                                <%}%>
+                                                </div>
+                                            <%}%>
+                                            <script>
+                                                function widgetTypeTrigger(val){
+                                                    
+                                                    document.querySelectorAll('[id^=addWidgetType-group]').forEach((item)=>{
+                                                        item.hidden = true;
+                                                        
+                                                    });
+                                                    document.getElementById(`addWidgetType-group-${val}`).hidden = false;
+                                                }
+                                            </script>
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
-                                            <label for="addWidgetData">Data</label>
+                                            <label for="addData">Data</label>
+                                            <input type="hidden" id="no_sensor" name="no_sensor_data" value="1">
+                                            <div class="form-group" id="addData">
+                                                <div class="form-group" id="addData-0">
+                                                    <select class="form-control mb-4" id="addDeviceData-0" name="DeviceData-0" onchange="addDeviceTrigger('Data-0')">
+                                                        <option selected value="">--Select Device--</option>
+                                                        <%for(let i=0; i< sensor.length; i++){%>
+                                                        <option value="<%=JSON.stringify(sensor[i])%>"><%=sensor[i].dev_id%></option>
+                                                        
+                                                        <%}%>
+                                                    </select>
+                                                    
+                                                    <select class="form-control mb-4" id="addSensorData-0" name="SensorData-0">
+                                                        <option selected value="">--Select Sensor--</option>
+                                                        <option value=""></option>
+                                                        <!-- <option value="2">AIRHUMID</option>
+                                                        <option value="3">ADC_CH0V</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
                                             
-                                            <select class="form-control mb-4" id="addWidgetData">
-                                                <option selected value="1">AIRTEMP</option>
-                                                <option value="2">AIRHUMID</option>
-                                                <option value="3">ADC_CH0V</option>
-                                            </select>
-                                            <select class="form-control mb-4" id="addWidgetData">
-                                                <option selected value="1">AIRTEMP</option>
-                                                <option value="2">AIRHUMID</option>
-                                                <option value="3">ADC_CH0V</option>
-                                            </select>
-                                            <a onclick="" class="btn btn-primary btn-user btn-block">Add more sensor ...</a>
+                                            <a onclick="add_sensor()" class="btn btn-primary btn-user btn-block">Add more sensor ...</a>
                                             <script>
-                                                function add_sensor()
+                                                function addDeviceTrigger(replace){
+                                                    var sensor_list = JSON.parse(document.getElementById(`addDevice${replace}`).value).sensor_key_arr;
+                                                    
+                                                    var Sensordata = document.getElementById(`addSensor${replace}`);
+                                                    Sensordata.innerHTML = '<option selected value="">--Select Sensor--</option>';
+                                                    sensor_list.forEach((item)=>{
+                                                        Sensordata.innerHTML += `<option value="${item}">${item}</option>`;
+                                                    })
+                                                }
+                                                function add_sensor(){
+                                                    // mydiv.appendChild(document.createTextNode("bar"))
+                                                    var no_sensor = parseInt(document.getElementById('no_sensor').value);
+                                                    no_sensor++;
+                                                    var newNode = document.createElement('div');
+                                                    newNode.className = 'form-group';
+                                                    newNode.id = `addData-${no_sensor}`;
+                                                    newNode.innerHTML = document.getElementById('addData-0').innerHTML.replaceAll('Data-0',`Data-${no_sensor}`);
+                                                    
+                                                    document.getElementById('no_sensor').value = no_sensor;  
+                                                              
+                                                    document.getElementById("addData").appendChild(newNode);
+                                                }
                                             </script>
                                             <hr class="mt-2 mb-3"/>
                                             <input type="submit" id="add_widget" value="Confirm changes" class="btn btn-primary btn-user btn-block">
