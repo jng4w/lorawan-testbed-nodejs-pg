@@ -60,11 +60,17 @@
         function streaming_broker_connect_handler(connack)
         {
             console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
-        //    if(connack.sessionPresent==false){
+           if(connack.sessionPresent==false){
                 sub_topics.forEach((topic) => {
                     streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
                 });
-        //    }
+           }else{
+                var new_dev_id = '<%=new_dev_id%>'
+                if(new_dev_id){
+                    streaming_broker_mqttclient.subscribe(`devices/${new_dev_id}/up/payload`, {'qos': 0});
+                }
+ 
+           }
             
             
         }

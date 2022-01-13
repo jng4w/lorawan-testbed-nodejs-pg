@@ -19,9 +19,12 @@ exports.deviceProcessing = async (req, res, next) => {
         broker.addr = emqx_data["SERVER_ADDR"];
         broker.port = emqx_data["WEBSOCKET_PORT"];
 
+        var new_dev_id = req.session.dev.new_dev_id;
+        req.session.dev.new_dev_id = null;
         res.render('main/device', {
             // device: req.session.dev,
             user: req.session.user,
+            new_dev_id: new_dev_id,
             sensor: req.session.sensor,
             dev_list: dev_list,
             client_id: req.session.dev.client_id,
@@ -41,8 +44,9 @@ exports.addDeviceProcessing = async (req, res, next) => {
     if(req.session.login){
         try {
             (await Index.insertDeviceToCustomer(req.session.user.id, req.body.enddev_id));
-            req.session.sensor = (await Index.selectDeviceSensorFromCustomer(db_res.rows[0]._id)).rows;
-            console.log(req.session.sensor)
+            req.session.dev.new_dev_id = req.body.enddev_id;
+            req.session.sensor = (await Index.selectDeviceSensorFromCustomer(req.session.user.id)).rows;
+            console.log(req.session.sensor);
             res.redirect('/device');
         }
         catch(err) {

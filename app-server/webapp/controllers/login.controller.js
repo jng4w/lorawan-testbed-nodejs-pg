@@ -28,6 +28,7 @@ exports.loginProcessing = async (req, res, next) => {
         req.session.user.type = db_res.rows[0].type;
         req.session.dev = {};
         
+        req.session.dev.new_dev_id = null;
         
         
         // console.log(req.session.user);
