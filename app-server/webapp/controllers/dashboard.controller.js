@@ -77,25 +77,33 @@ exports.addWidgetDashboardProcessing = async (req, res, next) => {
         console.log('zxczxc', req.body);
         let body = req.body;
         let no_sensor_data = body.no_sensor_data;
-        let deviceSensor = [];
+        let device = [];
+        let sensor = [];
         for(let i=0; i < no_sensor_data; i++){
-            deviceSensor.push({
-                device: JSON.parse(body[`DeviceData-${i}`]).dev_id,
-                sensor: body[`SensorData-${i}`]
-            });
+            device.push(JSON.parse(body[`DeviceData-${i}`]).dev_id,);
+            sensor.push(body[`SensorData-${i}`]);
             body[`DeviceData-${i}`] = null;
             body[`SensorData-${i}`] = null;
         }
+        let ui_config;
         for(let i in body){
             if(i.startsWith(`addWidgetType-${body.WidgetType}`)){
-                var data = i.split('-');
-                var ui_config = (await Index.selectWidgetType(data[1])).rows[0].ui_config;
-                console.log(ui_config);
-                ui_config.view[data[2]] = body[i];
+                let data = i.split('-');
+                ui_config = (await Index.selectWidgetType(data[1])).rows[0].ui_config;
+                
+                
+                for(let j in ui_config.view){
+                    if(j ==data[2]){
+                        ui_config.view[j] = body[i].toLowerCase();
+                    }
+                    else ui_config.view[j] = null;
+                }
                 ui_config.numberOfDataSource.number = parseInt(body.no_sensor_data);
-                console.log(ui_config);
+                
             }
         }
+        console.log(body.widget_name, ui_config, body.board_id, body.WidgetType, device, sensor);
+        await Index.insertWidgetToBoard(body.widget_name, ui_config, body.board_id, body.WidgetType, device.toString(), sensor.toString());
         
         // try {
         //     (await Index.insertBoardToCustomer(req.session.user.id, req.body.board_name));

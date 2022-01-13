@@ -104,7 +104,7 @@ async function selectBoardFromCustomer(id){
 async function selectBoardWidgetFromCustomer(id){
 
     const res = await client.query(
-        `select E.dev_id as e_dev_id, W.display_name as w_display_name, B.display_name as b_display_name, *
+        `select W._id as w_id, E.dev_id as e_dev_id, W.display_name as w_display_name, B.display_name as b_display_name, *
         from
         public."BOARD" as B, public."WIDGET" as W, 
 		public."BELONG_TO" as BT, public."SENSOR" as S, public."ENDDEV" as E
@@ -134,7 +134,7 @@ async function insertDeviceToCustomer(id, dev_id){
 }
 
 async function insertBoardToCustomer(id, board_name){
-    console.log(id, board_name);
+    
     const res = await client.query(
         `INSERT INTO public."BOARD"(
             display_name, profile_id)
@@ -165,9 +165,24 @@ async function selectWidgetType(id){
             `
         );
         return res;
-    }
+    } 
+}
+
+async function insertWidgetToBoard(display_name, config_dict, board_id, widget_type_id, device_list, _sensor_list){
     
-    
+    const res = await client.query(
+        `CALL public.insert_widget_to_board(
+            $1, 
+            $2, 
+            $3, 
+            $4, 
+            $5,
+            $6
+        ) 
+        `,
+        [display_name, config_dict, board_id, widget_type_id, device_list, _sensor_list]
+    );
+    return res;
 }
 
 module.exports = {
@@ -180,5 +195,6 @@ module.exports = {
     selectBoardWidgetFromCustomer: selectBoardWidgetFromCustomer,
     insertDeviceToCustomer: insertDeviceToCustomer,
     insertBoardToCustomer: insertBoardToCustomer,
-    selectWidgetType: selectWidgetType
+    selectWidgetType: selectWidgetType,
+    insertWidgetToBoard: insertWidgetToBoard
 }
