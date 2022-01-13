@@ -254,14 +254,16 @@ LANGUAGE PLPGSQL;
 
 
 -----------------------------------------------------
--- ADD DEV TO CUSTOMER
+-- ADD WIDGET TO BOARD
 CREATE PROCEDURE insert_widget_to_board
-(new_display_name character varying, new_config_dict jsonb, ref_board_id IN integer, ref_widget_type_id IN integer, ref_deviceSensor_id IN jsonb[])
+(new_display_name character varying, new_config_dict jsonb, ref_board_id integer, 
+ref_widget_type_id integer, ref_device_id character varying, ref_sensor_key character varying)
 AS $$
 DECLARE 
 	ref_sensor_id integer;
 	ref_widget_id integer;
-
+	tmp_device_id character varying[] := string_to_array(ref_device_id,',');
+	tmp_sensor_key character varying[] := string_to_array(ref_sensor_key,',');
 
 BEGIN
 INSERT INTO public."WIDGET"(
@@ -269,17 +271,17 @@ INSERT INTO public."WIDGET"(
 	VALUES (new_display_name, new_config_dict, ref_board_id, ref_widget_type_id)
 	RETURNING _id into ref_widget_id;
 
-FOR devsen_data IN ref_deviceSensor_id
+FOR i IN array_lower(tmp_device_id, 1) .. array_upper(tmp_device_id, 1)
 LOOP
 	SELECT S._id into ref_sensor_id FROM
 		public."ENDDEV" as E, public."SENSOR" as S
 	WHERE
 		E._id = S.enddev_id and
-		E.dev_id = devsen_data->>device and
-		S.sensor_key = devsen_data->>sensor;
+		E.dev_id = tmp_device_id[i] and
+		S.sensor_key = tmp_sensor_key[i];
 	
 	INSERT INTO public."BELONG_TO"(
-		widget_id, ref_sensor_id)
+		widget_id, sensor_id)
 		VALUES (ref_widget_id, ref_sensor_id);
 END LOOP;
 END;

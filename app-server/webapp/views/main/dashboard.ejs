@@ -10,6 +10,7 @@
     <!-- Global level stylesheet -->
     <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
     
+    
     <script>
             // var payload_data = JSON.parse(window.localStorage.getItem('payload-data')) ;
             
@@ -29,7 +30,7 @@
             //     "eui-a84041a54182a79f"
             // ];
             const devices = '<%= dev_list %>'.split(",");
-            console.log(devices);
+            // console.log(devices);
             //pass from server
             const streaming_broker_options = {
                 clientId: '<%= client_id %>',
@@ -84,7 +85,7 @@
                 //CONTINUE
                 //document.getElementById("payload-data-58").innerHTML = parsed_message;
                 console.log(topic);
-                console.log('parsed_message', parsed_message.payload_data);
+                console.log('parsed_message', parsed_message);
                 var recv_topic = topic.split('/')[1];
                 // var data = `"${recv_topic}": ${parsed_message.payload_data}`;
 
@@ -95,7 +96,17 @@
 
                 for(var i in parsed_message.payload_data){
                     
-                    document.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
+                    // do3cument.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
+                    document.querySelectorAll(`[id^=payload-data-${recv_topic}-${i}]`).forEach((item)=>{
+                                                        item.innerHTML = parsed_message.payload_data[i];                                  
+                    });
+                    document.querySelectorAll(`[id^=chart-payload-data-${recv_topic}-${i}]`).forEach((item)=>{
+                                                        var graph = $(item).data('graph');
+                                                        graph.data.labels.push(parsed_message.recv_timestamp);
+                                                        graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
+                                                        graph.update();        
+
+                    });
                 }
 
                 // parsed_message.payload_data.forEach((item) => {
@@ -239,10 +250,11 @@
                                             <!-- Input type Text -->
                                             <label for="widget_name">Widget Name</label>
                                             <div class="form-group">
-                                                <input type="hidden" id='add-widget-board_id' value="<%=board.length?board[0].value:''%>">
+                                                <input type="hidden" id='add-widget-board_id' name='board_id' value="<%=board.length?board[0].key:''%>">
+                                                
                                                 <input type="text" class="form-control form-control-user"
                                                     id="addWidgetName" aria-describedby="widget_name"
-                                                    placeholder="Enter Widget name" name="endwidget_name">
+                                                    placeholder="Enter Widget name" name="widget_name">
                                             </div>
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
@@ -354,171 +366,183 @@
                         <!-- Widget Card Example -->
                         
                         <%for(let j=0; j< boardWidget.length; j++){ %>
-                            <%if(boardWidget[j].board_id == board[i].key){%>
-                        <%var config = boardWidget[j].config_dict; %>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-<%=config.view.color%> shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-<%=config.view.color%> text-uppercase mb-1">
-                                                <%=boardWidget[j].w_display_name%></div>
-                                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>">[blank]</div>  <!--31.2&#176;C -->
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="dropdown no-arrow">
-                                                <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                                </a>
-                                                <!-- Configure dropdown menu -->
-                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                    aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure">
+                        <%if(boardWidget[j].board_id == board[i].key){%>
+                            <%var config = boardWidget[j].config_dict; %>
+                            <%if(config.type == 'Card'){%>
+                                <div class="col-xl-3 col-md-6 mb-4">
+                                    <div class="card border-left-<%=config.view['Color of card']%> shadow h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-<%=config.view['Color of card']%> text-uppercase mb-1">
+                                                        <%=boardWidget[j].w_display_name%></div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="dropdown no-arrow">
+                                                        <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-configure"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                                        </a>
+                                                        <!-- Configure dropdown menu -->
+                                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                            aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-configure">
 
-                                                    <a class="dropdown-item" href="#" data-toggle="modal"
-                                                    data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-edit">Edit widget</a>
+                                                            <a class="dropdown-item" href="#" data-toggle="modal"
+                                                            data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-edit">Edit widget</a>
 
-                                                    <a class="dropdown-item" href="#" data-toggle="modal"
-                                                    data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-delete">Delete widget</a>
+                                                            <a class="dropdown-item" href="#" data-toggle="modal"
+                                                            data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-delete">Delete widget</a>
 
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <!------------------------------------------------------------------------------------------------------------------------>
-                        <!-- Configure Widget Modals for unique Widgets -->
-                        <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-edit"
-                            tabindex="-1" role="dialog" aria-labelledby="configureSensorModalLabel" aria-hidden="true">
+                                
+                                <!------------------------------------------------------------------------------------------------------------------------>
+                                <!-- Configure Widget Modals for unique Widgets -->
+                                <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-edit"
+                                    tabindex="-1" role="dialog" aria-labelledby="configureSensorModalLabel" aria-hidden="true">
 
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="configureSensorModalLabel">Configure Widget</h5>
-                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Widget ID: <%=boardWidget[j].sensor_key%></p>
-                                        <hr>
-                                        <!-- action="device/configure" -->
-                                        <form method="post" action="" class="user">
-                                            <!-- Input type Text -->
-                                            <label for="widget_name">Widget Name</label>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control form-control-user"
-                                                    id="configureWidgetName" aria-describedby="widget_name"
-                                                    placeholder="Enter Widget name" name="widget_name">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="configureSensorModalLabel">Configure Widget</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
                                             </div>
-                                            <!-- Input type Select -->
-                                            <label for="configureSensorData">Display Data</label>
-                                            <select class="form-control mb-4" id="configureSensorData">
-                                                <option selected value="1">Temperature</option>
-                                                <option value="2">Hudmidity</option>
-                                                <option value="3">Bat5V</option>
-                                            </select>
-                                            <input type="submit" id="sensor" value="Confirm changes" class="btn btn-primary btn-user btn-block">
-                                            <hr>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Delete Widget Modals for unique Widgets -->
-                        <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-delete"
-                            tabindex="-1" role="dialog" aria-labelledby="deleteSensorModalLabel" aria-hidden="true">
-
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteSensorModalLabel">Delete this widget?</h5>
-                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">Select <b style="color: #2F69CA">Delete</b> button to remove this widget from the board.</div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                        <button class="btn btn-primary" type="button" action="">Delete</button>
+                                            <div class="modal-body">
+                                                <p>Widget ID: <%=boardWidget[j].sensor_key%></p>
+                                                <hr>
+                                                <!-- action="device/configure" -->
+                                                <form method="post" action="" class="user">
+                                                    <!-- Input type Text -->
+                                                    <label for="widget_name">Widget Name</label>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control form-control-user"
+                                                            id="configureWidgetName" aria-describedby="widget_name"
+                                                            placeholder="Enter Widget name" name="widget_name">
+                                                    </div>
+                                                    <!-- Input type Select -->
+                                                    <label for="configureSensorData">Display Data</label>
+                                                    <select class="form-control mb-4" id="configureSensorData">
+                                                        <option selected value="1">Temperature</option>
+                                                        <option value="2">Hudmidity</option>
+                                                        <option value="3">Bat5V</option>
+                                                    </select>
+                                                    <input type="submit" id="sensor" value="Confirm changes" class="btn btn-primary btn-user btn-block">
+                                                    <hr>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <%}%>
-                        <%}%>
 
+                                <!-- Delete Widget Modals for unique Widgets -->
+                                <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-delete"
+                                    tabindex="-1" role="dialog" aria-labelledby="deleteSensorModalLabel" aria-hidden="true">
+
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteSensorModalLabel">Delete this widget?</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">Select <b style="color: #2F69CA">Delete</b> button to remove this widget from the board.</div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                <button class="btn btn-primary" type="button" action="">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <%}else if(config.type == 'Chart'){%>
+                                <div class="card shadow col-md-12 mb-4">
+                        
+                                    <div
+                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-<%=config.view['Color of line']%>"><%=boardWidget[j].w_display_name%></h6>
+                                        <div class="dropdown no-arrow">
+                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">Dropdown Header:</div>
+                                                <a class="dropdown-item" href="#">Action</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="chart-area">
+                                            <canvas id="chart-payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>"></canvas>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            <%}else if(config.type == "Thresholds"){%>
+                                <div class="card shadow mb-4">
+                        
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
+                                        <div class="dropdown no-arrow">
+                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">Dropdown Header:</div>
+                                                <a class="dropdown-item" href="#">Action</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="mb-1 small">Temperature</div>
+                                        <div class="progress mb-4">
+                                            <div class="progress-bar" role="progressbar" style="width: 62.4%"
+                                                aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
+                                        </div>
+                                        <div class="mb-1 small">Humidity</div>
+                                        <div class="progress mb-4">
+                                            <div class="progress-bar" role="progressbar" style="width: 58.5%"
+                                                aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
+                                        </div>
+            
+                                    </div>
+                                </div>
+                            
+                            
+                            <%}%>
+                        <%}%>
+                        <%}%>
+                        
                     </div>
+                    
                     <%}%>
-                    <div class="card shadow mb-4">
-                        
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
-                            <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                    aria-labelledby="dropdownMenuLink">
-                                    <div class="dropdown-header">Dropdown Header:</div>
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card-body">
-                            <div class="mb-1 small">Temperature</div>
-                            <div class="progress mb-4">
-                                <div class="progress-bar" role="progressbar" style="width: 62.4%"
-                                    aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
-                            </div>
-                            <div class="mb-1 small">Humidity</div>
-                            <div class="progress mb-4">
-                                <div class="progress-bar" role="progressbar" style="width: 58.5%"
-                                    aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
-                            </div>
+                    
 
-                        </div>
-                    </div>
-
-                    <div class="card shadow mb-4">
-                        
-                        <div
-                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Chart 1</h6>
-                            <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                    aria-labelledby="dropdownMenuLink">
-                                    <div class="dropdown-header">Dropdown Header:</div>
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card-body">
-                            <div class="chart-area">
-                                <canvas id="myAreaChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <!-- /.container-fluid -->
@@ -556,7 +580,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
@@ -567,11 +591,108 @@
 
     <!-- Page level plugins -->
     <script src="vendor/chart.js/Chart.min.js"></script>
-
+    
     <!-- Page level custom scripts -->
     <script src="js/visuals/chart-area-demo.js"></script>
-    <script src="js/visuals/chart-pie-demo.js"></script>
-
+    <!-- <script src="js/visuals/chart-pie-demo.js"></script> -->
+    <script>
+        document.querySelectorAll('[id^=chart-payload-data-]').forEach((item)=>{
+            // var ctx = document.getElementById("myAreaChart");
+            var graph = new Chart(item, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                label: "",
+                lineTension: 0.3,
+                backgroundColor: "rgba(78, 115, 223, 0.05)",
+                borderColor: "rgba(78, 115, 223, 1)",
+                pointRadius: 3,
+                pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointBorderColor: "rgba(78, 115, 223, 1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: [],
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                }
+                },
+                scales: {
+                xAxes: [{
+                    time: {
+                    unit: 'date'
+                    },
+                    gridLines: {
+                    display: false,
+                    drawBorder: false
+                    },
+                    ticks: {
+                    maxTicksLimit: 7
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                    display: true,
+                    labelString: 'Temperature (°C)'
+                    },
+                    ticks: {
+                    maxTicksLimit: 5,
+                    padding: 10,
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return number_format(value);
+                    }
+                    },
+                    gridLines: {
+                    color: "rgb(234, 236, 244)",
+                    zeroLineColor: "rgb(234, 236, 244)",
+                    drawBorder: true,
+                    borderDash: [2],
+                    zeroLineBorderDash: [2]
+                    }
+                }],
+                },
+                legend: {
+                display: true
+                },
+                tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                titleMarginBottom: 10,
+                titleFontColor: '#6e707e',
+                titleFontSize: 14,
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                intersect: false,
+                mode: 'index',
+                caretPadding: 10,
+                callbacks: {
+                    label: function(tooltipItem, chart) {
+                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                    return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                    }
+                }
+                }
+            }
+            });
+            $(item).data('graph', graph);  
+                                        
+        });  
+    </script>
 </body>
 
 </html>
