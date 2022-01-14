@@ -24,7 +24,7 @@
             const streaming_broker_protocol = "ws"; //pass from server
             const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
             const streaming_broker_port = '<%= broker.port %>'; //pass from server
-
+            const MAX_SESSION_STORAGE_LENGTH= 20;
             //pass from server
             // const devices = [
             //     "eui-a84041a54182a79f"
@@ -68,13 +68,34 @@
             function streaming_broker_connect_handler(connack)
             {
                 console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
-                
-                // if(connack.sessionPresent==false){
-                sub_topics.forEach((topic) => {
-                    streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
-                });
-                // }
-                
+                if(connack.sessionPresent==false){
+                        sub_topics.forEach((topic) => {
+                            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+                        });
+                }else{
+                    let storage = sessionStorage.getItem("payload-storage");
+                    let length_flag = 0;
+                    if(storage){
+                        storage = JSON.parse(storage);
+                    }else{
+                        return;
+                    }
+                    for(let i in storage.payload){
+                        
+                        for(let j in storage.payload[i].payload_data){
+                            document.querySelectorAll(`[id^=payload-data-${i}-${j}]`).forEach((item)=>{
+                                                                item.innerHTML = storage.payload[i].payload_data[j].at(-1);                                  
+                            });
+                            document.querySelectorAll(`[id^=chart-payload-data-${i}-${j}]`).forEach((item)=>{
+                                                                var graph = $(item).data('graph');
+                                                                graph.data.labels=storage.payload[i].recv_timestamp;
+                                                                graph.data.datasets[0].data=storage.payload[i].payload_data[j];
+                                                                graph.update();        
+
+                            });
+                        }
+                    }
+                }
             }
             
             //MESSAGE SEND HERE
@@ -93,10 +114,40 @@
                 // if(!data) data = {};
                 // data[recv_topic] = JSON.stringify(parsed_message.payload_data);
                 // window.localStorage.setItem(`payload-data`, JSON.stringify(data));
+                let storage = sessionStorage.getItem("payload-storage");
+                let length_flag = 0;
+                if(storage){
+                    storage = JSON.parse(storage);
+                }else{
+                    storage = {
+                        payload: {}
+                    }
+                }
+                if(!storage.payload[recv_topic]){
+                    storage.payload[recv_topic] = {};
+                    storage.payload[recv_topic].recv_timestamp = [];
+                    storage.payload[recv_topic].payload_data = {};
+                    length_flag = 1;
+                }else if(storage.payload[recv_topic].recv_timestamp.length > MAX_SESSION_STORAGE_LENGTH){
+                    storage.payload[recv_topic].recv_timestamp.shift();
+                    length_flag = 2;
+                }
+
+                storage.payload[recv_topic].recv_timestamp.push(parsed_message.recv_timestamp);
 
                 for(var i in parsed_message.payload_data){
                     
                     // do3cument.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
+                    
+                    //STORAGE
+                    if(length_flag==1){
+                        storage.payload[recv_topic].payload_data[i] = [];
+                    }else if(length_flag==2){
+                        storage.payload[recv_topic].payload_data[i].shift();
+                    }
+                    storage.payload[recv_topic].payload_data[i].push(parsed_message.payload_data[i]);
+
+                    //GRAPH
                     document.querySelectorAll(`[id^=payload-data-${recv_topic}-${i}]`).forEach((item)=>{
                                                         item.innerHTML = parsed_message.payload_data[i];                                  
                     });
@@ -109,6 +160,7 @@
                     });
                 }
 
+                sessionStorage.setItem("payload-storage", JSON.stringify(storage));
                 // parsed_message.payload_data.forEach((item) => {
                 //     document.getElementById(`payload-data-${recv_topic[1]}-${item.key}`).innerHTML = item
                 // })
