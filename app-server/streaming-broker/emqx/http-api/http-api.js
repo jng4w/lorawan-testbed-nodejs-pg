@@ -13,7 +13,7 @@ async function add_client_acl_on_dev_topic(client_id, dev_list) {
     // console.log('acl_batch ', acl_batch);
     await emqx_http.post('api/v4/acl', acl_batch)
         .then((res) => {
-            console.log(res);
+            //console.log(res);
         })  
         .catch((err) => {
             // console.log(err);

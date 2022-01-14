@@ -143,7 +143,7 @@
                     storage.payload[recv_topic].payload_data[i].shift();
                 }
                 storage.payload[recv_topic].payload_data[i].push(parsed_message.payload_data[i]);
-
+                sessionStorage.setItem("payload-storage", JSON.stringify(storage));
                 document.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
             }
 
