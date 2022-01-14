@@ -32,6 +32,16 @@ async function del_client_acl_on_dev_topic(client_id, dev_list) {
     });
 }
 
+async function kick_client(client_id) {
+    await emqx_http.delete(`/api/v4/clients/${encodeURIComponent(client_id)}`)
+    .then((res) => {
+        console.log(res);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
 module.exports = {
     add_client_acl_on_dev_topic,
     del_client_acl_on_dev_topic
