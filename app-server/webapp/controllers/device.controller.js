@@ -11,16 +11,19 @@ exports.deviceProcessing = async (req, res, next) => {
             dev_list.push(item.dev_id);
         });
         
-        // await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        
 
         var broker = {};
         broker.id = emqx_data["ENDUSER_USERNAME"];
         broker.psw = emqx_data["ENDUSER_PASSWORD"];
         broker.addr = emqx_data["SERVER_ADDR"];
         broker.port = emqx_data["WEBSOCKET_PORT"];
-
         var new_dev_id = req.session.dev.new_dev_id;
-        req.session.dev.new_dev_id = null;
+        if(new_dev_id){
+            req.session.dev.new_dev_id = null;
+            await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        }
+        
         res.render('main/device', {
             // device: req.session.dev,
             user: req.session.user,
@@ -46,6 +49,7 @@ exports.addDeviceProcessing = async (req, res, next) => {
             (await Index.insertDeviceToCustomer(req.session.user.id, req.body.enddev_id));
             req.session.dev.new_dev_id = req.body.enddev_id;
             req.session.sensor = (await Index.selectDeviceSensorFromCustomer(req.session.user.id)).rows;
+             
             console.log(req.session.sensor);
             res.redirect('/device');
         }
