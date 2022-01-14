@@ -23,7 +23,7 @@ exports.dashboardProcessing = async (req, res, next) => {
             dev_list.push(item.dev_id);
         });
         
-        // await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
         var broker = {};
         broker.id = emqx_data["ENDUSER_USERNAME"];
         broker.psw = emqx_data["ENDUSER_PASSWORD"];
