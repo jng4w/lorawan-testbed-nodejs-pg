@@ -19,10 +19,11 @@ exports.deviceProcessing = async (req, res, next) => {
         broker.addr = emqx_data["SERVER_ADDR"];
         broker.port = emqx_data["WEBSOCKET_PORT"];
         var new_dev_id = req.session.dev.new_dev_id;
-        if(new_dev_id){
-            req.session.dev.new_dev_id = null;
-            await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
-        }
+        req.session.dev.new_dev_id = null;
+        await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        // if(new_dev_id){
+            
+        // }
         
         res.render('main/device', {
             // device: req.session.dev,
