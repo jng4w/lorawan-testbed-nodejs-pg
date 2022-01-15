@@ -23,6 +23,8 @@ router.post('/', loginController.loginProcessing);
 
 router.post('/logout', (req, res, next) => {
     req.session.destroy();
+
+    res.redirect('/login');
 }); 
 
 module.exports = router;
