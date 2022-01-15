@@ -102,7 +102,7 @@ exports.addWidgetDashboardProcessing = async (req, res, next) => {
                 
             }
         }
-        console.log(body.widget_name, ui_config, body.board_id, body.WidgetType, device, sensor);
+        // console.log(body.widget_name, ui_config, body.board_id, body.WidgetType, device, sensor);
         await Index.insertWidgetToBoard(body.widget_name, ui_config, body.board_id, body.WidgetType, device.toString(), sensor.toString());
         
         // try {

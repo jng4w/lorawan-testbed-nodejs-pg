@@ -146,7 +146,7 @@
                 sessionStorage.setItem("payload-storage", JSON.stringify(storage));
                 document.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
             }
-
+            sessionStorage.setItem("payload-storage", JSON.stringify(storage));
             // parsed_message.payload_data.forEach((item) => {
             //     document.getElementById(`payload-data-${recv_topic[1]}-${item.key}`).innerHTML = item
             // })
@@ -371,7 +371,10 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="../login">Logout</a>
+                    <form action="../login/logout" method="post">
+                        <!-- <a  onclick="this.parentNode.submit();">Logout</a> -->
+                        <input type="submit" class="btn btn-primary" value="Logout">
+                    </form>
                 </div>
             </div>
         </div>
