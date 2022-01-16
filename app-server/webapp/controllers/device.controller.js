@@ -11,16 +11,16 @@ exports.deviceProcessing = async (req, res, next) => {
             dev_list.push(item.dev_id);
         });
         
-        
+        var new_dev_id = req.session.dev.new_dev_id;
+        req.session.dev.new_dev_id = null;
+        await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
 
         var broker = {};
         broker.id = emqx_data["ENDUSER_USERNAME"];
         broker.psw = emqx_data["ENDUSER_PASSWORD"];
         broker.addr = emqx_data["SERVER_ADDR"];
         broker.port = emqx_data["WEBSOCKET_PORT"];
-        var new_dev_id = req.session.dev.new_dev_id;
-        req.session.dev.new_dev_id = null;
-        await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        
         // if(new_dev_id){
             
         // }

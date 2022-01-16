@@ -44,7 +44,8 @@ async function kick_client(client_id) {
 
 module.exports = {
     add_client_acl_on_dev_topic,
-    del_client_acl_on_dev_topic
+    del_client_acl_on_dev_topic,
+    kick_client
 }
 
 

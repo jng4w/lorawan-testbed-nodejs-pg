@@ -24,6 +24,7 @@ exports.dashboardProcessing = async (req, res, next) => {
         });
         
         await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
+        
         var broker = {};
         broker.id = emqx_data["ENDUSER_USERNAME"];
         broker.psw = emqx_data["ENDUSER_PASSWORD"];
@@ -74,7 +75,7 @@ exports.addBoardDashboardProcessing = async (req, res, next) => {
 exports.addWidgetDashboardProcessing = async (req, res, next) => {
     
     if(req.session.login){
-        console.log('zxczxc', req.body);
+        
         let body = req.body;
         let no_sensor_data = body.no_sensor_data;
         let device = [];
