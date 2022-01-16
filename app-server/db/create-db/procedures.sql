@@ -233,7 +233,7 @@ $$;
 -----------------------------------------------------
 -- ADD DEV TO CUSTOMER
 CREATE PROCEDURE insert_device_to_customer
-(ref_profile_id integer, ref_enddev_id character varying)
+(ref_profile_id IN integer, ref_enddev_id INOUT character varying)
 AS $$
 DECLARE ref_id integer;
 
@@ -246,7 +246,44 @@ SELECT COALESCE(_id, 0) INTO ref_id
 INSERT INTO public."OWN"(
 	profile_id, enddev_id)
 	VALUES (ref_profile_id, ref_id);
+	
+END;
+$$
+LANGUAGE PLPGSQL;
+-----------------------------------------------------
 
+
+-----------------------------------------------------
+-- ADD WIDGET TO BOARD
+CREATE PROCEDURE insert_widget_to_board
+(new_display_name character varying, new_config_dict jsonb, ref_board_id integer, 
+ref_widget_type_id integer, ref_device_id character varying, ref_sensor_key character varying)
+AS $$
+DECLARE 
+	ref_sensor_id integer;
+	ref_widget_id integer;
+	tmp_device_id character varying[] := string_to_array(ref_device_id,',');
+	tmp_sensor_key character varying[] := string_to_array(ref_sensor_key,',');
+
+BEGIN
+INSERT INTO public."WIDGET"(
+	display_name, config_dict, board_id, widget_type_id)
+	VALUES (new_display_name, new_config_dict, ref_board_id, ref_widget_type_id)
+	RETURNING _id into ref_widget_id;
+
+FOR i IN array_lower(tmp_device_id, 1) .. array_upper(tmp_device_id, 1)
+LOOP
+	SELECT S._id into ref_sensor_id FROM
+		public."ENDDEV" as E, public."SENSOR" as S
+	WHERE
+		E._id = S.enddev_id and
+		E.dev_id = tmp_device_id[i] and
+		S.sensor_key = tmp_sensor_key[i];
+	
+	INSERT INTO public."BELONG_TO"(
+		widget_id, sensor_id)
+		VALUES (ref_widget_id, ref_sensor_id);
+END LOOP;
 END;
 $$
 LANGUAGE PLPGSQL;

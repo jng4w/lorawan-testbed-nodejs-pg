@@ -1,0 +1,52 @@
+{
+    "Card": {
+        "type": "Card",
+        "view": {
+          "Icon": {
+            "type": "select",
+            "domain": [
+              "null",
+              "dollar-sign"
+            ]
+          },
+          "Color of card": {
+            "type": "select",
+            "domain": [
+              "Primary",
+              "Warning",
+              "Danger"
+            ]
+          }
+        },
+        "numberOfDataSource": {
+          "maxNumber": 1,
+          "defaultNumber": 1
+        }
+      },
+    "Chart": {
+        "type": "Chart",
+        "view": {
+          "Color of line": {
+              "type": "select",
+              "domain": ["Primary", "Warning", "Danger"]
+          }
+        },
+        "numberOfDataSource": {
+            "defaultNumber": 1,
+            "maxNumber": 1
+        }
+    },
+    "Thresholds": {
+        "type": "Thresholds",
+        "view": {
+          "Color of thresholds": {
+              "type": "select",
+              "domain": ["Primary", "Warning", "Danger"]
+          }
+        },
+        "numberOfDataSource": {
+            "defaultNumber": 1,
+            "maxNumber": 3
+        }
+    }
+}

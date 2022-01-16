@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const loginController = require('../controllers/login.controller');
-const { check, validationResult } = require('express-validator');
-const { validator } = require('../controllers/validator.controller');
+const emqxHttp = require(`${__dirname}/../../streaming-broker/emqx/http-api/http-api.js`)
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
     // if(!req.session.login){
         // Show form dang nhap => loginProcessing
         if(!req.session.login){
@@ -21,8 +20,10 @@ router.get('/', function(req, res, next) {
 
 router.post('/', loginController.loginProcessing); 
 
-router.post('/logout', (req, res, next) => {
+router.post('/logout', async (req, res, next) => {
     req.session.destroy();
+    await emqxHttp.kick_client(req.session.dev.client_id);
+    res.redirect('/login');
 }); 
 
 module.exports = router;

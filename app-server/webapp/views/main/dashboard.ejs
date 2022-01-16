@@ -10,6 +10,7 @@
     <!-- Global level stylesheet -->
     <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
     
+    
     <script>
             // var payload_data = JSON.parse(window.localStorage.getItem('payload-data')) ;
             
@@ -23,13 +24,13 @@
             const streaming_broker_protocol = "ws"; //pass from server
             const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
             const streaming_broker_port = '<%= broker.port %>'; //pass from server
-
+            const MAX_SESSION_STORAGE_LENGTH= 20;
             //pass from server
             // const devices = [
             //     "eui-a84041a54182a79f"
             // ];
             const devices = '<%= dev_list %>'.split(",");
-            console.log(devices);
+            // console.log(devices);
             //pass from server
             const streaming_broker_options = {
                 clientId: '<%= client_id %>',
@@ -67,13 +68,36 @@
             function streaming_broker_connect_handler(connack)
             {
                 console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
-                
-                // if(connack.sessionPresent==false){
-                sub_topics.forEach((topic) => {
-                    streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
-                });
-                // }
-                
+                if(connack.sessionPresent==false){
+                        sub_topics.forEach((topic) => {
+                            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+                        });
+                }else{
+                    let storage = sessionStorage.getItem("payload-storage");
+                    let length_flag = 0;
+                    if(storage){
+                        storage = JSON.parse(storage);
+                    }else{
+                        return;
+                    }
+                    for(let i in storage.payload){
+                        
+                        for(let j in storage.payload[i].payload_data){
+                            document.querySelectorAll(`[id^=payload-data-${i}-${j}]`).forEach((item)=>{
+                                                                item.innerHTML = storage.payload[i].payload_data[j].at(-1);                                  
+                            });
+                            document.querySelectorAll(`[id^=chart-payload-data-${i}-${j}]`).forEach((item)=>{
+                                                                var graph = $(item).data('graph');
+                                                                graph.data.labels=storage.payload[i].recv_timestamp;
+                                                                graph.data.datasets[0].data=storage.payload[i].payload_data[j];
+                                                                graph.update();        
+
+                            });
+                        }
+                    }
+
+
+                }
             }
             
             //MESSAGE SEND HERE
@@ -84,7 +108,7 @@
                 //CONTINUE
                 //document.getElementById("payload-data-58").innerHTML = parsed_message;
                 console.log(topic);
-                console.log('parsed_message', parsed_message.payload_data);
+                console.log('parsed_message', parsed_message);
                 var recv_topic = topic.split('/')[1];
                 // var data = `"${recv_topic}": ${parsed_message.payload_data}`;
 
@@ -92,12 +116,53 @@
                 // if(!data) data = {};
                 // data[recv_topic] = JSON.stringify(parsed_message.payload_data);
                 // window.localStorage.setItem(`payload-data`, JSON.stringify(data));
+                let storage = sessionStorage.getItem("payload-storage");
+                let length_flag = 0;
+                if(storage){
+                    storage = JSON.parse(storage);
+                }else{
+                    storage = {
+                        payload: {}
+                    }
+                }
+                if(!storage.payload[recv_topic]){
+                    storage.payload[recv_topic] = {};
+                    storage.payload[recv_topic].recv_timestamp = [];
+                    storage.payload[recv_topic].payload_data = {};
+                    length_flag = 1;
+                }else if(storage.payload[recv_topic].recv_timestamp.length > MAX_SESSION_STORAGE_LENGTH){
+                    storage.payload[recv_topic].recv_timestamp.shift();
+                    length_flag = 2;
+                }
+
+                storage.payload[recv_topic].recv_timestamp.push(parsed_message.recv_timestamp);
 
                 for(var i in parsed_message.payload_data){
                     
-                    document.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
+                    // do3cument.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
+                    
+                    //STORAGE
+                    if(length_flag==1){
+                        storage.payload[recv_topic].payload_data[i] = [];
+                    }else if(length_flag==2){
+                        storage.payload[recv_topic].payload_data[i].shift();
+                    }
+                    storage.payload[recv_topic].payload_data[i].push(parsed_message.payload_data[i]);
+
+                    //GRAPH
+                    document.querySelectorAll(`[id^=payload-data-${recv_topic}-${i}]`).forEach((item)=>{
+                                                        item.innerHTML = parsed_message.payload_data[i];                                  
+                    });
+                    document.querySelectorAll(`[id^=chart-payload-data-${recv_topic}-${i}]`).forEach((item)=>{
+                                                        var graph = $(item).data('graph');
+                                                        graph.data.labels.push(parsed_message.recv_timestamp);
+                                                        graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
+                                                        graph.update();        
+
+                    });
                 }
 
+                sessionStorage.setItem("payload-storage", JSON.stringify(storage));
                 // parsed_message.payload_data.forEach((item) => {
                 //     document.getElementById(`payload-data-${recv_topic[1]}-${item.key}`).innerHTML = item
                 // })
@@ -141,9 +206,13 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div class="nav-item dropdown">
 
-                                <button class="btn btn-primary dropdown-toggle" href="#" id="changeDashboard"
+                                <button class="btn btn-primary dropdown-toggle" id="changeDashboard"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <%if(board.length){%>
                                 <%= board[0].value%>
+                                <%}else{%>
+                                    <%= 'No board yet'%>
+                                <%}%>
                             </button>
                             <div class="dropdown-menu dropdown-menu-left animated--fade-in"
                             aria-labelledby="changeDashboard">
@@ -169,12 +238,15 @@
                                 }
                             </script>
                         </div>
+                        <%if(board.length){%>
+                            
+                        
                         <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                             role="button" data-toggle="modal" data-target="#addWidgetModal">
                         
                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;Add widget
                         </a>
-                        
+                        <%}%>
                         <!-- Add Board Modal-->
                         <div class="modal fade" id="addBoardModal" tabindex="-1" role="dialog" aria-labelledby="addBoardModalLabel"
                         aria-hidden="true">
@@ -232,36 +304,100 @@
                                             <!-- Input type Text -->
                                             <label for="widget_name">Widget Name</label>
                                             <div class="form-group">
-                                                <input type="hidden" id='add-widget-board_id' value="<%=board[0].value%>">
+                                                <input type="hidden" id='add-widget-board_id' name='board_id' value="<%=board.length?board[0].key:''%>">
+                                                
                                                 <input type="text" class="form-control form-control-user"
                                                     id="addWidgetName" aria-describedby="widget_name"
-                                                    placeholder="Enter Widget name" name="endwidget_name">
+                                                    placeholder="Enter Widget name" name="widget_name">
                                             </div>
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
                                             <label for="addWidgetType">Widget Type</label>
-                                            <select class="form-control mb-4" id="addWidgetType">
-                                                <option selected value="1">Card</option>
-                                                <option value="2">Chart</option>
-                                                <option value="3">Table</option>
+                                            <select class="form-control mb-4" id="addWidgetType" name="WidgetType" onchange="widgetTypeTrigger(this.value);">
+                                                <%for(let i =0; i < widgetType.length; i++){%>
+                                                <option value="<%=widgetType[i]._id%>"><%=widgetType[i].ui_config.type%></option>
+                                                <%}%>
                                             </select>
+                                            <%for(let i in widgetType){%>
+                                                <%let jMax = widgetType[i].ui_config%>
+                                                <%if(i!=0){%>
+                                                    <div class="form-group" id="addWidgetType-group-<%=widgetType[i]._id%>" hidden>
+                                                <%}else{%>
+                                                    <div class="form-group" id="addWidgetType-group-<%=widgetType[i]._id%>">
+                                                <%}%>
+                                                <%for(let j in jMax.view){%>
+                                                    
+                                                    <%let kMax = jMax.view[j].domain%>
+                                                    <label for="addWidgetType-<%=jMax.type%>-<%=j%>"><%=j%></label>
+                                                    <select class="form-control mb-4" id="addWidgetType-<%=jMax.type%>-<%=j%>" name="addWidgetType-<%=widgetType[i]._id%>-<%=j%>">
+                                                        <option selected value="">--Select <%=j%>--</option>
+                                                    <%for(let k in kMax){%>
+                                                        <option value="<%=kMax[k]%>"><%=kMax[k]%></option>
+                                                    <%}%>
+                                                    </select>
+                                                <%}%>
+                                                </div>
+                                            <%}%>
+                                            <script>
+                                                function widgetTypeTrigger(val){
+                                                    
+                                                    document.querySelectorAll('[id^=addWidgetType-group]').forEach((item)=>{
+                                                        item.hidden = true;
+                                                        
+                                                    });
+                                                    document.getElementById(`addWidgetType-group-${val}`).hidden = false;
+                                                }
+                                            </script>
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
-                                            <label for="addWidgetData">Data</label>
+                                            <label for="addData">Data</label>
+                                            <input type="hidden" id="no_sensor" name="no_sensor_data" value="1">
+                                            <div class="form-group" id="addData">
+                                                <div class="form-group" id="addData-0">
+                                                    <select class="form-control mb-4" id="addDeviceData-0" name="DeviceData-0" onchange="addDeviceTrigger('Data-0')">
+                                                        <option selected value="">--Select Device--</option>
+                                                        <%for(let i=0; i< sensor.length; i++){%>
+                                                        <option value="<%=JSON.stringify(sensor[i])%>"><%=sensor[i].dev_id%></option>
+                                                        
+                                                        <%}%>
+                                                    </select>
+                                                    
+                                                    <select class="form-control mb-4" id="addSensorData-0" name="SensorData-0">
+                                                        <option selected value="">--Select Sensor--</option>
+                                                        <option value=""></option>
+                                                        <!-- <option value="2">AIRHUMID</option>
+                                                        <option value="3">ADC_CH0V</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
                                             
-                                            <select class="form-control mb-4" id="addWidgetData">
-                                                <option selected value="1">AIRTEMP</option>
-                                                <option value="2">AIRHUMID</option>
-                                                <option value="3">ADC_CH0V</option>
-                                            </select>
-                                            <select class="form-control mb-4" id="addWidgetData">
-                                                <option selected value="1">AIRTEMP</option>
-                                                <option value="2">AIRHUMID</option>
-                                                <option value="3">ADC_CH0V</option>
-                                            </select>
-                                            <a onclick="" class="btn btn-primary btn-user btn-block">Add more sensor ...</a>
+                                            <a onclick="add_sensor()" class="btn btn-primary btn-user btn-block">Add more sensor ...</a>
                                             <script>
+
                                                 function add_sensor();
+
+                                                function addDeviceTrigger(replace){
+                                                    var sensor_list = JSON.parse(document.getElementById(`addDevice${replace}`).value).sensor_key_arr;
+                                                    
+                                                    var Sensordata = document.getElementById(`addSensor${replace}`);
+                                                    Sensordata.innerHTML = '<option selected value="">--Select Sensor--</option>';
+                                                    sensor_list.forEach((item)=>{
+                                                        Sensordata.innerHTML += `<option value="${item}">${item}</option>`;
+                                                    })
+                                                }
+                                                function add_sensor(){
+                                                    // mydiv.appendChild(document.createTextNode("bar"))
+                                                    var no_sensor = parseInt(document.getElementById('no_sensor').value);
+                                                    no_sensor++;
+                                                    var newNode = document.createElement('div');
+                                                    newNode.className = 'form-group';
+                                                    newNode.id = `addData-${no_sensor}`;
+                                                    newNode.innerHTML = document.getElementById('addData-0').innerHTML.replaceAll('Data-0',`Data-${no_sensor}`);
+                                                    
+                                                    document.getElementById('no_sensor').value = no_sensor;  
+                                                              
+                                                    document.getElementById("addData").appendChild(newNode);
+                                                }
                                             </script>
                                             <hr class="mt-2 mb-3"/>
                                             <input type="submit" id="add_widget" value="Confirm changes" class="btn btn-primary btn-user btn-block">
@@ -287,122 +423,139 @@
                         <!-- Widget Card Example -->
                         
                         <%for(let j=0; j< boardWidget.length; j++){ %>
-                            <%if(boardWidget[j].board_id == board[i].key){%>
-                        <%var config = boardWidget[j].config_dict; %>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-<%=config.view.color%> shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-<%=config.view.color%> text-uppercase mb-1">
-                                                <%=boardWidget[j].w_display_name%></div>
-                                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>">[blank]</div>  <!--31.2&#176;C -->
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="dropdown no-arrow">
-                                                <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                                </a>
-                                                <!-- Configure dropdown menu -->
-                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                    aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure">
 
-                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
-                                                    onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')">Edit widget</a>
+                        <%if(boardWidget[j].board_id == board[i].key){%>
+                            <%var config = boardWidget[j].config_dict; %>
+                            <%if(config.type == 'Card'){%>
+                                <div class="col-xl-3 col-md-6 mb-4">
+                                    <div class="card border-left-<%=config.view['Color of card']%> shadow h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-<%=config.view['Color of card']%> text-uppercase mb-1">
+                                                        <%=boardWidget[j].w_display_name%></div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="dropdown no-arrow">
+                                                        <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-configure"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                                        </a>
+                                                        <!-- Configure dropdown menu -->
+                                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                          aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure">
 
-                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
-                                                    onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')">Delete widget</a>
+                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
+                                                            onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')">Edit widget</a>
 
-                                                    <script>
-                                                        function openEditWidgetModal(widget_id) {
-                                                            var str = "Widget ID: " + widget_id;
-                                                            $("#widget_id").html(str);
-                                                            document.getElementById(`edit-widget_id`).value = widget_id;
-                                                        }
+                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
+                                                            onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')">Delete widget</a>
+                                                            <script>
+                                                                function openEditWidgetModal(widget_id) {
+                                                                    var str = "Widget ID: " + widget_id;
+                                                                    $("#widget_id").html(str);
+                                                                    document.getElementById(`edit-widget_id`).value = widget_id;
+                                                                }
 
-                                                        function openDeleteWidgetModal(widget_id) {
-                                                            document.getElementById(`delete-widget_id`).value = widget_id;
-                                                        }
-                                                    </script>
-
+                                                                function openDeleteWidgetModal(widget_id) {
+                                                                    document.getElementById(`delete-widget_id`).value = widget_id;
+                                                                }
+                                                            </script>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
-                        </div>
+                       </div>
                         
-                        <!------------------------------------------------------------------------------------------------------------------------>
+                       <!------------------------------------------------------------------------------------------------------------------------>
+
+
+                              
+                            <%}else if(config.type == 'Chart'){%>
+                                <div class="card shadow col-md-12 mb-4">
+                        
+                                    <div
+                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-<%=config.view['Color of line']%>"><%=boardWidget[j].w_display_name%></h6>
+                                        <div class="dropdown no-arrow">
+                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">Dropdown Header:</div>
+                                                <a class="dropdown-item" href="#">Action</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="chart-area">
+                                            <canvas id="chart-payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>"></canvas>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            <%}else if(config.type == "Thresholds"){%>
+                                <div class="card shadow mb-4">
+                        
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
+                                        <div class="dropdown no-arrow">
+                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">Dropdown Header:</div>
+                                                <a class="dropdown-item" href="#">Action</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="mb-1 small">Temperature</div>
+                                        <div class="progress mb-4">
+                                            <div class="progress-bar" role="progressbar" style="width: 62.4%"
+                                                aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
+                                        </div>
+                                        <div class="mb-1 small">Humidity</div>
+                                        <div class="progress mb-4">
+                                            <div class="progress-bar" role="progressbar" style="width: 58.5%"
+                                                aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
+                                        </div>
+            
+                                    </div>
+                                </div>
+                            
+                            
+                            <%}%>
 
                         <%}%>
                         <%}%>
-
+                        
                     </div>
+                    
                     <%}%>
-                    <div class="card shadow mb-4">
-                        
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
-                            <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                    aria-labelledby="dropdownMenuLink">
-                                    <div class="dropdown-header">Dropdown Header:</div>
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card-body">
-                            <div class="mb-1 small">Temperature</div>
-                            <div class="progress mb-4">
-                                <div class="progress-bar" role="progressbar" style="width: 62.4%"
-                                    aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
-                            </div>
-                            <div class="mb-1 small">Humidity</div>
-                            <div class="progress mb-4">
-                                <div class="progress-bar" role="progressbar" style="width: 58.5%"
-                                    aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
-                            </div>
+                    
 
-                        </div>
-                    </div>
-
-                    <div class="card shadow mb-4">
-                        
-                        <div
-                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Chart 1</h6>
-                            <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                    aria-labelledby="dropdownMenuLink">
-                                    <div class="dropdown-header">Dropdown Header:</div>
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card-body">
-                            <div class="chart-area">
-                                <canvas id="myAreaChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <!-- /.container-fluid -->
@@ -509,15 +662,19 @@
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <!-- Modal footer -->
                 <div class="modal-footer">
-                    <!-- Modal footer -->
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="../login">Logout</a>
+                    <form action="../login/logout" method="post">
+                        <!-- <a  onclick="this.parentNode.submit();">Logout</a> -->
+                        <input type="submit" class="btn btn-primary" value="Logout">
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
@@ -528,11 +685,108 @@
 
     <!-- Page level plugins -->
     <script src="vendor/chart.js/Chart.min.js"></script>
-
+    
     <!-- Page level custom scripts -->
     <script src="js/visuals/chart-area-demo.js"></script>
-    <script src="js/visuals/chart-pie-demo.js"></script>
-
+    <!-- <script src="js/visuals/chart-pie-demo.js"></script> -->
+    <script>
+        document.querySelectorAll('[id^=chart-payload-data-]').forEach((item)=>{
+            // var ctx = document.getElementById("myAreaChart");
+            var graph = new Chart(item, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                label: "",
+                lineTension: 0.3,
+                backgroundColor: "rgba(78, 115, 223, 0.05)",
+                borderColor: "rgba(78, 115, 223, 1)",
+                pointRadius: 3,
+                pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointBorderColor: "rgba(78, 115, 223, 1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: [],
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                }
+                },
+                scales: {
+                xAxes: [{
+                    time: {
+                    unit: 'date'
+                    },
+                    gridLines: {
+                    display: false,
+                    drawBorder: false
+                    },
+                    ticks: {
+                    maxTicksLimit: 7
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                    display: true,
+                    labelString: 'Temperature (°C)'
+                    },
+                    ticks: {
+                    maxTicksLimit: 5,
+                    padding: 10,
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return number_format(value);
+                    }
+                    },
+                    gridLines: {
+                    color: "rgb(234, 236, 244)",
+                    zeroLineColor: "rgb(234, 236, 244)",
+                    drawBorder: true,
+                    borderDash: [2],
+                    zeroLineBorderDash: [2]
+                    }
+                }],
+                },
+                legend: {
+                display: true
+                },
+                tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                titleMarginBottom: 10,
+                titleFontColor: '#6e707e',
+                titleFontSize: 14,
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                intersect: false,
+                mode: 'index',
+                caretPadding: 10,
+                callbacks: {
+                    label: function(tooltipItem, chart) {
+                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                    return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                    }
+                }
+                }
+            }
+            });
+            $(item).data('graph', graph);  
+                                        
+        });  
+    </script>
 </body>
 
 </html>

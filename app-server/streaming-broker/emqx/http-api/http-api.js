@@ -10,11 +10,11 @@ async function add_client_acl_on_dev_topic(client_id, dev_list) {
             access: `allow`
         });
     });
-    console.log('acl_batch ', acl_batch);
+    // console.log('acl_batch ', acl_batch);
     await emqx_http.post('api/v4/acl', acl_batch)
         .then((res) => {
-            // console.log(res);
-        })
+            //console.log(res);
+        })  
         .catch((err) => {
             // console.log(err);
         });
@@ -22,7 +22,7 @@ async function add_client_acl_on_dev_topic(client_id, dev_list) {
 
 async function del_client_acl_on_dev_topic(client_id, dev_list) {
     await dev_list.forEach(async (dev_id) => {
-        await emqx_http.delete(`api/v4/acl/clientid/${client_id}/topic/${encodeURIComponent(`devices/${dev_id}/up/payload`)}`)
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/up/payload`)}`)
         .then((res) => {
             console.log(res);
         })
@@ -32,9 +32,20 @@ async function del_client_acl_on_dev_topic(client_id, dev_list) {
     });
 }
 
+async function kick_client(client_id) {
+    await emqx_http.delete(`/api/v4/clients/${encodeURIComponent(client_id)}`)
+    .then((res) => {
+        console.log(res);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
 module.exports = {
     add_client_acl_on_dev_topic,
-    del_client_acl_on_dev_topic
+    del_client_acl_on_dev_topic,
+    kick_client
 }
 
 
