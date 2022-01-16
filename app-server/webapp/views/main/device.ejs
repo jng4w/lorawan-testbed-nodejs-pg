@@ -192,15 +192,15 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Device</h1>
+                    <h1 class="h3 mb-2 text-gray-800"><%= __('Device') %></h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Device List</h6>
+                            <h6 class="m-0 font-weight-bold text-primary"><%= __('Device List') %></h6>
                             <span class="float-right">
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addDeviceModal">
-                                    <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;Add device
+                                    <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;<%= __('Add device') %>
                                 </button>
                             </span>
                         </div>
@@ -209,9 +209,9 @@
                                 <table class="table dt-responsive nowrap" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Device name</th>
-                                            <th>No. sensors</th>
-                                            <th>Data</th>
+                                            <th><%= __('Device name') %></th>
+                                            <th><%= __('No. sensors') %></th>
+                                            <th><%= __('Data') %></th>
                                             <th id="battery"><i class="fas fa-battery-three-quarters fa-lg fa-fw mr-2"></i></th>
                                             <th></th>
                                         </tr>
@@ -241,7 +241,7 @@
                                             <td class="align-middle">
                                                 <button type="button" id="<%=sensor[i].dev_id%>" class="btn btn-light btn-sm"
                                                         onclick="openUniqueDeviceModal('<%=sensor[i].dev_id%>')" data-toggle="modal" data-target="#configureDeviceModal">
-                                                    Configure
+                                                    <%= __('Configure') %>
                                                 </button>
                                             </td>
                                         </tr>
@@ -284,7 +284,7 @@
             <div class="modal-content">
                 <!-- Modal header -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="configureDeviceModalLabel">Configure device</h5>
+                    <h5 class="modal-title" id="configureDeviceModalLabel"><%= __('Configure device') %></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -297,7 +297,7 @@
                     <form method="post" action="" class="user">
                         <!-- Input type Text -->
                         <input type="hidden" class="form-control form-control-user" id='configure-device_id' value="">
-                        <label for="device_name">Device Name</label>
+                        <label for="device_name"><%= __('Device name') %></label>
                         <div class="form-group">
                             <input type="text" class="form-control form-control-user"
                                 id="configureDeviceName" aria-describedby="device_name"
@@ -306,7 +306,7 @@
                         <!-- Nếu có làm option đổi board, thì ở controller trả về thêm biến board
                         trước khi render page device, sau đó list các board ra ở tag select này-->
                         <!-- Input type Select -->
-                        <label for="configureDeviceGroup">Dashboard</label>
+                        <label for="configureDeviceGroup"><%= __('Dashboard') %></label>
                         <select class="form-control mb-4" id="configureDeviceGroup">
                             <option selected value="1">Garden 1</option>
                             <option value="2">Garden 2</option>
@@ -317,7 +317,7 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
                 </div>
             </div>
         </div>
@@ -338,7 +338,7 @@
             <div class="modal-content">
                 <!-- Modal header -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addDeviceModalLabel">Add device</h5>
+                    <h5 class="modal-title" id="addDeviceModalLabel"><%= __('Add device') %></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -361,7 +361,7 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
                 </div>
             </div>
         </div>
