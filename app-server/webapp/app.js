@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const i18n = require("i18n");
 
 const indexRouter = require('./routes/index.route');
 const dashboardRouter = require('./routes/dashboard.route');
@@ -14,6 +15,7 @@ const userRouter = require('./routes/user.route');
 const deviceRouter = require('./routes/device.route');
 const settingRouter = require('./routes/setting.route');
 const logoutRouter = require('./routes/logout.route');
+const languageRouter = require('./routes/language.route');
 
 // var usersRouter = require('./routes/users');
 // var diaryRouter = require('./routes/diary.route');
@@ -50,6 +52,9 @@ app.use(session({
 }
 }));
 
+// language node package
+app.use(i18n.init);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -61,6 +66,7 @@ app.use('/user', userRouter);
 app.use('/device', deviceRouter);
 app.use('/setting', settingRouter);
 app.use('/logout', logoutRouter);
+app.use('/change-lang', languageRouter);
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
@@ -81,5 +87,11 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+i18n.configure({
+  locales:['en', 'vi'],
+  directory: __dirname + '/locales',
+  cookie: 'lang',
+ });
 
 module.exports = app;

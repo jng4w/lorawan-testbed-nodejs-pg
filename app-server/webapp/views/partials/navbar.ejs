@@ -2,7 +2,7 @@
  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../dashboard">
         <!-- <div class="sidebar-brand-icon">
             <i class="fas fa-laugh-wink"></i>
             <img class="rounded-circle" src="img/lorawan.png"
@@ -18,21 +18,21 @@
     <li class="nav-item <%= title === 'Dashboard' && 'active' %>">
         <a class="nav-link" href="../dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span><%= __('Dashboard') %></span></a>
     </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item <%= title === 'Device' && 'active' %>">
         <a class="nav-link" href="../device">
             <i class="fas fa-fw fa-microchip"></i>
-            <span>Device</span></a>
+            <span><%= __('Device') %></span></a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item <%= title === 'User' && 'active' %>">
         <a class="nav-link" href="../user">
             <i class="fas fa-fw fa-user"></i>
-            <span>User</span>
+            <span><%= __('User') %></span>
         </a>
     </li>
 
@@ -41,21 +41,21 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Other
+        <%= __('Other') %>
     </div>
 
-    <!-- Nav Item - Charts -->
+    <!-- Nav Item - Setting -->
     <li class="nav-item <%= title === 'Setting' && 'active' %>">
         <a class="nav-link" href="#">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Setting</span></a>
+            <span><%= __('Setting') %></span></a>
     </li>
 
-    <!-- Nav Item - Tables -->
+    <!-- Nav Item - Logout -->
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
             <i class="fas fa-fw fa-sign-out-alt"></i>
-            <span>Logout</span></a>
+            <span><%= __('Logout') %></span></a>
     </li>
 
     <!-- Divider -->

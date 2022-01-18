@@ -222,7 +222,7 @@
                                 <%}%>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" role="button" data-toggle="modal" data-target="#addBoardModal">
-                                    <i class="fas fa-plus fa-sm text-gray-600"></i>&nbsp;Add board
+                                    <i class="fas fa-plus fa-sm text-gray-600"></i>&nbsp;<%= __('Add board') %>
                                 </a>
 
                             </div>
@@ -244,7 +244,7 @@
                         <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                             role="button" data-toggle="modal" data-target="#addWidgetModal">
                         
-                            <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;Add widget
+                            <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;<%= __('Add widget') %>
                         </a>
                         <%}%>
                         <!-- Add Board Modal-->
@@ -253,7 +253,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addBoardModalLabel">Add board</h5>
+                                        <h5 class="modal-title" id="addBoardModalLabel"><%= __('Add board') %></h5>
                                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
@@ -263,25 +263,19 @@
                                         <form method="post" action="dashboard/add-board" class="user">
                                             <!-- Input type Text -->
                                             
-                                            <label for="board_name">Board Name</label>
+                                            <label for="board_name"><%= __('Board name') %></label>
                                 
                                             <div class="form-group">
                                                 <input type="text" class="form-control form-control-user"
                                                     id="addWidgetName" aria-describedby="board_name"
                                                     placeholder="Enter Board name" name="board_name">
                                             </div>
-                                            <!-- Select type Select -->
-                                            <!-- <label for="addBoardDevice">Device</label>
-                                            <select class="form-control mb-4" id="addBoardDevice">
-                                                <option selected value="1">Device 1</option>
-                                                <option value="2">Device 2</option>
-                                                <option value="3">Device 3</option>
-                                            </select> -->
+
                                             <input type="submit" id="add_board" value="Add board" class="btn btn-primary btn-user btn-block">
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
                                     </div>
                                 </div>
                             </div>
@@ -293,7 +287,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addWidgetModalLabel">Add widget</h5>
+                                        <h5 class="modal-title" id="addWidgetModalLabel"><%= __('Add widget') %></h5>
                                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
@@ -302,7 +296,7 @@
                                         <!-- action="device/configure" -->
                                         <form method="post" action="dashboard/add-widget" class="user">
                                             <!-- Input type Text -->
-                                            <label for="widget_name">Widget Name</label>
+                                            <label for="widget_name"><%= __('Widget name') %></label>
                                             <div class="form-group">
                                                 <input type="hidden" id='add-widget-board_id' name='board_id' value="<%=board.length?board[0].key:''%>">
                                                 
@@ -312,7 +306,7 @@
                                             </div>
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
-                                            <label for="addWidgetType">Widget Type</label>
+                                            <label for="addWidgetType"><%= __('Widget type') %></label>
                                             <select class="form-control mb-4" id="addWidgetType" name="WidgetType" onchange="widgetTypeTrigger(this.value);">
                                                 <%for(let i =0; i < widgetType.length; i++){%>
                                                 <option value="<%=widgetType[i]._id%>"><%=widgetType[i].ui_config.type%></option>
@@ -350,12 +344,12 @@
                                             </script>
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
-                                            <label for="addData">Data</label>
+                                            <label for="addData"><%= __('Data') %></label>
                                             <input type="hidden" id="no_sensor" name="no_sensor_data" value="1">
                                             <div class="form-group" id="addData">
                                                 <div class="form-group" id="addData-0">
                                                     <select class="form-control mb-4" id="addDeviceData-0" name="DeviceData-0" onchange="addDeviceTrigger('Data-0')">
-                                                        <option selected value="">--Select Device--</option>
+                                                        <option selected value="">--<%= __('Select device') %>--</option>
                                                         <%for(let i=0; i< sensor.length; i++){%>
                                                         <option value="<%=JSON.stringify(sensor[i])%>"><%=sensor[i].dev_id%></option>
                                                         
@@ -363,7 +357,7 @@
                                                     </select>
                                                     
                                                     <select class="form-control mb-4" id="addSensorData-0" name="SensorData-0">
-                                                        <option selected value="">--Select Sensor--</option>
+                                                        <option selected value="">--<%= __('Select sensor') %>--</option>
                                                         <option value=""></option>
                                                         <!-- <option value="2">AIRHUMID</option>
                                                         <option value="3">ADC_CH0V</option> -->
@@ -371,8 +365,11 @@
                                                 </div>
                                             </div>
                                             
-                                            <a onclick="add_sensor()" class="btn btn-primary btn-user btn-block">Add more sensor ...</a>
+                                            <a onclick="add_sensor()" class="btn btn-primary btn-user btn-block"><%= __('Add more sensor') %> ...</a>
                                             <script>
+
+                                                function add_sensor();
+
                                                 function addDeviceTrigger(replace){
                                                     var sensor_list = JSON.parse(document.getElementById(`addDevice${replace}`).value).sensor_key_arr;
                                                     
@@ -401,7 +398,7 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
                                     </div>
                                 </div>
                             </div>
@@ -420,6 +417,7 @@
                         <!-- Widget Card Example -->
                         
                         <%for(let j=0; j< boardWidget.length; j++){ %>
+
                         <%if(boardWidget[j].board_id == board[i].key){%>
                             <%var config = boardWidget[j].config_dict; %>
                             <%if(config.type == 'Card'){%>
@@ -440,14 +438,24 @@
                                                         </a>
                                                         <!-- Configure dropdown menu -->
                                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                            aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-configure">
+                                                          aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure">
 
-                                                            <a class="dropdown-item" href="#" data-toggle="modal"
-                                                            data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-edit">Edit widget</a>
+                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
+                                                            onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')"><%= __('Configure widget') %></a>
 
-                                                            <a class="dropdown-item" href="#" data-toggle="modal"
-                                                            data-target="#<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-delete">Delete widget</a>
+                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
+                                                            onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')"><%= __('Delete widget') %></a>
+                                                            <script>
+                                                                function openEditWidgetModal(widget_id) {
+                                                                    var str = "Widget ID: " + widget_id;
+                                                                    $("#widget_id").html(str);
+                                                                    document.getElementById(`edit-widget_id`).value = widget_id;
+                                                                }
 
+                                                                function openDeleteWidgetModal(widget_id) {
+                                                                    document.getElementById(`delete-widget_id`).value = widget_id;
+                                                                }
+                                                            </script>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -455,70 +463,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!------------------------------------------------------------------------------------------------------------------------>
-                                <!-- Configure Widget Modals for unique Widgets -->
-                                <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-edit"
-                                    tabindex="-1" role="dialog" aria-labelledby="configureSensorModalLabel" aria-hidden="true">
+                        
+                       <!------------------------------------------------------------------------------------------------------------------------>
 
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="configureSensorModalLabel">Configure Widget</h5>
-                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">×</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Widget ID: <%=boardWidget[j].sensor_key%></p>
-                                                <hr>
-                                                <!-- action="device/configure" -->
-                                                <form method="post" action="" class="user">
-                                                    <!-- Input type Text -->
-                                                    <label for="widget_name">Widget Name</label>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control form-control-user"
-                                                            id="configureWidgetName" aria-describedby="widget_name"
-                                                            placeholder="Enter Widget name" name="widget_name">
-                                                    </div>
-                                                    <!-- Input type Select -->
-                                                    <label for="configureSensorData">Display Data</label>
-                                                    <select class="form-control mb-4" id="configureSensorData">
-                                                        <option selected value="1">Temperature</option>
-                                                        <option value="2">Hudmidity</option>
-                                                        <option value="3">Bat5V</option>
-                                                    </select>
-                                                    <input type="submit" id="sensor" value="Confirm changes" class="btn btn-primary btn-user btn-block">
-                                                    <hr>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Delete Widget Modals for unique Widgets -->
-                                <div class="modal fade" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-delete"
-                                    tabindex="-1" role="dialog" aria-labelledby="deleteSensorModalLabel" aria-hidden="true">
-
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteSensorModalLabel">Delete this widget?</h5>
-                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">×</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">Select <b style="color: #2F69CA">Delete</b> button to remove this widget from the board.</div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                <button class="btn btn-primary" type="button" action="">Delete</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                              
                             <%}else if(config.type == 'Chart'){%>
                                 <div class="card shadow col-md-12 mb-4">
                         
@@ -588,6 +537,7 @@
                             
                             
                             <%}%>
+
                         <%}%>
                         <%}%>
                         
@@ -615,25 +565,102 @@
     <!-- End of Page Wrapper -->
 
     <!-- Global Modals-->
+    <!-- Configure Widget Modals for unique Widgets -->
+    <div class="modal fade" id="editWidgetModal" tabindex="-1"
+        role="dialog" aria-labelledby="configureSensorModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Modal header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="configureSensorModalLabel"><%= __('Configure widget') %></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <p id="widget_id">Widget ID: temp</p>
+                    <hr>
+                    <!-- action="widget/configure" -->
+                    <form method="post" action="" class="user">
+                        <input type="text" class="form-control form-control-user" id='edit-widget_id' value="">
+                        <!-- Input type Text -->
+                        <label for="widget_name"><%= __('Widget name') %></label>
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user" id="configureWidgetName"
+                                aria-describedby="widget_name" placeholder="Enter Widget name" name="widget_name">
+                        </div>
+                        <!-- Input type Select -->
+                        <label for="configureSensorData"><%= __('Display data') %></label>
+                        <select class="form-control mb-4" id="configureSensorData">
+                            <option selected value="1">Temperature</option>
+                            <option value="2">Hudmidity</option>
+                            <option value="3">Bat5V</option>
+                        </select>
+                        <input type="submit" id="widget_confirm" value="Confirm changes" class="btn btn-primary btn-user btn-block">
+                        <hr>
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Widget Modals for unique Widgets -->
+    <div class="modal fade" id="deleteWidgetModal" tabindex="-1"
+        role="dialog" aria-labelledby="deleteWidgetModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Modal header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteWidgetModalLabel"><%= __('Delete this widget?') %></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">Select <b style="color: #2F69CA">Delete</b> button to remove this widget from the board.
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Delete') %></button>
+                    <!-- action="widget/delete" -->
+                    <form method="post" action="" class="user">
+                        <input type="hidden" class="form-control form-control-user" id='delete-widget_id' value="">
+                        <button class="btn btn-primary" type="submit"><%= __('Cancel') %></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+                <!-- Modal header -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><%= __('Ready to leave?') %></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <!-- Modal body -->
+                <div class="modal-body"><%= __('Select Logout below if you are ready to end your current session') %>.</div>
+                <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
+                    <a class="btn btn-primary" href="../login"><%= __('Logout') %></a>
                     <form action="../login/logout" method="post">
                         <!-- <a  onclick="this.parentNode.submit();">Logout</a> -->
                         <input type="submit" class="btn btn-primary" value="Logout">
                     </form>
-                    
                 </div>
             </div>
         </div>
