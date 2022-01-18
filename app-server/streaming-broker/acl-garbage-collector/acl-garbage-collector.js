@@ -6,11 +6,12 @@ const emqx_http = require(`${__dirname}/../emqx/http-api/http-api.js`);
 const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../common/emqx.json`));
 
 const PERIOD = 30000; //ms
+const LIST_LIMIT = 1000;
 
 async function collect_garbage() {
     //get client list currently have session and ACL list
-    let client_list = await emqx_http.get_client_list_with_username(common_emqx['ENDUSER_USERNAME'], 50);
-    let acl_list = await emqx_http.get_acl_list_all_clientid(50);
+    let client_list = await emqx_http.get_client_list_with_username(common_emqx['ENDUSER_USERNAME'], LIST_LIMIT);
+    let acl_list = await emqx_http.get_acl_list_all_clientid(LIST_LIMIT);
 
     //extract client list into clientid array
     let clientid_list = client_list.data.data.map((client) => {
