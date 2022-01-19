@@ -806,10 +806,10 @@
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
-                    <a class="btn btn-primary" href="../login"><%= __('Logout') %></a>
+                    
                     <form action="../login/logout" method="post">
                         <!-- <a  onclick="this.parentNode.submit();">Logout</a> -->
-                        <input type="submit" class="btn btn-primary" value="Logout">
+                        <input type="submit" class="btn btn-primary" onclick='sessionStorage.removeItem("payload-storage");' value="<%= __('Logout') %>">
                     </form>
                 </div>
             </div>
