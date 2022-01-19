@@ -33,6 +33,7 @@ exports.dashboardProcessing = async (req, res, next) => {
 
         var boardWidget = (await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows;
         // console.log((await Index.selectBoardFromCustomer(req.session.user.id)).rows.length);
+        console.log(boardWidget[0]);
         res.render('main/dashboard', {
             
             user: req.session.user,
@@ -75,20 +76,25 @@ exports.addBoardDashboardProcessing = async (req, res, next) => {
 exports.addWidgetDashboardProcessing = async (req, res, next) => {
     
     if(req.session.login){
-        
+        console.log('data', JSON.stringify(req.body) );
         let body = req.body;
         let no_sensor_data = body.no_sensor_data;
+
+        //List device, sensor
         let device = [];
         let sensor = [];
         for(let i=0; i < no_sensor_data; i++){
-            device.push(JSON.parse(body[`DeviceData-${i}`]).dev_id,);
+            device.push(JSON.parse(body[`DeviceData-${i}`]).dev_id);
             sensor.push(body[`SensorData-${i}`]);
             body[`DeviceData-${i}`] = null;
             body[`SensorData-${i}`] = null;
         }
+
+        //UI_CONFIG col
         let ui_config;
+        let w_type = body.WidgetType.split('-')[0];
         for(let i in body){
-            if(i.startsWith(`addWidgetType-${body.WidgetType}`)){
+            if(i.startsWith(`addWidgetType-${w_type}`)){
                 let data = i.split('-');
                 ui_config = (await Index.selectWidgetType(data[1])).rows[0].ui_config;
                 
@@ -103,8 +109,9 @@ exports.addWidgetDashboardProcessing = async (req, res, next) => {
                 
             }
         }
-        // console.log(body.widget_name, ui_config, body.board_id, body.WidgetType, device, sensor);
-        await Index.insertWidgetToBoard(body.widget_name, ui_config, body.board_id, body.WidgetType, device.toString(), sensor.toString());
+
+        console.log('data', device.toString(), sensor.toString() );
+        await Index.insertWidgetToBoard(body.widget_name, ui_config, body.board_id, w_type, device.toString(), sensor.toString());
         
         // try {
         //     (await Index.insertBoardToCustomer(req.session.user.id, req.body.board_name));

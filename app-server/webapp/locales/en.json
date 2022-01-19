@@ -22,5 +22,15 @@
 	"Delete this widget?": "Delete this widget?",
 	"Delete": "Delete",
 	"Ready to leave?": "Ready to leave?",
-	"Select Logout below if you are ready to end your current session": "Select Logout below if you are ready to end your current session"
+	"Select Logout below if you are ready to end your current session": "Select Logout below if you are ready to end your current session",
+	"Device List": "Device List",
+	"Add device": "Add device",
+	"Device name": "Device name",
+	"No. sensors": "No. sensors",
+	"Configure": "Configure",
+	"Configure device": "Configure device",
+	"Profile": "Profile",
+	"Name": "Name",
+	"Phone number": "Phone number",
+	"Edit profile": "Edit profile"
 }
