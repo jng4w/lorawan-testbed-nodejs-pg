@@ -83,6 +83,9 @@
                     for(let i in storage.payload){
                         
                         for(let j in storage.payload[i].payload_data){
+                            document.querySelectorAll(`[id^=timestamp-payload-data-${i}-${j}]`).forEach((item)=>{
+                                                            item.innerHTML = `<%= __('Last updated') %>: ${storage.payload[i].recv_timestamp.at(-1)}`;                                 
+                            });
                             document.querySelectorAll(`[id^=payload-data-${i}-${j}]`).forEach((item)=>{
                                                                 item.innerHTML = storage.payload[i].payload_data[j].at(-1);                                  
                             });
@@ -173,6 +176,9 @@
                     storage.payload[recv_topic].payload_data[i].push(parsed_message.payload_data[i]);
 
                     //GRAPH
+                    document.querySelectorAll(`[id^=timestamp-payload-data-${recv_topic}-${i}]`).forEach((item)=>{
+                                                        item.innerHTML = `<%= __('Last updated') %>: ${parsed_message.recv_timestamp}`;                                  
+                    });
                     document.querySelectorAll(`[id^=payload-data-${recv_topic}-${i}]`).forEach((item)=>{
                                                         item.innerHTML = parsed_message.payload_data[i];                                  
                     });
@@ -186,7 +192,7 @@
                                             graph.data.labels.push(parsed_message.recv_timestamp);
                                             graph.data.labels=[...new Set(graph.data.labels)];
                                             graph.data.labels.sort();
-                                            console.log(graph.data.labels);
+                                            // console.log(graph.data.labels);
                                             // graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
                                             graph.data.datasets.forEach((item_data) => {
                                                 // console.log('plot1', item_data.id.dev, item_data.id.sensor);
@@ -391,7 +397,7 @@
                                             <%}%>
                                             <script>
                                                 function widgetTypeTrigger(val){
-                                                    console.log(val);
+                                                    // console.log(val);
                                                     document.querySelectorAll('[id^=addWidgetType-group]').forEach((item)=>{
                                                         item.hidden = true;
                                                         
@@ -531,6 +537,7 @@
                                                     <div class="text-xs font-weight-bold text-<%=config.view['Color of card']%> text-uppercase mb-1">
                                                         <%=boardWidget[j].w_display_name%></div>
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
+                                                    <div class="p mb-0 text-gray-800" id="timestamp-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>"><%= __('Last updated') %>: ___</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="dropdown no-arrow">
@@ -829,7 +836,7 @@
             data.shift();
             data.shift();
             data.pop();
-            console.log(data);
+            // console.log(data);
             // var ctx = document.getElementById("myAreaChart");
             // var graph = new Chart(item, 
             
