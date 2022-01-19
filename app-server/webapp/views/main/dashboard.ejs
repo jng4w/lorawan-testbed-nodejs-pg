@@ -92,7 +92,7 @@
                             document.querySelectorAll(`[id^="chart payload-data"]`).forEach((item)=>{
                                     
                                     let id = $(item).data('id');
-                                    
+                                    if (!id) return;
                                     for(let k in id.dev){
                                         if(id.dev[k]==i && id.sensor[k]==j){
                                             var graph = $(item).data('graph');
