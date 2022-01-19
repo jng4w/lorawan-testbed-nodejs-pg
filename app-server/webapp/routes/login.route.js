@@ -21,8 +21,9 @@ router.get('/', async function(req, res, next) {
 router.post('/', loginController.loginProcessing); 
 
 router.post('/logout', async (req, res, next) => {
-    req.session.destroy();
     await emqxHttp.kick_client(req.session.dev.client_id);
+    req.session.destroy();
+    
     res.redirect('/login');
 }); 
 

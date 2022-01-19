@@ -380,13 +380,13 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body"><%=__('Select Logout below if you are ready to end your current session')%></div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <form action="../login/logout" method="post">
                         <!-- <a  onclick="this.parentNode.submit();">Logout</a> -->
-                        <input type="submit" class="btn btn-primary" value="Logout">
+                        <input type="submit" class="btn btn-primary" onclick='sessionStorage.removeItem("payload-storage");' value="<%= __('Logout')%>">
                     </form>
                 </div>
             </div>
