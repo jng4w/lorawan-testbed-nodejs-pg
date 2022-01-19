@@ -133,7 +133,7 @@
                 storage.payload[recv_topic].recv_timestamp.shift();
                 length_flag = 2;
             }
-
+            parsed_message.recv_timestamp = timestamp_format(parsed_message.recv_timestamp);
             storage.payload[recv_topic].recv_timestamp.push(parsed_message.recv_timestamp);
 
             for(var i in parsed_message.payload_data){
@@ -158,6 +158,15 @@
         {
             console.log("Can't connect to streaming broker" + error);
             process.exit(1);
+        }
+
+        function timestamp_format(str){
+                var arr = new Date(str).toLocaleString(NaN,{ hour12: false }).split(', ');
+                arr[0] = arr[0].split('/');
+                arr[0].pop();
+                arr[0] = `${arr[0][0]}/${arr[0][1]}`
+                arr[1] = arr[1].slice(0, 5);
+                return `${arr[0]} ${arr[1]}`
         }
 </script>
     <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
