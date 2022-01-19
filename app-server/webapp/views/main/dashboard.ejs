@@ -9,7 +9,7 @@
     <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
     <!-- Global level stylesheet -->
     <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <script>
             // var payload_data = JSON.parse(window.localStorage.getItem('payload-data')) ;
@@ -86,11 +86,34 @@
                             document.querySelectorAll(`[id^=payload-data-${i}-${j}]`).forEach((item)=>{
                                                                 item.innerHTML = storage.payload[i].payload_data[j].at(-1);                                  
                             });
-                            document.querySelectorAll(`[id^=chart-payload-data-${i}-${j}]`).forEach((item)=>{
-                                                                var graph = $(item).data('graph');
-                                                                graph.data.labels=storage.payload[i].recv_timestamp;
-                                                                graph.data.datasets[0].data=storage.payload[i].payload_data[j];
-                                                                graph.update();        
+                            document.querySelectorAll(`[id^="chart payload-data"]`).forEach((item)=>{
+                                    
+                                    let id = $(item).data('id');
+                                    
+                                    for(let k in id.dev){
+                                        if(id.dev[k]==i && id.sensor[k]==j){
+                                            var graph = $(item).data('graph');
+                                            let labels = graph.data.labels.concat(storage.payload[i].recv_timestamp);
+                                            graph.data.labels=[...new Set(labels)];
+                                            graph.data.labels.sort();
+                                            // graph.data.datasets[0].data=storage.payload[i].payload_data[j];
+                                            graph.data.datasets.forEach((item) => {
+                                                if(item.id.dev == i && item.id.sensor == j){
+                                                    item.data = storage.payload[i].recv_timestamp.map((element,index)=>{
+                                                        return {
+                                                            x: element,
+                                                            y: storage.payload[i].payload_data[j][index]
+                                                        }
+                                                    });
+                                        
+                                                }
+                                                // else {
+                                                //     item.data = NaN;
+                                                // }
+                                            })
+                                            graph.update(); 
+                                        }
+                                    }
 
                             });
                         }
@@ -134,11 +157,11 @@
                     storage.payload[recv_topic].recv_timestamp.shift();
                     length_flag = 2;
                 }
-
+                parsed_message.recv_timestamp = timestamp_format(parsed_message.recv_timestamp);
                 storage.payload[recv_topic].recv_timestamp.push(parsed_message.recv_timestamp);
 
                 for(var i in parsed_message.payload_data){
-                    
+                    // console.log('i', i);
                     // do3cument.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
                     
                     //STORAGE
@@ -153,12 +176,37 @@
                     document.querySelectorAll(`[id^=payload-data-${recv_topic}-${i}]`).forEach((item)=>{
                                                         item.innerHTML = parsed_message.payload_data[i];                                  
                     });
-                    document.querySelectorAll(`[id^=chart-payload-data-${recv_topic}-${i}]`).forEach((item)=>{
-                                                        var graph = $(item).data('graph');
-                                                        graph.data.labels.push(parsed_message.recv_timestamp);
-                                                        graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
-                                                        graph.update();        
-
+                    document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
+                                   
+                                    let id = $(item).data('id');
+                                    
+                                    for(let j in id.dev){
+                                        if(id.dev[j]==recv_topic && id.sensor[j]==i){
+                                            var graph = $(item).data('graph');
+                                            graph.data.labels.push(parsed_message.recv_timestamp);
+                                            graph.data.labels=[...new Set(graph.data.labels)];
+                                            graph.data.labels.sort();
+                                            console.log(graph.data.labels);
+                                            // graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
+                                            graph.data.datasets.forEach((item_data) => {
+                                                // console.log('plot1', item_data.id.dev, item_data.id.sensor);
+                                                if(item_data.id.dev == recv_topic && item_data.id.sensor == i){
+                                                    // console.log('plot', recv_topic, i, parsed_message.recv_timestamp, parseFloat(parsed_message.payload_data[i]));
+                                                    item_data.data.push({
+                                                        x: parsed_message.recv_timestamp,
+                                                        y: parseFloat(parsed_message.payload_data[i]) 
+                                                    });
+                                                }
+                                                // else {
+                                                //     item.data.push({
+                                                //         x: parsed_message.recv_timestamp,
+                                                //         y: NaN
+                                                //     });
+                                                // }
+                                            })
+                                            graph.update(); 
+                                        }
+                                    }
                     });
                 }
 
@@ -174,6 +222,15 @@
             {
                 console.log("Can't connect to streaming broker" + error);
                 process.exit(1);
+            }
+
+            function timestamp_format(str){
+                var arr = new Date(str).toLocaleString(NaN,{ hour12: false }).split(', ');
+                arr[0] = arr[0].split('/');
+                arr[0].pop();
+                arr[0] = `${arr[0][0]}/${arr[0][1]}`
+                arr[1] = arr[1].slice(0, 5);
+                return `${arr[0]} ${arr[1]}`
             }
     </script>
     <%- include('../partials/libs.ejs') %>
@@ -307,9 +364,9 @@
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
                                             <label for="addWidgetType"><%= __('Widget type') %></label>
-                                            <select class="form-control mb-4" id="addWidgetType" name="WidgetType" onchange="widgetTypeTrigger(this.value);">
+                                            <select class="form-control mb-4" id="addWidgetType" name="WidgetType" onchange="widgetTypeTrigger(this.value.split('-')[0]);">
                                                 <%for(let i =0; i < widgetType.length; i++){%>
-                                                <option value="<%=widgetType[i]._id%>"><%=widgetType[i].ui_config.type%></option>
+                                                <option value="<%=widgetType[i]._id%>-<%=widgetType[i].ui_config.numberOfDataSource.maxNumber%>"><%=widgetType[i].ui_config.type%></option>
                                                 <%}%>
                                             </select>
                                             <%for(let i in widgetType){%>
@@ -334,20 +391,40 @@
                                             <%}%>
                                             <script>
                                                 function widgetTypeTrigger(val){
-                                                    
+                                                    console.log(val);
                                                     document.querySelectorAll('[id^=addWidgetType-group]').forEach((item)=>{
                                                         item.hidden = true;
                                                         
                                                     });
                                                     document.getElementById(`addWidgetType-group-${val}`).hidden = false;
+
+                                                    document.getElementById('no_sensor').value = "1";
+                                                    
+                                                    var newNode = document.createElement('div');
+                                                    newNode.className = 'form-group';
+                                                    newNode.id = `addData-0`;
+                                                    newNode.innerHTML = document.getElementById('addData-0').innerHTML;
+                                                    document.getElementById("addData").innerHTML = '';
+                                                    document.getElementById("addData").appendChild(newNode);
+                                                    if(parseInt(document.getElementById('no_sensor').value) >= parseInt(document.getElementById('addWidgetType').value.split('-')[1])){
+                                                        document.getElementById('addSensorButton').hidden = true;
+                                                        return;
+                                                    }
+                                                    else document.getElementById('addSensorButton').hidden = false;
                                                 }
                                             </script>
                                             <hr class="mt-2 mb-3"/>
                                             <!-- Select type Select -->
                                             <label for="addData"><%= __('Data') %></label>
-                                            <input type="hidden" id="no_sensor" name="no_sensor_data" value="1">
+                                            <input type="hidden" id="no_sensor" name="no_sensor_data" value="1" >
+                                            
                                             <div class="form-group" id="addData">
                                                 <div class="form-group" id="addData-0">
+                                                    
+                                                    <button class="close" type="button" onclick="deleteSensor('addData-0')">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                    
                                                     <select class="form-control mb-4" id="addDeviceData-0" name="DeviceData-0" onchange="addDeviceTrigger('Data-0')">
                                                         <option selected value="">--<%= __('Select device') %>--</option>
                                                         <%for(let i=0; i< sensor.length; i++){%>
@@ -365,10 +442,22 @@
                                                 </div>
                                             </div>
                                             
-                                            <a onclick="add_sensor()" class="btn btn-primary btn-user btn-block"><%= __('Add more sensor') %> ...</a>
+                                            <a id="addSensorButton" onclick="add_sensor()" class="btn btn-primary btn-user btn-block"><%= __('Add more sensor') %> ...</a>
                                             <script>
+                                                check_no_sensor();
+                                                
+                                                function deleteSensor(val){
+                                                    no_sensor = parseInt(document.getElementById('no_sensor').value);
+                                                    if(no_sensor > 1){
+                                                        document.getElementById(val).remove();
+                                                        no_sensor--;
+                                                        document.getElementById('no_sensor').value = no_sensor;
+                                                        document.getElementById('addSensorButton').hidden = false;
+                                                    }
 
-                                                function add_sensor();
+                                                    
+                                                }
+                                                
 
                                                 function addDeviceTrigger(replace){
                                                     var sensor_list = JSON.parse(document.getElementById(`addDevice${replace}`).value).sensor_key_arr;
@@ -379,18 +468,31 @@
                                                         Sensordata.innerHTML += `<option value="${item}">${item}</option>`;
                                                     })
                                                 }
+
+                                                function check_no_sensor(){
+                                                    if(parseInt(document.getElementById('no_sensor').value) >= parseInt(document.getElementById('addWidgetType').value.split('-')[1])){
+                                                        document.getElementById('addSensorButton').hidden = true;
+                                                        return;
+                                                    }
+                                                }
+
                                                 function add_sensor(){
                                                     // mydiv.appendChild(document.createTextNode("bar"))
+
                                                     var no_sensor = parseInt(document.getElementById('no_sensor').value);
-                                                    no_sensor++;
+                                                    
                                                     var newNode = document.createElement('div');
                                                     newNode.className = 'form-group';
                                                     newNode.id = `addData-${no_sensor}`;
                                                     newNode.innerHTML = document.getElementById('addData-0').innerHTML.replaceAll('Data-0',`Data-${no_sensor}`);
-                                                    
+                                                    no_sensor++;
                                                     document.getElementById('no_sensor').value = no_sensor;  
                                                               
                                                     document.getElementById("addData").appendChild(newNode);
+
+                                                    check_no_sensor();
+
+                                                    
                                                 }
                                             </script>
                                             <hr class="mt-2 mb-3"/>
@@ -418,7 +520,7 @@
                         
                         <%for(let j=0; j< boardWidget.length; j++){ %>
 
-                        <%if(boardWidget[j].board_id == board[i].key){%>
+                        <%if(boardWidget[j].b_board_id == board[i].key){%>
                             <%var config = boardWidget[j].config_dict; %>
                             <%if(config.type == 'Card'){%>
                                 <div class="col-xl-3 col-md-6 mb-4">
@@ -428,23 +530,23 @@
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-<%=config.view['Color of card']%> text-uppercase mb-1">
                                                         <%=boardWidget[j].w_display_name%></div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="dropdown no-arrow">
-                                                        <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>-configure"
+                                                        <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>-configure"
                                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                                         </a>
                                                         <!-- Configure dropdown menu -->
                                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                          aria-labelledby="<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-configure">
+                                                          aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
 
                                                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
-                                                            onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')"><%= __('Configure widget') %></a>
+                                                            onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>%>')"><%= __('Configure widget') %></a>
 
                                                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
-                                                            onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>')"><%= __('Delete widget') %></a>
+                                                            onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>')"><%= __('Delete widget') %></a>
                                                             <script>
                                                                 function openEditWidgetModal(widget_id) {
                                                                     var str = "Widget ID: " + widget_id;
@@ -475,7 +577,7 @@
                                         class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                         <h6 class="m-0 font-weight-bold text-<%=config.view['Color of line']%>"><%=boardWidget[j].w_display_name%></h6>
                                         <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            <a class="dropdown-toggle" role="button" id="dropdownMenuLink"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                             </a>
@@ -492,8 +594,21 @@
                                     
                                     <div class="card-body">
                                         <div class="chart-area">
-                                            <canvas id="chart-payload-data-<%=boardWidget[j].e_dev_id%>-<%=boardWidget[j].sensor_key%>-<%=boardWidget[j].w_id%>"></canvas>
+                                            <%let tmp1 = boardWidget[j]%>
+                                            <%let tmp = ''%>
+                                            <%let arr = []%>
                                             
+                                            <%for(let k = 0; k < tmp1.e_dev_id.length; k++){%>
+                                                <%tmp+=`${tmp1.e_dev_id[k]} ${tmp1.s_sensor_key[k]} `%>
+                                                <%arr.push({dev: tmp1.e_dev_id[k], sensor: tmp1.s_sensor_key[k]})%>
+                                                
+                                            <%}%>
+                                            <canvas id="chart payload-data <%=tmp%><%=boardWidget[j].w_id%>"></canvas>
+                                            <script>
+                                                $("#chart payload-data <%=tmp%><%=boardWidget[j].w_id%>").data('id', {
+                                                    deviceSensor: '<%= arr.toString%>'.split(',')
+                                                });  
+                                            </script>
                                         </div>
                                     </div>
                                     
@@ -544,7 +659,35 @@
                     </div>
                     
                     <%}%>
-                    
+                    <!-- <div class="card shadow col-md-12 mb-4">
+                        
+                        <div
+                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">xzccz</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Dropdown Header:</div>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="myAreaChart"></canvas>
+                                
+                            </div>
+                        </div>
+                        
+                    </div> -->
 
                     
                 </div>
@@ -681,100 +824,143 @@
     <script src="js/visuals/chart-area-demo.js"></script>
     <!-- <script src="js/visuals/chart-pie-demo.js"></script> -->
     <script>
-        document.querySelectorAll('[id^=chart-payload-data-]').forEach((item)=>{
+        document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
+            var data = $(item).attr('id').split(' ');
+            data.shift();
+            data.shift();
+            data.pop();
+            console.log(data);
             // var ctx = document.getElementById("myAreaChart");
-            var graph = new Chart(item, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                label: "",
-                lineTension: 0.3,
-                backgroundColor: "rgba(78, 115, 223, 0.05)",
-                borderColor: "rgba(78, 115, 223, 1)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointBorderColor: "rgba(78, 115, 223, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-                data: [],
-                }],
-            },
-            options: {
-                maintainAspectRatio: false,
-                layout: {
-                padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                }
+            // var graph = new Chart(item, 
+            
+            let properties = {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                    //     {
+                    // label: "",
+                    // lineTension: 0.3,
+                    // backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    // borderColor: "rgba(78, 115, 223, 1)",
+                    // pointRadius: 3,
+                    // pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    // pointBorderColor: "rgba(78, 115, 223, 1)",
+                    // pointHoverRadius: 3,
+                    // pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    // pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    // pointHitRadius: 10,
+                    // pointBorderWidth: 2,
+                    // data: [],
+                    // }
+                ],
                 },
-                scales: {
-                xAxes: [{
-                    time: {
-                    unit: 'date'
+                options: {
+                    spanGaps: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
                     },
-                    gridLines: {
-                    display: false,
-                    drawBorder: false
+                    scales: {
+                        xAxes: [{
+                            time: {
+                            unit: 'date'
+                            },
+                            gridLines: {
+                            display: false,
+                            drawBorder: false
+                            },
+                            ticks: {
+                            maxTicksLimit: 7
+                            }
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Temperature (°C)'
+                            },
+                            ticks: {
+                                maxTicksLimit: 5,
+                                padding: 10,
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    return number_format(value, 2);
+                                }
+                            },
+                            gridLines: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: true,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        }],
                     },
-                    ticks: {
-                    maxTicksLimit: 7
-                    }
-                }],
-                yAxes: [{
-                    scaleLabel: {
-                    display: true,
-                    labelString: 'Temperature (°C)'
+                    legend: {
+                    display: true
                     },
-                    ticks: {
-                    maxTicksLimit: 5,
-                    padding: 10,
-                    // Include a dollar sign in the ticks
-                    callback: function(value, index, values) {
-                        return number_format(value);
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        titleMarginBottom: 10,
+                        titleFontColor: '#6e707e',
+                        titleFontSize: 14,
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        intersect: false,
+                        mode: 'index',
+                        caretPadding: 10,
+                        callbacks: {
+                            label: function(tooltipItem, chart) {
+                            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                            return datasetLabel + ': ' + number_format(tooltipItem.yLabel, 2);
+                            }
+                        }
                     }
-                    },
-                    gridLines: {
-                    color: "rgb(234, 236, 244)",
-                    zeroLineColor: "rgb(234, 236, 244)",
-                    drawBorder: true,
-                    borderDash: [2],
-                    zeroLineBorderDash: [2]
-                    }
-                }],
-                },
-                legend: {
-                display: true
-                },
-                tooltips: {
-                backgroundColor: "rgb(255,255,255)",
-                bodyFontColor: "#858796",
-                titleMarginBottom: 10,
-                titleFontColor: '#6e707e',
-                titleFontSize: 14,
-                borderColor: '#dddfeb',
-                borderWidth: 1,
-                xPadding: 15,
-                yPadding: 15,
-                displayColors: false,
-                intersect: false,
-                mode: 'index',
-                caretPadding: 10,
-                callbacks: {
-                    label: function(tooltipItem, chart) {
-                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                    return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
-                    }
-                }
                 }
             }
-            });
-            $(item).data('graph', graph);  
+            let deviceSensor = {
+                dev: [],
+                sensor: []
+            };
+            let color = [{backgroundColor: 'rgba(78, 115, 223, 0.05)', borderColor: 'rgba(78, 115, 223, 1)'},
+            {backgroundColor: 'rgba(222, 85, 78, 0.05)', borderColor: 'rgba(222, 85, 78, 1)'},
+            {backgroundColor: 'rgba(78, 222, 122, 0.05)', borderColor: 'rgba(78, 222, 122, 1)'}]
+            for(let i=0; i < data.length; i+=2){
+                deviceSensor.dev.push(data[i]);
+                deviceSensor.sensor.push(data[i+1]);
+                properties.data.datasets.push({
+                    id: {
+                        dev: data[i],
+                        sensor: data[i+1]
+                    },
+                    label: `${data[i+1]} (${data[i]})`,
+                    lineTension: 0.3,
+                    backgroundColor: color[i/2].backgroundColor,
+                    borderColor: color[i/2].borderColor,
+                    pointRadius: 3,
+                    pointBackgroundColor: color[i/2].borderColor,
+                    pointBorderColor: color[i/2].borderColor,
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: color[i/2].borderColor,
+                    pointHoverBorderColor: color[i/2].borderColor,
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: [],
+                });
+                properties.options.scales.yAxes[0].scaleLabel.labelString = '';
+            }
+            var graph = new Chart(item, properties);
+            $(item).data('graph', graph); 
+            $(item).data('id', deviceSensor); 
                                         
         });  
     </script>

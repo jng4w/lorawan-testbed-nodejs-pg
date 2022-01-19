@@ -104,16 +104,20 @@ async function selectBoardFromCustomer(id){
 async function selectBoardWidgetFromCustomer(id){
 
     const res = await client.query(
-        `select W._id as w_id, E.dev_id as e_dev_id, W.display_name as w_display_name, B.display_name as b_display_name, *
-        from
-        public."BOARD" as B, public."WIDGET" as W, 
-		public."BELONG_TO" as BT, public."SENSOR" as S, public."ENDDEV" as E
-        where
-        B._id = W.board_id and
-        W._id = BT.widget_id and
-        BT.sensor_id = S._id and
-		E._id = S.enddev_id and
-		B.profile_id = $1;  
+        `select  
+        array_agg(E.dev_id) as e_dev_id, array_agg(S.sensor_key) as s_sensor_key,
+        W._id as w_id,  W.display_name as w_display_name, B._id as b_board_id, B.display_name as b_display_name, 
+         config_dict
+                from
+                public."BOARD" as B, public."WIDGET" as W, 
+                public."BELONG_TO" as BT, public."SENSOR" as S, public."ENDDEV" as E
+                where
+                B._id = W.board_id and
+                W._id = BT.widget_id and
+                BT.sensor_id = S._id and
+                E._id = S.enddev_id and
+                B.profile_id = $1
+        group by w_id, b_board_id;  
         `,
         [id]
     );
