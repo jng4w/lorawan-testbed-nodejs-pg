@@ -1,6 +1,12 @@
 const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}/../common/emqx.json`));
 const emqx_http = require(`${__dirname}/../../streaming-broker/emqx/http-api/http-api.js`);
 
+const hook_action =  {
+    SESSION_TERMINATED: 'session_terminated'
+}
+
+const LIST_LIMIT = 1000;
+
 exports.hookProcessing = async (req, res, next) => {
     try {
         if (!req.body.hasOwnProperty('node')) {
@@ -13,10 +19,10 @@ exports.hookProcessing = async (req, res, next) => {
             return;
         }
 
-        if (req.body.action == 'session_terminated')
+        if (req.body.action == hook_action['SESSION_TERMINATED'])
         {
-            if (req.body.clientid.slice(0, 3) == 'uid') {
-                let acl_list = await get_acl_list_one_clientid(req.body.clientid, 1000);
+            if (req.body.username == common_emqx['ENDUSER_USERNAME']) {
+                let acl_list = await get_acl_list_one_clientid(req.body.clientid, LIST_LIMIT);
 
                 //extract distinct topic from acl_list
                 let unique_topics_list = [...Set(acl_list.data.data.map((acl) => {
