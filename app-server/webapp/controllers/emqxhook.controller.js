@@ -25,6 +25,8 @@ exports.hookProcessing = async (req, res, next) => {
             unique_topics_list.forEach((topic) => {
                 await emqx_http.delete_acl_clientid_on_topic(req.body.clientid, topic);
             });
+
+            res.status(200).end();
         }
     } catch (err) {
         console.log(err);
