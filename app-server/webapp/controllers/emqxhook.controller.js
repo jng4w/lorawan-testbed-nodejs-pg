@@ -15,7 +15,7 @@ exports.hookProcessing = async (req, res, next) => {
 
         if (req.body.action == 'session_terminated')
         {
-            if (req.body.clientid.slice(0, 3) == 'uid') {
+            if (req.body.username == common_emqx['ENDUSER_USERNAME']) {
                 let acl_list = await get_acl_list_one_clientid(req.body.clientid, 1000);
 
                 //extract distinct topic from acl_list
