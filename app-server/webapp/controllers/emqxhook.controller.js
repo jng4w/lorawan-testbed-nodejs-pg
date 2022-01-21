@@ -15,18 +15,20 @@ exports.hookProcessing = async (req, res, next) => {
 
         if (req.body.action == 'session_terminated')
         {
-            let acl_list = await get_acl_list_one_clientid(req.body.clientid, 1000);
+            if (req.body.clientid.slice(0, 3) == 'uid') {
+                let acl_list = await get_acl_list_one_clientid(req.body.clientid, 1000);
 
-            //extract distinct topic from acl_list
-            let unique_topics_list = [...Set(acl_list.data.data.map((acl) => {
-                return acl.topic;
-            }))]; //return a datatype array [<topic1>, <topic2>]
-
-            unique_topics_list.forEach((topic) => {
-                await emqx_http.delete_acl_clientid_on_topic(req.body.clientid, topic);
-            });
-
-            res.status(200).end();
+                //extract distinct topic from acl_list
+                let unique_topics_list = [...Set(acl_list.data.data.map((acl) => {
+                    return acl.topic;
+                }))]; //return a datatype array [<topic1>, <topic2>]
+    
+                unique_topics_list.forEach(async (topic) => {
+                    await emqx_http.delete_acl_clientid_on_topic(req.body.clientid, topic);
+                });
+    
+                res.status(200).end();
+            }
         }
     } catch (err) {
         console.log(err);
