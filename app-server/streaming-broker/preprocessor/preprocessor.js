@@ -131,7 +131,7 @@ function streaming_broker_message_handler(topic, message, packet)
             'topic': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['PAYLOAD']}`,
             'msg': JSON.stringify(dev_data["payload"]),
             'options': {
-                qos: 2,
+                qos: 0,
                 dup: false,
                 retain: true,
                 /*

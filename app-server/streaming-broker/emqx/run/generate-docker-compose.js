@@ -35,7 +35,7 @@ networks:
 
 
 try {
-    fs.writeFileSync('./docker-compose.yml', content)
+    fs.writeFileSync(`${__dirname}/docker-compose.yml`, content)
 } catch (err) {
     console.error(err)
 }
