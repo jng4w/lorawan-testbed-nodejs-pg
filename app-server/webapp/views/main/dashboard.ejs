@@ -24,7 +24,10 @@
             const streaming_broker_protocol = "ws"; //pass from server
             const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
             const streaming_broker_port = '<%= broker.port %>'; //pass from server
-            const MAX_SESSION_STORAGE_LENGTH= 20;
+
+            const STORAGE_KEY = 'payload-storage';
+            const MAX_SESSION_STORAGE_LENGTH = 20;
+
             //pass from server
             // const devices = [
             //     "eui-a84041a54182a79f"
@@ -64,16 +67,20 @@
             streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
             streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
             
+            //create browser storage instance
+            const clientStorage = localStorage;
+
             //handle incoming connect
             function streaming_broker_connect_handler(connack)
             {
                 console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
                 if(connack.sessionPresent==false){
-                        sub_topics.forEach((topic) => {
-                            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
-                        });
+                    clientStorage.removeItem(STORAGE_KEY);
+                    sub_topics.forEach((topic) => {
+                        streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+                    });
                 }else{
-                    let storage = sessionStorage.getItem("payload-storage");
+                    let storage = clientStorage.getItem(STORAGE_KEY);
                     let length_flag = 0;
                     if(storage){
                         storage = JSON.parse(storage);
@@ -142,7 +149,7 @@
                 // if(!data) data = {};
                 // data[recv_topic] = JSON.stringify(parsed_message.payload_data);
                 // window.localStorage.setItem(`payload-data`, JSON.stringify(data));
-                let storage = sessionStorage.getItem("payload-storage");
+                let storage = clientStorage.getItem(STORAGE_KEY);
                 let length_flag = 0;
                 if(storage){
                     storage = JSON.parse(storage);
@@ -216,7 +223,7 @@
                     });
                 }
 
-                sessionStorage.setItem("payload-storage", JSON.stringify(storage));
+                clientStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
                 // parsed_message.payload_data.forEach((item) => {
                 //     document.getElementById(`payload-data-${recv_topic[1]}-${item.key}`).innerHTML = item
                 // })
@@ -809,7 +816,7 @@
                     
                     <form action="../login/logout" method="post">
                         <!-- <a  onclick="this.parentNode.submit();">Logout</a> -->
-                        <input type="submit" class="btn btn-primary" onclick='sessionStorage.removeItem("payload-storage");' value="<%= __('Logout') %>">
+                        <input type="submit" class="btn btn-primary" onclick='clientStorage.removeItem(STORAGE_KEY);' value="<%= __('Logout') %>">
                     </form>
                 </div>
             </div>
