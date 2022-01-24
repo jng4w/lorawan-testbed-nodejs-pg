@@ -1,4 +1,6 @@
-const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}/../common/emqx.json`));
+const fs = require('fs');
+
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}/../../common/emqx.json`));
 const emqx_http = require(`${__dirname}/../../streaming-broker/emqx/http-api/http-api.js`);
 
 const hook_action =  {
