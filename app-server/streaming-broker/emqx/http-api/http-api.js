@@ -72,12 +72,23 @@ function delete_acl_clientid_on_topic(clientid, topic) {
     })
 }
 
+function get_acl_list_one_clientid(clientid, limit) {
+    return emqx_http.get(`/api/v4/acl/clientid/${clientid}?_page=1&_limit=${encodeURIComponent(limit)}`)
+    .then((res) => {
+        return res;
+    })
+    .catch((err) => {
+        return err;
+    })
+}
+
 module.exports = {
     add_client_acl_on_dev_topic,
     del_client_acl_on_dev_topic,
     kick_client,
     get_client_list_with_username,
     get_acl_list_all_clientid,
+    get_acl_list_one_clientid,
     delete_acl_clientid_on_topic
 }
 

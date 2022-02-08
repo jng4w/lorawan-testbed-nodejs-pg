@@ -16,6 +16,7 @@ const deviceRouter = require('./routes/device.route');
 const settingRouter = require('./routes/setting.route');
 const logoutRouter = require('./routes/logout.route');
 const languageRouter = require('./routes/language.route');
+const emqxhookRouter = require('./routes/emqxhook.route');
 
 // var usersRouter = require('./routes/users');
 // var diaryRouter = require('./routes/diary.route');
@@ -67,6 +68,7 @@ app.use('/device', deviceRouter);
 app.use('/setting', settingRouter);
 app.use('/logout', logoutRouter);
 app.use('/change-lang', languageRouter);
+app.use('/emqxhook', emqxhookRouter);
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
