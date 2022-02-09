@@ -1,5 +1,7 @@
 #Initialize emqx
-1. docker-compose up -d
-2. dashboard->plugin->start mnesia
-3. node initial_acl.js
-4. dashboard->plugin->start http authentication
+> docker-compose up -d
+> go to dashboard->plugin->start mnesia
+> node ./initialize_acl.js
+> dashboard->plugin->start http authentication
+> cd conf -> read README.md 
+> npm start

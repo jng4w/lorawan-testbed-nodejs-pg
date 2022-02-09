@@ -62,7 +62,7 @@ function emqx_web_hook() {
     ## Connection process pool size
     ##
     ## Value: Number
-    web.hook.pool_size = 16
+    web.hook.pool_size = 32
     
     ## Whether to enable HTTP Pipelining
     ##
