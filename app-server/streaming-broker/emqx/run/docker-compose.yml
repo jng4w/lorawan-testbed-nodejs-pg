@@ -5,13 +5,13 @@ services:
     image: emqx/emqx:latest
     environment:
     - "EMQX_NAME=emqx"
-    - "EMQX_HOST=192.168.1.210"
+    - "EMQX_HOST=localhost"
     - "EMQX_CLUSTER__DISCOVERY=static"
-    - "EMQX_CLUSTER__STATIC__SEEDS=emqx@192.168.1.210"
+    - "EMQX_CLUSTER__STATIC__SEEDS=emqx@localhost"
     networks:
       emqx-bridge:
         aliases:
-        - 192.168.1.210
+        - 127.0.0.1
     ports:
       - "1883:1883" 
       - "8081:8081" 
