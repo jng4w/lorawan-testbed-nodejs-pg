@@ -24,10 +24,10 @@ exports.hookProcessing = async (req, res, next) => {
         if (req.body.action == hook_action['SESSION_TERMINATED'])
         {
             if (req.body.username == common_emqx['ENDUSER_USERNAME']) {
-                let acl_list = await get_acl_list_one_clientid(req.body.clientid, LIST_LIMIT);
+                let acl_list = await emqx_http.get_acl_list_one_clientid(req.body.clientid, LIST_LIMIT);
 
                 //extract distinct topic from acl_list
-                let unique_topics_list = [...Set(acl_list.data.data.map((acl) => {
+                let unique_topics_list = [...new Set(acl_list.data.data.map((acl) => {
                     return acl.topic;
                 }))]; //return a datatype array [<topic1>, <topic2>]
     
