@@ -12,153 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <script>
-            // var payload_data = JSON.parse(window.localStorage.getItem('payload-data')) ;
             
-            //     for(var i in payload_data){
-            //         for(var j in payload_data[i]){
-            //             document.getElementById(`payload-data-${i}-${j}`).innerHTML = payload_data[i][j];
-            //         }
-                    
-            //     }
-            document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
-                var data = $(item).attr('id').split(' ');
-                data.shift();
-                data.shift();
-                data.pop();
-                // console.log(data);
-                // var ctx = document.getElementById("myAreaChart");
-                // var graph = new Chart(item, 
-                
-                let properties = {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [
-                        //     {
-                        // label: "",
-                        // lineTension: 0.3,
-                        // backgroundColor: "rgba(78, 115, 223, 0.05)",
-                        // borderColor: "rgba(78, 115, 223, 1)",
-                        // pointRadius: 3,
-                        // pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                        // pointBorderColor: "rgba(78, 115, 223, 1)",
-                        // pointHoverRadius: 3,
-                        // pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                        // pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                        // pointHitRadius: 10,
-                        // pointBorderWidth: 2,
-                        // data: [],
-                        // }
-                    ],
-                    },
-                    options: {
-                        spanGaps: true,
-                        maintainAspectRatio: false,
-                        layout: {
-                            padding: {
-                                left: 10,
-                                right: 25,
-                                top: 25,
-                                bottom: 0
-                            }
-                        },
-                        scales: {
-                            xAxes: [{
-                                time: {
-                                unit: 'date'
-                                },
-                                gridLines: {
-                                display: false,
-                                drawBorder: false
-                                },
-                                ticks: {
-                                maxTicksLimit: 7
-                                }
-                            }],
-                            yAxes: [{
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Temperature (°C)'
-                                },
-                                ticks: {
-                                    maxTicksLimit: 5,
-                                    padding: 10,
-                                    // Include a dollar sign in the ticks
-                                    callback: function(value, index, values) {
-                                        return number_format(value, 2);
-                                    }
-                                },
-                                gridLines: {
-                                    color: "rgb(234, 236, 244)",
-                                    zeroLineColor: "rgb(234, 236, 244)",
-                                    drawBorder: true,
-                                    borderDash: [2],
-                                    zeroLineBorderDash: [2]
-                                }
-                            }],
-                        },
-                        legend: {
-                        display: true
-                        },
-                        tooltips: {
-                            backgroundColor: "rgb(255,255,255)",
-                            bodyFontColor: "#858796",
-                            titleMarginBottom: 10,
-                            titleFontColor: '#6e707e',
-                            titleFontSize: 14,
-                            borderColor: '#dddfeb',
-                            borderWidth: 1,
-                            xPadding: 15,
-                            yPadding: 15,
-                            displayColors: false,
-                            intersect: false,
-                            mode: 'index',
-                            caretPadding: 10,
-                            callbacks: {
-                                label: function(tooltipItem, chart) {
-                                var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                                return datasetLabel + ': ' + number_format(tooltipItem.yLabel, 2);
-                                }
-                            }
-                        }
-                    }
-                }
-                let deviceSensor = {
-                    dev: [],
-                    sensor: []
-                };
-                let color = [{backgroundColor: 'rgba(78, 115, 223, 0.05)', borderColor: 'rgba(78, 115, 223, 1)'},
-                {backgroundColor: 'rgba(222, 85, 78, 0.05)', borderColor: 'rgba(222, 85, 78, 1)'},
-                {backgroundColor: 'rgba(78, 222, 122, 0.05)', borderColor: 'rgba(78, 222, 122, 1)'}]
-                for(let i=0; i < data.length; i+=2){
-                    deviceSensor.dev.push(data[i]);
-                    deviceSensor.sensor.push(data[i+1]);
-                    properties.data.datasets.push({
-                        id: {
-                            dev: data[i],
-                            sensor: data[i+1]
-                        },
-                        label: `${data[i+1]} (${data[i]})`,
-                        lineTension: 0.3,
-                        backgroundColor: color[i/2].backgroundColor,
-                        borderColor: color[i/2].borderColor,
-                        pointRadius: 3,
-                        pointBackgroundColor: color[i/2].borderColor,
-                        pointBorderColor: color[i/2].borderColor,
-                        pointHoverRadius: 3,
-                        pointHoverBackgroundColor: color[i/2].borderColor,
-                        pointHoverBorderColor: color[i/2].borderColor,
-                        pointHitRadius: 10,
-                        pointBorderWidth: 2,
-                        data: [],
-                    });
-                    properties.options.scales.yAxes[0].scaleLabel.labelString = '';
-                }
-                var graph = new Chart(item, properties);
-                $(item).data('graph', graph); 
-                $(item).data('id', deviceSensor); 
-                                            
-            }); 
 
             const streaming_broker_protocol = "ws"; //pass from server
             const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
@@ -217,6 +71,7 @@
                 try {
                     console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
                     if(connack.sessionPresent==false){
+                        
                         clientStorage.removeItem(STORAGE_KEY);
                         sub_topics.forEach((topic) => {
                             streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
@@ -993,7 +848,153 @@
     <script src="js/visuals/chart-area-demo.js"></script>
     <!-- <script src="js/visuals/chart-pie-demo.js"></script> -->
     <script>
-    
+            // var payload_data = JSON.parse(window.localStorage.getItem('payload-data')) ;
+            
+            //     for(var i in payload_data){
+            //         for(var j in payload_data[i]){
+            //             document.getElementById(`payload-data-${i}-${j}`).innerHTML = payload_data[i][j];
+            //         }
+                    
+            //     }
+            document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
+                var data = $(item).attr('id').split(' ');
+                data.shift();
+                data.shift();
+                data.pop();
+                // console.log(data);
+                // var ctx = document.getElementById("myAreaChart");
+                // var graph = new Chart(item, 
+                
+                let properties = {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [
+                        //     {
+                        // label: "",
+                        // lineTension: 0.3,
+                        // backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        // borderColor: "rgba(78, 115, 223, 1)",
+                        // pointRadius: 3,
+                        // pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        // pointBorderColor: "rgba(78, 115, 223, 1)",
+                        // pointHoverRadius: 3,
+                        // pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                        // pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                        // pointHitRadius: 10,
+                        // pointBorderWidth: 2,
+                        // data: [],
+                        // }
+                    ],
+                    },
+                    options: {
+                        spanGaps: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                unit: 'date'
+                                },
+                                gridLines: {
+                                display: false,
+                                drawBorder: false
+                                },
+                                ticks: {
+                                maxTicksLimit: 7
+                                }
+                            }],
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Temperature (°C)'
+                                },
+                                ticks: {
+                                    maxTicksLimit: 5,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function(value, index, values) {
+                                        return number_format(value, 2);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: true,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }],
+                        },
+                        legend: {
+                        display: true
+                        },
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            titleMarginBottom: 10,
+                            titleFontColor: '#6e707e',
+                            titleFontSize: 14,
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            intersect: false,
+                            mode: 'index',
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function(tooltipItem, chart) {
+                                var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                return datasetLabel + ': ' + number_format(tooltipItem.yLabel, 2);
+                                }
+                            }
+                        }
+                    }
+                }
+                let deviceSensor = {
+                    dev: [],
+                    sensor: []
+                };
+                let color = [{backgroundColor: 'rgba(78, 115, 223, 0.05)', borderColor: 'rgba(78, 115, 223, 1)'},
+                {backgroundColor: 'rgba(222, 85, 78, 0.05)', borderColor: 'rgba(222, 85, 78, 1)'},
+                {backgroundColor: 'rgba(78, 222, 122, 0.05)', borderColor: 'rgba(78, 222, 122, 1)'}]
+                for(let i=0; i < data.length; i+=2){
+                    deviceSensor.dev.push(data[i]);
+                    deviceSensor.sensor.push(data[i+1]);
+                    properties.data.datasets.push({
+                        id: {
+                            dev: data[i],
+                            sensor: data[i+1]
+                        },
+                        label: `${data[i+1]} (${data[i]})`,
+                        lineTension: 0.3,
+                        backgroundColor: color[i/2].backgroundColor,
+                        borderColor: color[i/2].borderColor,
+                        pointRadius: 3,
+                        pointBackgroundColor: color[i/2].borderColor,
+                        pointBorderColor: color[i/2].borderColor,
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: color[i/2].borderColor,
+                        pointHoverBorderColor: color[i/2].borderColor,
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: [],
+                    });
+                    properties.options.scales.yAxes[0].scaleLabel.labelString = '';
+                }
+                var graph = new Chart(item, properties);
+                $(item).data('graph', graph); 
+                $(item).data('id', deviceSensor); 
+                                            
+            }); 
     </script>
 </body>
 
