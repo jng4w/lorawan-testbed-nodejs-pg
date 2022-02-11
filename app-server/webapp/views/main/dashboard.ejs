@@ -97,32 +97,36 @@
                                         
                                         let id = $(item).data('id');
 
-                                        if (!id) return;
-
-                                        for(let k in id.dev){
-                                            if(id.dev[k]==i && id.sensor[k]==j){
-                                                var graph = $(item).data('graph');
-                                                let labels = graph.data.labels.concat(storage.payload[i].recv_timestamp);
-                                                graph.data.labels=[...new Set(labels)];
-                                                graph.data.labels.sort();
-                                                // graph.data.datasets[0].data=storage.payload[i].payload_data[j];
-                                                graph.data.datasets.forEach((item) => {
-                                                    if(item.id.dev == i && item.id.sensor == j){
-                                                        item.data = storage.payload[i].recv_timestamp.map((element,index)=>{
-                                                            return {
-                                                                x: element,
-                                                                y: storage.payload[i].payload_data[j][index]
-                                                            }
-                                                        });
-                                            
-                                                    }
-                                                    // else {
-                                                    //     item.data = NaN;
-                                                    // }
-                                                })
-                                                graph.update(); 
+                                        // if (!id) continue;
+                                        try {
+                                            for(let k in id.dev){
+                                                if(id.dev[k]==i && id.sensor[k]==j){
+                                                    var graph = $(item).data('graph');
+                                                    let labels = graph.data.labels.concat(storage.payload[i].recv_timestamp);
+                                                    graph.data.labels=[...new Set(labels)];
+                                                    graph.data.labels.sort();
+                                                    // graph.data.datasets[0].data=storage.payload[i].payload_data[j];
+                                                    graph.data.datasets.forEach((item) => {
+                                                        if(item.id.dev == i && item.id.sensor == j){
+                                                            item.data = storage.payload[i].recv_timestamp.map((element,index)=>{
+                                                                return {
+                                                                    x: element,
+                                                                    y: storage.payload[i].payload_data[j][index]
+                                                                }
+                                                            });
+                                                
+                                                        }
+                                                        // else {
+                                                        //     item.data = NaN;
+                                                        // }
+                                                    })
+                                                    graph.update(); 
+                                                }
                                             }
+                                        } catch (err) {
+                                            console.log(err);
                                         }
+                                        
 
                                 });
                             }
@@ -197,34 +201,39 @@
                         document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
                                     
                                         let id = $(item).data('id');
-                                        if (!id) return;
-                                        for(let j in id.dev){
-                                            if(id.dev[j]==recv_topic && id.sensor[j]==i){
-                                                var graph = $(item).data('graph');
-                                                graph.data.labels.push(parsed_message.recv_timestamp);
-                                                graph.data.labels=[...new Set(graph.data.labels)];
-                                                graph.data.labels.sort();
-                                                // console.log(graph.data.labels);
-                                                // graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
-                                                graph.data.datasets.forEach((item_data) => {
-                                                    // console.log('plot1', item_data.id.dev, item_data.id.sensor);
-                                                    if(item_data.id.dev == recv_topic && item_data.id.sensor == i){
-                                                        // console.log('plot', recv_topic, i, parsed_message.recv_timestamp, parseFloat(parsed_message.payload_data[i]));
-                                                        item_data.data.push({
-                                                            x: parsed_message.recv_timestamp,
-                                                            y: parseFloat(parsed_message.payload_data[i]) 
-                                                        });
-                                                    }
-                                                    // else {
-                                                    //     item.data.push({
-                                                    //         x: parsed_message.recv_timestamp,
-                                                    //         y: NaN
-                                                    //     });
-                                                    // }
-                                                })
-                                                graph.update(); 
+                                        // if (!id) return;
+                                        try {
+                                            for(let j in id.dev){
+                                                if(id.dev[j]==recv_topic && id.sensor[j]==i){
+                                                    var graph = $(item).data('graph');
+                                                    graph.data.labels.push(parsed_message.recv_timestamp);
+                                                    graph.data.labels=[...new Set(graph.data.labels)];
+                                                    graph.data.labels.sort();
+                                                    // console.log(graph.data.labels);
+                                                    // graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
+                                                    graph.data.datasets.forEach((item_data) => {
+                                                        // console.log('plot1', item_data.id.dev, item_data.id.sensor);
+                                                        if(item_data.id.dev == recv_topic && item_data.id.sensor == i){
+                                                            // console.log('plot', recv_topic, i, parsed_message.recv_timestamp, parseFloat(parsed_message.payload_data[i]));
+                                                            item_data.data.push({
+                                                                x: parsed_message.recv_timestamp,
+                                                                y: parseFloat(parsed_message.payload_data[i]) 
+                                                            });
+                                                        }
+                                                        // else {
+                                                        //     item.data.push({
+                                                        //         x: parsed_message.recv_timestamp,
+                                                        //         y: NaN
+                                                        //     });
+                                                        // }
+                                                    })
+                                                    graph.update(); 
+                                                }
                                             }
+                                        } catch (err) {
+                                            console.log(err);
                                         }
+                                        
                         });
                     }
 
