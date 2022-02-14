@@ -3,16 +3,19 @@
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../dashboard">
-        <!-- <div class="sidebar-brand-icon">
-            <i class="fas fa-laugh-wink"></i>
-            <img class="rounded-circle" src="img/lorawan.png"
-                                        alt="...">
-        </div> -->
+        <div class="sidebar-brand-icon">
+            <img class="rounded-circle" src="img/lora.png" width=30px alt="lora">
+        </div>
         <div class="sidebar-brand-text mx-3">LoraWAN</sup></div>
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        <%= __('Application') %>
+    </div>
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item <%= title === 'Dashboard' && 'active' %>">
@@ -59,7 +62,7 @@
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
+    <hr class="sidebar-divider d-none d-md-block mb-4">
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
@@ -67,4 +70,5 @@
     </div> 
 
 </ul>
+
 <!-- End of Sidebar -->
