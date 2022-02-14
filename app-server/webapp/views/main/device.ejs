@@ -244,16 +244,20 @@
                                             <!-- Data -->
                                             <td class="align-middle">     
                                                 <div class="row row-cols-md-2 no-gutters">
+                                                    <% let ss_batv = 0;%>
                                                     <% let ss_key = sensor[i].sensor_key_arr;%>
-                                                    <% for(let j=0; j< ss_key.length; j++){%>
-                
+                                                    <% for(let j=0; j< ss_key.length; j++){
+                                                        if(ss_key[j] == 'BatV'){
+                                                            ss_batv=ss_key[j];
+                                                        }
+                                                        else{%>
                                                     <div class="col-md-5"><%=ss_key[j]%>: <p id="payload-data-<%=sensor[i].dev_id%>-<%=ss_key[j]%>">[Blank]</p></div>
-                                                      
+                                                        <%}%>
                                                     <%}%>
                                                 </div>
                                             </td>
                                             <!-- Battery -->
-                                            <td class="align-middle" id="battery">5V</td>
+                                            <td class="align-middle" id="payload-data-<%=sensor[i].dev_id%>-<%=ss_batv%>">[Blank]</td>
                                             <!-- Configure button -->
                                             <td class="align-middle">
                                                 <button type="button" id="<%=sensor[i].dev_id%>" class="btn btn-light btn-sm"
