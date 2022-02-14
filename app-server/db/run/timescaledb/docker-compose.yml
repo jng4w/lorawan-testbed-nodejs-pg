@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+ timescaledb:
+  container_name: timescaledb_container
+  image: timescale/timescaledb:latest-pg12
+  restart: always
+  environment:
+   POSTGRES_USER: root
+   POSTGRES_PASSWORD: root
+  ports:
+   - "5432:5432"
