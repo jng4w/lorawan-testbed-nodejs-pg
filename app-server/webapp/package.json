@@ -1,11 +1,11 @@
 {
   "name": "webapp",
   "version": "1.0.0",
-  "description": "//nodemon ./bin/www localhost 8080",
+  "description": "//nodemon ./bin/www",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./bin/www localhost 8080"
+    "start": "nodemon ./bin/www"
   },
   "author": "",
   "license": "ISC",

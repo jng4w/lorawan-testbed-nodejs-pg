@@ -14,7 +14,8 @@ const web = JSON.parse(fs.readFileSync('./../common/webapp.json'));
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(web["SERVER_PORT"] || '3000');
+const port = normalizePort(web["SERVER_PORT"] || '3000');
+const host = String(web["SERVER_ADDR"]);
 app.set('port', port);
 
 /**
@@ -27,7 +28,9 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, host, () => {
+  console.log(`server is listening on ${host}:${port}`);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
