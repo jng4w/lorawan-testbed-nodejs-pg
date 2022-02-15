@@ -117,7 +117,8 @@ async function selectBoardWidgetFromCustomer(id){
                 BT.sensor_id = S._id and
                 E._id = S.enddev_id and
                 B.profile_id = $1
-        group by w_id, b_board_id;  
+        group by w_id, b_board_id
+        order by config_dict->>'type', w_id;  
         `,
         [id]
     );
