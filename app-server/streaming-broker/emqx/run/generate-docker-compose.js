@@ -7,7 +7,7 @@ const content =
 
 services:
   emqx1:
-    image: emqx/emqx:latest
+    image: emqx/emqx:4.3.12
     environment:
     - \"EMQX_NAME=emqx\"
     - \"EMQX_HOST=${common_emqx['SERVER_ADDR']}\"

@@ -3,5 +3,8 @@
     "SERVER_PORT": 5432,
     "POSTGRES_USER": "root",
     "POSTGRES_PASSWORD": "root",
-    "DATABASE_NAME": "lorawan-db"
+    "DB_NAME": {
+        "APP": "lorawan-db",
+        "TTS": "tts-db"
+    }
 }

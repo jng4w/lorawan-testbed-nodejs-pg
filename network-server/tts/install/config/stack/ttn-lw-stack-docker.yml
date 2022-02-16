@@ -1,0 +1,130 @@
+# Identity Server configuration
+# Email configuration for "168.199.105.69"
+is:
+  email:
+    sender-name: 'The Things Stack'
+    sender-address: 'noreply@168.199.105.69'
+    network:
+      name: 'The Things Stack'
+      console-url: 'http://168.199.105.69:280/console'
+      identity-server-url: 'http://168.199.105.69:280/oauth'
+
+    # If sending email with Sendgrid
+    # provider: sendgrid
+    # sendgrid:
+    #   api-key: '...'              # enter Sendgrid API key
+
+    # If sending email with SMTP
+    # provider: smtp
+    # smtp:
+    #   address:  '...'             # enter SMTP server address
+    #   username: '...'             # enter SMTP server username
+    #   password: '...'             # enter SMTP server password
+
+  # Web UI configuration for "168.199.105.69":
+  oauth:
+    ui:
+      canonical-url: 'http://168.199.105.69:280/oauth'
+      is:
+        base-url: 'http://168.199.105.69:280/api/v3'
+
+# HTTP server configuration
+http:
+  cookie:
+    block-key: 'a321a09ae5c1f605b34689044d9a7077d7050895cb2b2ff7fc0825a85aaa0e21'                # generate 32 bytes (openssl rand -hex 32)
+    hash-key: '81b65891ca64162bbc413c7dcc8e61ef09c015676c36dda202ad402f13bc0d4bd037d2fb8dfb45cabac2d407e6c5643e12870caecbc4da8aa0755ef52dba8905'                 # generate 64 bytes (openssl rand -hex 64)
+  metrics:
+    password: 'metrics'               # choose a password
+  pprof:
+    password: 'pprof'                 # choose a password
+
+# If using custom certificates:
+# tls:
+#   source: file
+#   root-ca: /run/secrets/ca.pem
+#   certificate: /run/secrets/cert.pem
+#   key: /run/secrets/key.pem
+
+# Let's encrypt for "168.199.105.69"
+tls:
+  source: 'acme'
+  acme:
+    dir: '/var/lib/acme'
+    email: 'you@168.199.105.69'
+    hosts: ['168.199.105.69']
+    default-host: '168.199.105.69'
+
+# If Gateway Server enabled, defaults for "168.199.105.69":
+gs:
+  mqtt:
+    public-address: '168.199.105.69:21882'
+    public-tls-address: '168.199.105.69:28882'
+  mqtt-v2:
+    public-address: '168.199.105.69:21881'
+    public-tls-address: '168.199.105.69:28881'
+
+# If Gateway Configuration Server enabled, defaults for "168.199.105.69":
+gcs:
+  basic-station:
+    default:
+      lns-uri: 'wss://168.199.105.69:28887'
+  the-things-gateway:
+    default:
+      mqtt-server: 'mqtts://168.199.105.69:28881'
+
+# Web UI configuration for "168.199.105.69":
+console:
+  ui:
+    canonical-url: 'http://168.199.105.69:280/console'
+    is:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    gs:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    gcs:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    ns:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    as:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    js:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    qrg:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    edtc:
+      base-url: 'http://168.199.105.69:280/api/v3'
+
+  oauth:
+    authorize-url: 'http://168.199.105.69:280/oauth/authorize'
+    token-url: 'http://168.199.105.69:280/oauth/token'
+    logout-url: 'http://168.199.105.69:280/oauth/logout'
+    client-id: 'console'
+    client-secret: 'secret'          # choose or generate a secret
+
+# If Application Server enabled, defaults for "168.199.105.69":
+as:
+  mqtt:
+    public-address: '168.199.105.69:21883'
+    public-tls-address: '168.199.105.69:28883'
+  webhooks:
+    downlink:
+      public-address: '168.199.105.69:21885/api/v3'
+
+# If Device Claiming Server enabled, defaults for "168.199.105.69":
+dcs:
+  oauth:
+    authorize-url: 'http://168.199.105.69:280/oauth/authorize'
+    token-url: 'http://168.199.105.69:280/oauth/token'
+    logout-url: 'http://168.199.105.69:280/oauth/logout'
+    client-id: 'device-claiming'
+    client-secret: 'device-claiming'          # choose or generate a secret
+  ui:
+    canonical-url: 'http://168.199.105.69:280/claim'
+    as:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    dcs:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    is:
+      base-url: 'http://168.199.105.69:280/api/v3'
+    ns:
+      base-url: 'http://168.199.105.69:280/api/v3'
+
