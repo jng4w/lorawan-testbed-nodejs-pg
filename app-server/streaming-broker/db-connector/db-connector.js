@@ -106,6 +106,6 @@ const db_pool = new Pool({
     password: common_pg["POSTGRES_PASSWORD"],
     host: common_pg["SERVER_ADDR"],
     port: common_pg["SERVER_PORT"],
-    database: common_pg["DATABASE_NAME"]
+    database: common_pg["DB_NAME"]["APP"]
 })
 

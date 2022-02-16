@@ -6,7 +6,7 @@ const common = JSON.parse(fs.readFileSync('./../common/pg.json'));
 const client = new Pool({
   user: common["POSTGRES_USER"],
   host: common["SERVER_ADDR"],
-  database: common["DATABASE_NAME"],
+  database: common["DB_NAME"]["APP"],
   password: common["POSTGRES_PASSWORD"],
   port: common["SERVER_PORT"]
 })

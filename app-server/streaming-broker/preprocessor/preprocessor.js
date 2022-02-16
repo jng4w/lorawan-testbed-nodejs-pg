@@ -66,8 +66,6 @@ function extract_dev_data(json_pkg) {
         }
     };
 
-    delete json_pkg["uplink_message"]["decoded_payload"]["meta"];
-
     let payload_json_pkg = {
         "recv_timestamp" : json_pkg["received_at"],
         "payload_data" : json_pkg["uplink_message"]["decoded_payload"]["data"]
