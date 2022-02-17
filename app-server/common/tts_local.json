@@ -1,5 +1,5 @@
 {
-    "SERVER_ADDR": "168.199.105.69",
+    "SERVER_ADDR": "128.199.105.69",
     "SERVER_PORT": {
         "HTTP": 280,
         "HTTPS": 2443,
