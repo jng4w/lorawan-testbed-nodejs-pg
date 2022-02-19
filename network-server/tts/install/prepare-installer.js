@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const common_tts = JSON.parse(fs.readFileSync(`${__dirname}/../../../app-server/common/tts_local.json`));
+const common_tts = JSON.parse(fs.readFileSync(`${__dirname}/../../../app-server/common/tts.json`));
 const common_pg = JSON.parse(fs.readFileSync(`${__dirname}/../../../app-server/common/pg.json`));
 
 const content = {}
@@ -86,7 +86,7 @@ services:
       - "${common_tts['SERVER_PORT']['AS_WEBHOOKS']}:8885"
       - "${common_tts['SERVER_PORT']['GCS_LNS']}:1887"
       - "${common_tts['SERVER_PORT']['GCS_LNSS']}:8887"
-      - "21700:1700/udp"
+      - "${common_tts['SERVER_PORT']['SEMTECH_UDP']}:1700/udp"
 
     # If using custom certificates:
     # secrets:

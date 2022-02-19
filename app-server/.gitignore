@@ -1,0 +1,14 @@
+common/
+
+streaming-broker/node_modules/
+streaming-broker/tts-bridge/using-emqx-bridge/emqx_bridge_mqtt.conf
+streaming-broker/emqx/conf/emqx_web_hook.conf
+streaming-broker/emqx/http-api/test.js
+streaming-broker/.vscode/
+
+webapp/node_modules/
+webapp/.env/
+webapp/.idea/
+webapp/.vscode/
+
+

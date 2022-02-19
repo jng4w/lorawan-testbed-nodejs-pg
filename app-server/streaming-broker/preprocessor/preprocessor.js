@@ -25,18 +25,16 @@ const streaming_broker_protocol = "mqtt";
 const streaming_broker_addr = common_emqx['SERVER_ADDR'];
 const streaming_broker_port = common_emqx['SERVER_PORT'];
 
-//topics levels of streaming brokers
-const dev_topic_levels = {
-    'DEVICES': common_emqx['TOPIC_LEVEL_DEVICES'],
-    'UP': common_emqx['TOPIC_LEVEL_UP'],
-    'PAYLOAD': common_emqx['TOPIC_LEVEL_PAYLOAD'],
-    'MIXED': common_emqx['TOPIC_LEVEL_MIXED']
-};
-
 //get raw topic of all devices
 const sub_topics = [
     {
-        'topic': `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/raw`,
+        'topic': `devices/+/up/raw`,
+        'options': {
+            'qos': 0
+        }
+    },
+    {
+        'topic': `devices/+/down/push/raw`,
         'options': {
             'qos': 0
         }
@@ -99,55 +97,87 @@ function streaming_broker_connect_handler(connack)
     }
 }
 
-//EXTRACT
 function streaming_broker_message_handler(topic, message, packet)
 {
-    //parse msg
-    let parsed_message = JSON.parse(message);
-    //extract
-    let dev_data = extract_dev_data(parsed_message);
+    let topic_levels = topic.split('/');
 
-    let pub_topics = [
-        {
-            //for db cache
-            'topic': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['MIXED']}`,
-            'msg': JSON.stringify(dev_data),
-            'options': {
-                qos: 0,
-                dup: false,
-                retain: false,
-                /*
-                properties: {
-                    messageExpiryInterval: 300
+    //EXTRACT UPLINK
+    if (topic == `devices/${topic_levels[1]}/up/raw`) {
+        //parse msg
+        let parsed_message = JSON.parse(message);
+        //extract
+        let dev_data = extract_dev_data(parsed_message);
+    
+        let pub_topics = [
+            {
+                //for db cache
+                'topic': `devices/${topic_levels[1]}/up/mixed`,
+                'msg': JSON.stringify(dev_data),
+                'options': {
+                    qos: 0,
+                    dup: false,
+                    retain: false
                 }
-                */
-            }
-        },
-
-        {
-            //for customer
-            'topic': `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/${dev_topic_levels['PAYLOAD']}`,
-            'msg': JSON.stringify(dev_data["payload"]),
-            'options': {
-                qos: 0,
-                dup: false,
-                retain: true,
-                /*
-                properties: {
-                    messageExpiryInterval: 300
+            },
+    
+            {
+                //for customer
+                'topic': `devices/${topic_levels[1]}/up/payload`,
+                'msg': JSON.stringify(dev_data["payload"]),
+                'options': {
+                    qos: 0,
+                    dup: false,
+                    retain: true
                 }
-                */
             }
+        ];
+    
+        //publish extracted data to 2 different topics
+        try {
+            pub_topics.forEach((topic) => {
+                streaming_broker_mqttclient.publish(topic['topic'], topic['msg'], topic['options']);
+            });
+        } catch (err) {
+            console.log(err);
         }
-    ];
+    }
 
-    //publish extracted data to 2 different topics
-    try {
-        pub_topics.forEach((topic) => {
-            streaming_broker_mqttclient.publish(topic['topic'], topic['msg'], topic['options']);
-        });
-    } catch (err) {
-        console.log(err);
+    //DOWNLINK PUSH
+    else if (topic == `devices/${topic_levels[1]}/down/push/raw`) {
+        //parse msg
+        let downlink_payload = JSON.parse(message);
+
+        downlink_payload = 
+        {
+            "downlinks": [
+                {
+                    "f_port": downlink_payload['f_port'],
+                    "frm_payload": downlink_payload['frm_payload_base64'],
+                    "priority": "HIGH",
+                    "confirmed": true
+                }
+            ]
+        };
+    
+        let pub_topics = [
+            {
+                'topic': `devices/${topic_levels[1]}/down/push`,
+                'msg': JSON.stringify(downlink_payload),
+                'options': {
+                    qos: 0,
+                    dup: false,
+                    retain: false
+                }
+            }
+        ];
+    
+        try {
+            pub_topics.forEach((topic) => {
+                streaming_broker_mqttclient.publish(topic['topic'], topic['msg'], topic['options']);
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 

@@ -1,7 +1,0 @@
-{
-    "TRANSPORTER_SERVICE": "gmail",
-    "TRANSPORTER_EMAIL": "jingnguyen10@gmail.com",
-    "TRANSPORTER_PASS": "Zxcvbnm200",
-    "EMAIL_HEADER": "BKLORAWAN: EMAIL VERIFICATION",
-    "PATH": "./views/extra/mail.ejs"
-}

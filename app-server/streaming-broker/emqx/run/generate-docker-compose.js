@@ -7,10 +7,10 @@ const content =
 
 services:
   emqx1:
-    image: emqx/emqx:4.3.12
+    image: emqx/emqx:4.4.0
     environment:
     - \"EMQX_NAME=emqx\"
-    - \"EMQX_HOST=${common_emqx['SERVER_ADDR']}\"
+    - \"EMQX_HOST=127.0.0.1\"
     - \"EMQX_CLUSTER__DISCOVERY=static\"
     - \"EMQX_CLUSTER__STATIC__SEEDS=emqx@${common_emqx['SERVER_ADDR']}\"
     networks:
@@ -23,10 +23,9 @@ services:
       - \"${common_emqx['WEBSOCKET_PORT']}:${common_emqx['WEBSOCKET_PORT']}\" 
       - \"8883:8883\" 
       - \"8084:8084\" 
-      - \"18083:18083\"
-      - \"6369:6369\"
-      - \"6370:6370\"
+      - \"8080:8080\" 
       - \"11883:11883\"
+      - \"18083:18083\"
 
 networks:
   emqx-bridge:

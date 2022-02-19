@@ -40,21 +40,88 @@ const streaming_broker_protocol = "mqtt";
 const streaming_broker_addr = common_emqx['SERVER_ADDR'];
 const streaming_broker_port = common_emqx['SERVER_PORT'];
 
-//get uplink messages of all devices
-const sub_topics = [
+//get uplink messages of all  from TTS
+const tts_sub_topics = [
     {
         'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/up`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/join`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/down/queued`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/down/sent`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/down/ack`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/down/nack`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/down/failed`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/service/data`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/+/location/solved`,
         'options': {
             'qos': 0
         }
     }
 ];
 
-//topics levels of streaming brokers
-const dev_topic_levels = {
-    'DEVICES': common_emqx['TOPIC_LEVEL_DEVICES'],
-    'UP': common_emqx['TOPIC_LEVEL_UP']
-};
+//sub topic emqx
+const emqx_sub_topics = [
+    {
+        'topic': `devices/+/down/push`,
+        'options': {
+            'qos': 0
+        }
+    },
+
+    {
+        'topic': `devices/+/down/replace`,
+        'options': {
+            'qos': 0
+        }
+    }
+]
 
 /* ==============CONNECT TO NETWORK SERVER============== */
 const network_server_mqttclient = mqtt.connect(
@@ -72,7 +139,7 @@ function network_server_mqtt_connect_handler(connack)
 {
     console.log(`network server mqtt connected? ${network_server_mqttclient.connected}`);
     if (connack.sessionPresent == false) {
-        sub_topics.forEach((topic) => {
+        tts_sub_topics.forEach((topic) => {
             network_server_mqttclient.subscribe(topic['topic'], topic['options']);
         });
     }
@@ -81,25 +148,128 @@ function network_server_mqtt_connect_handler(connack)
 //FORWARD UPLINK
 function network_server_mqtt_message_handler(topic, message, packet)
 {
-    //parse msg
-    let parsed_message = JSON.parse(message);
-    console.log(parsed_message);
-    //publish
-    let pub_topic = `${dev_topic_levels['DEVICES']}/${parsed_message['end_device_ids']['device_id']}/${dev_topic_levels['UP']}/raw`;
-    //try..catch in case cannot connect to app server
-    try {
-        streaming_broker_mqttclient.publish(pub_topic, message, {
-            qos: 0,
-            dup: false,
-            retain: false,
-            /*
-            properties: {
-                messageExpiryInterval: 300
-            }
-            */
-        });
-    } catch (err) {
-        console.log(err);
+    //split topic
+    let topic_levels = topic.split('/');
+
+    if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/up`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/up`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/join`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/join`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/down/sent`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/down/sent`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/down/ack`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/down/ack`, message, {
+                qos: 0,
+                dup: false,
+                retain: true
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/down/nack`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/down/nack`, message, {
+                qos: 0,
+                dup: false,
+                retain: true
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/down/queued`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/down/queued`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/down/failed`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/down/failed`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/service/data`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/service/data`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[4]}/location/solved`) {
+        //try..catch in case cannot connect to app server
+        try {
+            streaming_broker_mqttclient.publish(`devices/${topic_levels[4]}/location/solved`, message, {
+                qos: 0,
+                dup: false,
+                retain: true
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else {
+        console.log('out of topic');
     }
 }
 
@@ -126,14 +296,47 @@ function streaming_broker_connect_handler(connack)
     console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
     if (connack.sessionPresent == false) {
         //subscribe
+        emqx_sub_topics.forEach((topic) => {
+            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
+        });
     }
-    
 }
 
 //CONTROL DOWNLINK
 function streaming_broker_message_handler(topic, message, packet)
 {
-    //NOT BE USED YET
+    //split topic
+    let topic_levels = topic.split('/');
+  
+    if (topic == `devices/${topic_levels[1]}/down/push`) {
+        //try..catch in case cannot connect to app server
+        try {
+            network_server_mqttclient.publish(`v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[1]}/down/push`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else if (topic == `devices/${topic_levels[1]}/down/replace`) {
+        //try..catch in case cannot connect to app server
+        try {
+            network_server_mqttclient.publish(`v3/${common_tts['APPLICATION_ID']}@${common_tts['TENANT_ID']}/devices/${topic_levels[1]}/down/replace`, message, {
+                qos: 0,
+                dup: false,
+                retain: false
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    else {
+        console.log('out of topic');
+    }
 }
 
 // handle error
