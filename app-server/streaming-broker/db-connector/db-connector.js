@@ -26,17 +26,10 @@ const streaming_broker_protocol = "mqtt";
 const streaming_broker_addr = common_emqx['SERVER_ADDR'];
 const streaming_broker_port = common_emqx['SERVER_PORT'];
 
-//topics levels of streaming brokers
-const dev_topic_levels = {
-    'DEVICES': common_emqx['TOPIC_LEVEL_DEVICES'],
-    'UP': common_emqx['TOPIC_LEVEL_UP'],
-    'MIXED': common_emqx['TOPIC_LEVEL_MIXED']
-};
-
 //get topics of all devices
 const sub_topics = [
     {
-        'topic': `${dev_topic_levels['DEVICES']}/+/${dev_topic_levels['UP']}/${dev_topic_levels['MIXED']}`,
+        'topic': `devices/+/up/mixed`,
         'options': {
             'qos': 0
         }
