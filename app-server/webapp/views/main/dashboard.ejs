@@ -10,262 +10,9 @@
     <!-- Global level stylesheet -->
     <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="./../../public/js/base64ArrayBuffer.js"></script>
     
-    <script>
-            /*
-
-            const streaming_broker_protocol = "ws"; //pass from server
-            const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
-            const streaming_broker_port = '<%= broker.port %>'; //pass from server
-
-            const STORAGE_KEY = 'payload-storage';
-            const MAX_SESSION_STORAGE_LENGTH = 20;
-
-            //pass from server
-            // const devices = [
-            //     "eui-a84041a54182a79f"
-            // ];
-            const devices = '<%= dev_list %>'.split(",");
-            // console.log(devices);
-            //pass from server
-            const streaming_broker_options = {
-                clientId: '<%= client_id %>',
-                username: '<%= broker.id %>',
-                password: '<%= broker.psw %>',
-                keepalive: 120,
-                protocolVersion: 5,
-                clean: false,
-                properties: {  // MQTT 5.0
-                    sessionExpiryInterval: 300
-                }
-                // resubscribe: false
-            }
-
-            const sub_topics = [];
-            devices.forEach((device_id) => {
-                sub_topics.push({
-                    'topic': `devices/${device_id}/up/payload`,
-                    'options': {
-                        'qos': 0
-                    }
-                });
-            });
-                
-            const streaming_broker_mqttclient = mqtt.connect(
-                `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}/mqtt`, 
-                streaming_broker_options
-            );
-            
-            streaming_broker_mqttclient.on('connect', streaming_broker_connect_handler);
-            streaming_broker_mqttclient.on('error', streaming_broker_error_handler);
-            streaming_broker_mqttclient.on('message', streaming_broker_message_handler);
-            
-            
-            
-            //create browser storage instance
-            const clientStorage = localStorage;
-
-            //handle incoming connect
-            function streaming_broker_connect_handler(connack)
-            {
-                try {
-                    console.log(`streaming broker connected? ${streaming_broker_mqttclient.connected}`);
-                    if(connack.sessionPresent==false){
-                        
-                        clientStorage.removeItem(STORAGE_KEY);
-                        sub_topics.forEach((topic) => {
-                            streaming_broker_mqttclient.subscribe(topic['topic'], topic['options']);
-                        });
-                    }else{
-                        let storage = clientStorage.getItem(STORAGE_KEY);
-                        let length_flag = 0;
-                        if(storage){
-                            storage = JSON.parse(storage);
-                        }else{
-                            return;
-                        }
-                        for(let i in storage.payload){
-                            
-                            for(let j in storage.payload[i].payload_data){
-                                document.querySelectorAll(`[id^=timestamp-payload-data-${i}-${j}]`).forEach((item)=>{
-                                                                item.innerHTML = `<%= __('Last updated') %>: ${storage.payload[i].recv_timestamp.at(-1)}`;                                 
-                                });
-                                document.querySelectorAll(`[id^=payload-data-${i}-${j}]`).forEach((item)=>{
-                                                                    item.innerHTML = storage.payload[i].payload_data[j].at(-1);                                  
-                                });
-                                document.querySelectorAll(`[id^="chart payload-data"]`).forEach((item)=>{
-                                        
-                                        let id = $(item).data('id');
-
-                                        // if (!id) continue;
-                                        try {
-                                            for(let k in id.dev){
-                                                if(id.dev[k]==i && id.sensor[k]==j){
-                                                    var graph = $(item).data('graph');
-                                                    let labels = graph.data.labels.concat(storage.payload[i].recv_timestamp);
-                                                    graph.data.labels=[...new Set(labels)];
-                                                    graph.data.labels.sort();
-                                                    // graph.data.datasets[0].data=storage.payload[i].payload_data[j];
-                                                    graph.data.datasets.forEach((item) => {
-                                                        if(item.id.dev == i && item.id.sensor == j){
-                                                            item.data = storage.payload[i].recv_timestamp.map((element,index)=>{
-                                                                return {
-                                                                    x: element,
-                                                                    y: storage.payload[i].payload_data[j][index]
-                                                                }
-                                                            });
-                                                
-                                                        }
-                                                        // else {
-                                                        //     item.data = NaN;
-                                                        // }
-                                                    })
-                                                    graph.update(); 
-                                                }
-                                            }
-                                        } catch (err) {
-                                            console.log(err);
-                                        }
-                                        
-
-                                });
-                            }
-                        }
-
-
-                    }
-                }
-                catch(err) {
-                    console.log(err);
-                }
-                
-            }
-            
-            //MESSAGE SEND HERE
-            function streaming_broker_message_handler(topic, message, packet)
-            {
-                try {
-                    //parse msg
-                    let parsed_message = JSON.parse(message);
-                    //CONTINUE
-                    //document.getElementById("payload-data-58").innerHTML = parsed_message;
-                    console.log(topic);
-                    console.log('parsed_message', parsed_message);
-                    var recv_topic = topic.split('/')[1];
-                    // var data = `"${recv_topic}": ${parsed_message.payload_data}`;
-
-                    // var data = JSON.parse(window.localStorage.getItem('payload-data'));
-                    // if(!data) data = {};
-                    // data[recv_topic] = JSON.stringify(parsed_message.payload_data);
-                    // window.localStorage.setItem(`payload-data`, JSON.stringify(data));
-                    let storage = clientStorage.getItem(STORAGE_KEY);
-                    let length_flag = 0;
-                    if(storage){
-                        storage = JSON.parse(storage);
-                    }else{
-                        storage = {
-                            payload: {}
-                        }
-                    }
-                    if(!storage.payload[recv_topic]){
-                        storage.payload[recv_topic] = {};
-                        storage.payload[recv_topic].recv_timestamp = [];
-                        storage.payload[recv_topic].payload_data = {};
-                        length_flag = 1;
-                    }else if(storage.payload[recv_topic].recv_timestamp.length > MAX_SESSION_STORAGE_LENGTH){
-                        storage.payload[recv_topic].recv_timestamp.shift();
-                        length_flag = 2;
-                    }
-                    parsed_message.recv_timestamp = timestamp_format(parsed_message.recv_timestamp);
-                    storage.payload[recv_topic].recv_timestamp.push(parsed_message.recv_timestamp);
-
-                    for(var i in parsed_message.payload_data){
-                        // console.log('i', i);
-                        // do3cument.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
-                        
-                        //STORAGE
-                        if(length_flag==1){
-                            storage.payload[recv_topic].payload_data[i] = [];
-                        }else if(length_flag==2){
-                            storage.payload[recv_topic].payload_data[i].shift();
-                        }
-                        storage.payload[recv_topic].payload_data[i].push(parsed_message.payload_data[i]);
-
-                        //GRAPH
-                        document.querySelectorAll(`[id^=timestamp-payload-data-${recv_topic}-${i}]`).forEach((item)=>{
-                                                            item.innerHTML = `<%= __('Last updated') %>: ${parsed_message.recv_timestamp}`;                                  
-                        });
-                        document.querySelectorAll(`[id^=payload-data-${recv_topic}-${i}]`).forEach((item)=>{
-                                                            item.innerHTML = parsed_message.payload_data[i];                                  
-                        });
-                        document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
-                                    
-                                        let id = $(item).data('id');
-                                        // if (!id) return;
-                                        try {
-                                            for(let j in id.dev){
-                                                if(id.dev[j]==recv_topic && id.sensor[j]==i){
-                                                    var graph = $(item).data('graph');
-                                                    graph.data.labels.push(parsed_message.recv_timestamp);
-                                                    graph.data.labels=[...new Set(graph.data.labels)];
-                                                    graph.data.labels.sort();
-                                                    // console.log(graph.data.labels);
-                                                    // graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
-                                                    graph.data.datasets.forEach((item_data) => {
-                                                        // console.log('plot1', item_data.id.dev, item_data.id.sensor);
-                                                        if(item_data.id.dev == recv_topic && item_data.id.sensor == i){
-                                                            // console.log('plot', recv_topic, i, parsed_message.recv_timestamp, parseFloat(parsed_message.payload_data[i]));
-                                                            item_data.data.push({
-                                                                x: parsed_message.recv_timestamp,
-                                                                y: parseFloat(parsed_message.payload_data[i]) 
-                                                            });
-                                                        }
-                                                        // else {
-                                                        //     item.data.push({
-                                                        //         x: parsed_message.recv_timestamp,
-                                                        //         y: NaN
-                                                        //     });
-                                                        // }
-                                                    })
-                                                    graph.update(); 
-                                                }
-                                            }
-                                        } catch (err) {
-                                            console.log(err);
-                                        }
-                                        
-                        });
-                    }
-
-                    clientStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
-                    // parsed_message.payload_data.forEach((item) => {
-                    //     document.getElementById(`payload-data-${recv_topic[1]}-${item.key}`).innerHTML = item
-                    // })
-                    // parsed_message.recv_payload
-                }
-                catch(err){
-                    console.log(err);
-                }
-
-            }
-
-            // handle error
-            function streaming_broker_error_handler(error)
-            {
-                console.log("Can't connect to streaming broker" + error);
-                process.exit(1);
-            }
-
-            function timestamp_format(str){
-                var arr = new Date(str).toLocaleString(NaN,{ hour12: false }).split(', ');
-                arr[0] = arr[0].split('/');
-                arr[0].pop();
-                arr[0] = `${arr[0][0]}/${arr[0][1]}`
-                arr[1] = arr[1].slice(0, 5);
-                return `${arr[0]} ${arr[1]}`
-            }
-            */
-    </script>
     <%- include('../partials/libs.ejs') %>
 
 </head>
@@ -933,14 +680,6 @@
     <script src="js/visuals/chart-area-demo.js"></script>
     <!-- <script src="js/visuals/chart-pie-demo.js"></script> -->
     <script>
-            // var payload_data = JSON.parse(window.localStorage.getItem('payload-data')) ;
-            
-            //     for(var i in payload_data){
-            //         for(var j in payload_data[i]){
-            //             document.getElementById(`payload-data-${i}-${j}`).innerHTML = payload_data[i][j];
-            //         }
-                    
-            //     }
             document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
                 var data = $(item).attr('id').split(' ');
                 data.shift();
@@ -1092,13 +831,8 @@
     const STORAGE_KEY = 'payload-storage';
     const MAX_SESSION_STORAGE_LENGTH = 20;
 
-    //pass from server
-    // const devices = [
-    //     "eui-a84041a54182a79f"
-    // ];
     const devices = '<%= dev_list %>'.split(",");
-    // console.log(devices);
-    //pass from server
+
     const streaming_broker_options = {
         clientId: '<%= client_id %>',
         username: '<%= broker.id %>',
@@ -1107,19 +841,77 @@
         protocolVersion: 5,
         clean: false,
         properties: {  // MQTT 5.0
-            sessionExpiryInterval: 300
+            sessionExpiryInterval: 60
         }
         // resubscribe: false
     }
 
     const sub_topics = [];
     devices.forEach((device_id) => {
-        sub_topics.push({
-            'topic': `devices/${device_id}/up/payload`,
-            'options': {
-                'qos': 0
-            }
-        });
+        sub_topics.push(
+            {
+                'topic': `devices/${device_id}/up/payload`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/join`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/ack`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/nack`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/queued`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/sent`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/failed`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/service/data`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/location/solved`,
+                'options': {
+                    'qos': 0
+                }
+            },
+        );
     });
         
     const streaming_broker_mqttclient = mqtt.connect(
@@ -1159,51 +951,46 @@
                     
                     for(let j in storage.payload[i].payload_data){
                         document.querySelectorAll(`[id^=timestamp-payload-data-${i}-${j}]`).forEach((item)=>{
-                                                        item.innerHTML = `<%= __('Last updated') %>: ${storage.payload[i].recv_timestamp.at(-1)}`;                                 
+                            item.innerHTML = `<%= __('Last updated') %>: ${storage.payload[i].recv_timestamp.at(-1)}`;                                 
                         });
                         document.querySelectorAll(`[id^=payload-data-${i}-${j}]`).forEach((item)=>{
-                                                            item.innerHTML = storage.payload[i].payload_data[j].at(-1);                                  
+                            item.innerHTML = storage.payload[i].payload_data[j].at(-1);                                  
                         });
-                        document.querySelectorAll(`[id^="chart payload-data"]`).forEach((item)=>{
-                                
-                                let id = $(item).data('id');
+                        document.querySelectorAll(`[id^="chart payload-data"]`).forEach((item)=>{        
+                            let id = $(item).data('id');
 
-                                // if (!id) continue;
-                                try {
-                                    for(let k in id.dev){
-                                        if(id.dev[k]==i && id.sensor[k]==j){
-                                            var graph = $(item).data('graph');
-                                            let labels = graph.data.labels.concat(storage.payload[i].recv_timestamp);
-                                            graph.data.labels=[...new Set(labels)];
-                                            graph.data.labels.sort();
-                                            // graph.data.datasets[0].data=storage.payload[i].payload_data[j];
-                                            graph.data.datasets.forEach((item) => {
-                                                if(item.id.dev == i && item.id.sensor == j){
-                                                    item.data = storage.payload[i].recv_timestamp.map((element,index)=>{
-                                                        return {
-                                                            x: element,
-                                                            y: storage.payload[i].payload_data[j][index]
-                                                        }
-                                                    });
-                                        
-                                                }
-                                                // else {
-                                                //     item.data = NaN;
-                                                // }
-                                            })
-                                            graph.update(); 
-                                        }
+                            try {
+                                for(let k in id.dev){
+                                    if(id.dev[k]==i && id.sensor[k]==j){
+                                        var graph = $(item).data('graph');
+                                        let labels = graph.data.labels.concat(storage.payload[i].recv_timestamp);
+                                        graph.data.labels=[...new Set(labels)];
+                                        graph.data.labels.sort();
+                                        // graph.data.datasets[0].data=storage.payload[i].payload_data[j];
+                                        graph.data.datasets.forEach((item) => {
+                                            if(item.id.dev == i && item.id.sensor == j){
+                                                item.data = storage.payload[i].recv_timestamp.map((element,index)=>{
+                                                    return {
+                                                        x: element,
+                                                        y: storage.payload[i].payload_data[j][index]
+                                                    }
+                                                });
+                                    
+                                            }
+
+                                            else {
+                                            //     item.data = NaN;
+                                            }
+                                        })
+                                        graph.update(); 
                                     }
-                                } catch (err) {
-                                    console.log(err);
                                 }
-                                
-
+                            } catch (err) {
+                                console.log(err);
+                            }
                         });
                     }
                 }
-
-
             }
         }
         catch(err) {
@@ -1216,115 +1003,142 @@
     function streaming_broker_message_handler(topic, message, packet)
     {
         try {
-            //parse msg
-            let parsed_message = JSON.parse(message);
-            //CONTINUE
-            //document.getElementById("payload-data-58").innerHTML = parsed_message;
+            var recv_topic = topic.split('/');
+            var dev_id = recv_topic[1];
             console.log(topic);
-            console.log('parsed_message', parsed_message);
-            var recv_topic = topic.split('/')[1];
-            // var data = `"${recv_topic}": ${parsed_message.payload_data}`;
 
-            // var data = JSON.parse(window.localStorage.getItem('payload-data'));
-            // if(!data) data = {};
-            // data[recv_topic] = JSON.stringify(parsed_message.payload_data);
-            // window.localStorage.setItem(`payload-data`, JSON.stringify(data));
-            let storage = clientStorage.getItem(STORAGE_KEY);
-            let length_flag = 0;
-            if(storage){
-                storage = JSON.parse(storage);
-            }else{
-                storage = {
-                    payload: {}
+            if (topic == `devices/${dev_id}/up/payload`) {
+                //parse msg
+                let parsed_message = JSON.parse(message);
+
+                //CONTINUE
+                console.log('parsed_message', parsed_message);
+        
+                let storage = clientStorage.getItem(STORAGE_KEY);
+                let length_flag = 0;
+                if(storage){
+                    storage = JSON.parse(storage);
+                }else{
+                    storage = {
+                        payload: {}
+                    }
                 }
-            }
-            if(!storage.payload[recv_topic]){
-                storage.payload[recv_topic] = {};
-                storage.payload[recv_topic].recv_timestamp = [];
-                storage.payload[recv_topic].payload_data = {};
-                length_flag = 1;
-            }else if(storage.payload[recv_topic].recv_timestamp.length > MAX_SESSION_STORAGE_LENGTH){
-                storage.payload[recv_topic].recv_timestamp.shift();
-                length_flag = 2;
-            }
-            parsed_message.recv_timestamp = timestamp_format(parsed_message.recv_timestamp);
-            storage.payload[recv_topic].recv_timestamp.push(parsed_message.recv_timestamp);
-
-            for(var i in parsed_message.payload_data){
-                // console.log('i', i);
-                // do3cument.getElementById(`payload-data-${recv_topic}-${i}`).innerHTML = parsed_message.payload_data[i];
-                
-                //STORAGE
-                if(length_flag==1){
-                    storage.payload[recv_topic].payload_data[i] = [];
-                }else if(length_flag==2){
-                    storage.payload[recv_topic].payload_data[i].shift();
+                if(!storage.payload[dev_id]){
+                    storage.payload[dev_id] = {};
+                    storage.payload[dev_id].recv_timestamp = [];
+                    storage.payload[dev_id].payload_data = {};
+                    length_flag = 1;
+                }else if(storage.payload[dev_id].recv_timestamp.length > MAX_SESSION_STORAGE_LENGTH){
+                    storage.payload[dev_id].recv_timestamp.shift();
+                    length_flag = 2;
                 }
-                storage.payload[recv_topic].payload_data[i].push(parsed_message.payload_data[i]);
+                parsed_message.recv_timestamp = timestamp_format(parsed_message.recv_timestamp);
+                storage.payload[dev_id].recv_timestamp.push(parsed_message.recv_timestamp);
 
-                //GRAPH
-                document.querySelectorAll(`[id^=timestamp-payload-data-${recv_topic}-${i}]`).forEach((item)=>{
-                                                    item.innerHTML = `<%= __('Last updated') %>: ${parsed_message.recv_timestamp}`;                                  
-                });
-                document.querySelectorAll(`[id^=payload-data-${recv_topic}-${i}]`).forEach((item)=>{
-                                                    item.innerHTML = parsed_message.payload_data[i];                                  
-                });
-                document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
-                            
-                                let id = $(item).data('id');
-                                // if (!id) return;
-                                try {
-                                    for(let j in id.dev){
-                                        if(id.dev[j]==recv_topic && id.sensor[j]==i){
-                                            var graph = $(item).data('graph');
-                                            graph.data.labels.push(parsed_message.recv_timestamp);
-                                            graph.data.labels=[...new Set(graph.data.labels)];
-                                            graph.data.labels.sort();
-                                            // console.log(graph.data.labels);
-                                            // graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
-                                            graph.data.datasets.forEach((item_data) => {
-                                                // console.log('plot1', item_data.id.dev, item_data.id.sensor);
-                                                if(item_data.id.dev == recv_topic && item_data.id.sensor == i){
-                                                    // console.log('plot', recv_topic, i, parsed_message.recv_timestamp, parseFloat(parsed_message.payload_data[i]));
-                                                    item_data.data.push({
-                                                        x: parsed_message.recv_timestamp,
-                                                        y: parseFloat(parsed_message.payload_data[i]) 
-                                                    });
-                                                }
-                                                // else {
-                                                //     item.data.push({
-                                                //         x: parsed_message.recv_timestamp,
-                                                //         y: NaN
-                                                //     });
-                                                // }
-                                            })
-                                            graph.update(); 
-                                        }
-                                    }
-                                } catch (err) {
-                                    console.log(err);
-                                }
+                for(var i in parsed_message.payload_data){
+                    //STORAGE
+                    if(length_flag==1){
+                        storage.payload[dev_id].payload_data[i] = [];
+                    }else if(length_flag==2){
+                        storage.payload[dev_id].payload_data[i].shift();
+                    }
+                    storage.payload[dev_id].payload_data[i].push(parsed_message.payload_data[i]);
+
+                    //GRAPH
+                    document.querySelectorAll(`[id^=timestamp-payload-data-${dev_id}-${i}]`).forEach((item)=>{
+                                                        item.innerHTML = `<%= __('Last updated') %>: ${parsed_message.recv_timestamp}`;                                  
+                    });
+                    document.querySelectorAll(`[id^=payload-data-${dev_id}-${i}]`).forEach((item)=>{
+                                                        item.innerHTML = parsed_message.payload_data[i];                                  
+                    });
+                    document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
                                 
-                });
+                        let id = $(item).data('id');
+
+                        try {
+                            for(let j in id.dev){
+                                if(id.dev[j]==dev_id && id.sensor[j]==i){
+                                    var graph = $(item).data('graph');
+                                    graph.data.labels.push(parsed_message.recv_timestamp);
+                                    graph.data.labels=[...new Set(graph.data.labels)];
+                                    graph.data.labels.sort();
+                                    // console.log(graph.data.labels);
+                                    // graph.data.datasets[0].data.push(parsed_message.payload_data[i]);
+                                    graph.data.datasets.forEach((item_data) => {
+                                        // console.log('plot1', item_data.id.dev, item_data.id.sensor);
+                                        if(item_data.id.dev == dev_id && item_data.id.sensor == i){
+                                            // console.log('plot', dev_id, i, parsed_message.recv_timestamp, parseFloat(parsed_message.payload_data[i]));
+                                            item_data.data.push({
+                                                x: parsed_message.recv_timestamp,
+                                                y: parseFloat(parsed_message.payload_data[i]) 
+                                            });
+                                        }
+                                        // else {
+                                        //     item.data.push({
+                                        //         x: parsed_message.recv_timestamp,
+                                        //         y: NaN
+                                        //     });
+                                        // }
+                                    })
+                                    graph.update(); 
+                                }
+                            }
+                        } catch (err) {
+                            console.log(err);
+                        }           
+                    });
+                }
+
+                clientStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
             }
 
-            clientStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
-            // parsed_message.payload_data.forEach((item) => {
-            //     document.getElementById(`payload-data-${recv_topic[1]}-${item.key}`).innerHTML = item
-            // })
-            // parsed_message.recv_payload
+            else if (topic == `devices/${dev_id}/join`) {
+
+            }
+
+            else if (topic == `devices/${dev_id}/down/ack`) {
+
+            }
+
+            else if (topic == `devices/${dev_id}/down/nack`) {
+                
+            }
+
+            else if (topic == `devices/${dev_id}/down/failed`) {
+                
+            }
+
+            else if (topic == `devices/${dev_id}/down/queued`) {
+                
+            }
+
+            else if (topic == `devices/${dev_id}/down/sent`) {
+                
+            }
+
+            else if (topic == `devices/${dev_id}/service/data`) {
+                
+            }
+
+            else if (topic == `devices/${dev_id}/location/solved`) {
+                
+            }
+
+            else {
+
+            }
         }
+
         catch(err){
             console.log(err);
         }
-
     }
 
     // handle error
     function streaming_broker_error_handler(error)
     {
         console.log("Can't connect to streaming broker" + error);
-        process.exit(1);
+        //process.exit(1);
     }
 
     function timestamp_format(str){
@@ -1335,6 +1149,27 @@
         arr[1] = arr[1].slice(0, 5);
         return `${arr[0]} ${arr[1]}`
     }
+
+
+
+    function mqtt_publish(topic, msg) {
+        mqttclient.publish(topic, msg, {
+            qos: 0,
+            dup: false,
+            retain: false,
+        }, (err) => {
+            console.log(err);
+        });
+
+        mqttclient.publish(topic, msg, {
+            qos: 0,
+            dup: false,
+            retain: false,
+        }, (err) => {
+            console.log(err);
+        });
+    }
+
 </script>
 </body>
 

@@ -1,0 +1,81 @@
+{
+    "DO1_ctrl": {
+        "L": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AgEREQ==",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        },
+
+        "H": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AgAREQ==",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        }
+    },
+
+    "DO2_ctrl": {
+        "L": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AhEBEQ==",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        },
+
+        "H": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AhEAEQ==",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        }
+    },
+
+    "RO1_ctrl": {
+        "CLOSE": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AwER",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        },
+
+        "OPEN": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AwAR",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        }
+    },
+
+    "RO2_ctrl": {
+        "CLOSE": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AxEB",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        },
+
+        "OPEN": {
+            "downlinks": [{
+                "f_port": 2,
+                "frm_payload": "AxEA",
+                "priority": "HIGH",
+                "confirmed": true
+            }]
+        }
+    }
+}
