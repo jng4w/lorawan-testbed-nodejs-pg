@@ -9,6 +9,76 @@ function add_client_acl_on_dev_topic(client_id, dev_list) {
             action: `sub`,
             access: `allow`
         });
+        
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/join`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/down/ack`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/down/nack`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/down/failed`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/down/queued`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/down/sent`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/service/data`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/location/solved`,
+            action: `sub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/down/push`,
+            action: `pub`,
+            access: `allow`
+        });
+
+        acl_batch.push({
+            clientid: `${client_id}`,
+            topic: `devices/${dev_id}/down/replace`,
+            action: `pub`,
+            access: `allow`
+        });
     });
     // console.log('acl_batch ', acl_batch);
     return emqx_http.post('api/v4/acl', acl_batch)
