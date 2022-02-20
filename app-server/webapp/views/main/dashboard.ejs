@@ -83,6 +83,7 @@
                         
                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;<%= __('Add widget') %>
                         </a>
+
                         <%}%>
                         <!-- Add Board Modal-->
                         <div class="modal fade" id="addBoardModal" tabindex="-1" role="dialog" aria-labelledby="addBoardModalLabel"
@@ -287,7 +288,81 @@
                         </div>
 
                     </div>
-                    
+
+                    <div class="row">
+                        
+                        <div class="col-xl-1 col-md-6 mb-4">
+                            <div class="card shadow h-100 py-0">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
+                                                Control 1</div>
+                                            <hr class="sidebar-divider">
+                                            <a class="btn btn-primary shadow-sm controller" role="button">
+                                                <span class="text"><%= __('Trigger') %></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-1 col-md-6 mb-4">
+                            <div class="card shadow h-100 py-0">
+                                <div class="card-body">
+                                    <div class="row no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
+                                                Switch 1</div>
+                                            <hr class="sidebar-divider">
+                                            <input type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="dark"
+                                                    data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onclick="showChkState()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="chkState" class="example">
+                            <button type="button" class="btn btn-outline-primary" onclick="showChkState()">Show Toggle State</button>
+                        </div>
+
+                        <script>
+
+                            function showChkState() {
+                                        $('#chkState .badge').remove();
+                                        var chkBool = document.getElementById('toggle-event').checked;
+                                        $('#chkState button').after('<div class="badge badge-success px-3 py-2 mb-2 mx-3">'+chkBool+'</div>');
+                                    }
+	
+                        </script>
+                        <!-- <div class="col-xl-2 col-md-12 mb-4">
+                            <div class="card border-left-primary shadow h-100">
+                                <div class="card-body">
+                                        <div class="col mr-1">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Control 1</div>
+                                            <a class="d-none d-sm-inline-block btn btn-primary shadow-sm" role="button">
+                                                <span class="text"><%= __('Trigger') %></span>
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 col-md-6 mb-4">
+                            <div class="card shadow mb-4">
+
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Controller 2</h6>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="dark"
+                                            data-on="<%= __('On') %>" data-off="<%= __('Off') %>">
+                                </div>
+                            </div>
+                        </div> -->
+
+                    </div>
 
                     <!-- Content Row -->
                     <%for(let i=0; i< board.length ; i++){ %>

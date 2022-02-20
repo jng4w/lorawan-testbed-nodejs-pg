@@ -37,5 +37,9 @@
 	"Delete": "Xóa",
 	"Cancel": "Hủy",
 	"Last updated": "Cập nhật lúc",
+	"On": "Bật",
+	"Off": "Tắt",
+	"Trigger": "Kích hoạt",
+	"Toggle": "Kích hoạt",
 	"Select \"Logout\" below if you are ready to end your current session.": "Select \"Logout\" below if you are ready to end your current session."
 }
