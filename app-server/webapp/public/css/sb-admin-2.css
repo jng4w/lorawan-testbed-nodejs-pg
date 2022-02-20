@@ -2355,6 +2355,12 @@ fieldset:disabled a.btn {
   pointer-events: none;
 }
 
+.controller:hover {
+  color: #2F69CA !important;
+  background-color: #fff !important;
+  border-color: #2F69CA !important;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #2F69CA;
