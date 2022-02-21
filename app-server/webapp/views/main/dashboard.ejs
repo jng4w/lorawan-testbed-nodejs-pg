@@ -316,21 +316,49 @@
                                                 Switch 1</div>
                                             <hr class="sidebar-divider">
                                             <input type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="dark"
-                                                    data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onclick="showChkState()">
+                                                    data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onchange="showChkState()">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div id="chkState" class="example">
-                            <button type="button" class="btn btn-outline-primary" onclick="showChkState()">Show Toggle State</button>
+                            <!-- <button type="button" class="btn btn-outline-primary" onclick="showChkState()">Show Toggle State</button> -->
                         </div>
 
                         <script>
-
+                            
                             function showChkState() {
+                                        
                                         $('#chkState .badge').remove();
                                         var chkBool = document.getElementById('toggle-event').checked;
+                                        
+                                        if(chkBool){
+                                            var msg = 
+                                                `{"downlinks": [{
+                                                    "f_port": 2,
+                                                    "frm_payload": "AwEA",
+                                                    "priority": "HIGH",
+                                                    "confirmed": true
+                                                }
+                                                ]
+                                                }`;
+                                            mqtt_publish("devices/eui-a8404111e1832b1c/down/push", msg);
+                                            console.log('msg');
+                                        }
+                                        else {
+                                            var msg = 
+                                                `{"downlinks": [{
+                                                    "f_port": 2,
+                                                    "frm_payload": "AwAA",
+                                                    "priority": "HIGH",
+                                                    "confirmed": true
+                                                }
+                                                ]
+                                                }`;
+                                            mqtt_publish("devices/eui-a8404111e1832b1c/down/push", msg);
+                                            console.log('msg');
+                                        }
                                         $('#chkState button').after('<div class="badge badge-success px-3 py-2 mb-2 mx-3">'+chkBool+'</div>');
                                     }
 	
@@ -834,9 +862,12 @@
     const devices = '<%= dev_list %>'.split(",");
 
     const streaming_broker_options = {
-        clientId: '<%= client_id %>',
-        username: '<%= broker.id %>',
-        password: '<%= broker.psw %>',
+        // clientId: '<%= client_id %>',
+        clientId: 'suber',
+        // username: '<%= broker.id %>',
+        // password: '<%= broker.psw %>',
+        username: "anxYQc2AmG8fNcuaWaFA",
+        password: "xgeVOB89kyEVpHTfgKGg",
         keepalive: 120,
         protocolVersion: 5,
         clean: false,
@@ -1153,7 +1184,7 @@
 
 
     function mqtt_publish(topic, msg) {
-        mqttclient.publish(topic, msg, {
+        streaming_broker_mqttclient.publish(topic, msg, {
             qos: 0,
             dup: false,
             retain: false,
@@ -1161,13 +1192,6 @@
             console.log(err);
         });
 
-        mqttclient.publish(topic, msg, {
-            qos: 0,
-            dup: false,
-            retain: false,
-        }, (err) => {
-            console.log(err);
-        });
     }
 
 </script>
