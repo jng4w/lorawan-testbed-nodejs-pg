@@ -13,7 +13,7 @@
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
-
+<% try {%>
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -61,7 +61,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        <% try {%>
                                         <% for(let i=0; i< sensor.length; i++){%>
                                         <tr>
                                             <!-- Device name -->
@@ -73,6 +73,7 @@
                                                 <div class="row row-cols-md-2 no-gutters">
                                                     <% let ss_batv = 0;%>
                                                     <% let ss_key = sensor[i].sensor_key_arr;%>
+                                                    <% try {%>
                                                     <% for(let j=0; j< ss_key.length; j++){
                                                         if(ss_key[j] == 'BatV'){
                                                             ss_batv=ss_key[j];
@@ -81,6 +82,7 @@
                                                     <div class="col-md-5"><%=ss_key[j]%>: <p id="payload-data-<%=sensor[i].dev_id%>-<%=ss_key[j]%>">[Blank]</p></div>
                                                         <%}%>
                                                     <%}%>
+                                                    <%} catch (error) {}%>
                                                 </div>
                                             </td>
                                             <!-- Battery -->
@@ -94,6 +96,7 @@
                                             </td>
                                         </tr>
                                         <%};%>
+                                        <%} catch (error) {}%>
   
                                     </tbody>
                                 </table>
@@ -410,5 +413,6 @@
         }
     </script>
 </body>
+<%} catch (error) {}%>
 
 </html>

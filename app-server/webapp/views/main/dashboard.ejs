@@ -146,10 +146,13 @@
                                             <!-- Select type Select -->
                                             <label for="addWidgetType"><%= __('Widget type') %></label>
                                             <select class="form-control mb-4" id="addWidgetType" name="WidgetType" onchange="widgetTypeTrigger(this.value.split('-')[0]);">
+                                                <%try {%>
                                                 <%for(let i =0; i < widgetType.length; i++){%>
                                                 <option value="<%=widgetType[i]._id%>-<%=widgetType[i].ui_config.numberOfDataSource.maxNumber%>"><%=widgetType[i].ui_config.type%></option>
                                                 <%}%>
+                                                <%} catch (error) {}%>
                                             </select>
+                                            <%try {%>
                                             <%for(let i in widgetType){%>
                                                 <%let jMax = widgetType[i].ui_config%>
                                                 <%if(i!=0){%>
@@ -157,6 +160,7 @@
                                                 <%}else{%>
                                                     <div class="form-group" id="addWidgetType-group-<%=widgetType[i]._id%>">
                                                 <%}%>
+                                                <%try {%>
                                                 <%for(let j in jMax.view){%>
                                                     
                                                     <%let kMax = jMax.view[j].domain%>
@@ -168,8 +172,10 @@
                                                     <%}%>
                                                     </select>
                                                 <%}%>
+                                                <%} catch (error) {}%>
                                                 </div>
                                             <%}%>
+                                            <%} catch (error) {}%>
                                             <script>
                                                 function widgetTypeTrigger(val){
                                                     // console.log(val);
@@ -208,10 +214,12 @@
                                                     
                                                     <select class="form-control mb-4" id="addDeviceData-0" name="DeviceData-0" onchange="addDeviceTrigger('Data-0')">
                                                         <option selected value="">--<%= __('Select device') %>--</option>
+                                                        <%try {%>
                                                         <%for(let i=0; i< sensor.length; i++){%>
                                                         <option value="<%=JSON.stringify(sensor[i])%>"><%=sensor[i].dev_id%></option>
                                                         
                                                         <%}%>
+                                                        <%} catch (error) {}%>
                                                     </select>
                                                     
                                                     <select class="form-control mb-4" id="addSensorData-0" name="SensorData-0">
@@ -393,6 +401,7 @@
                     </div>
 
                     <!-- Content Row -->
+                    <%try {%>
                     <%for(let i=0; i< board.length ; i++){ %>
                         <%if(i==0){%>
                     <div class="row" id="board-<%=board[i].key%>">
@@ -400,7 +409,7 @@
                     <div class="row" id="board-<%=board[i].key%>" style="display: none;">
                         <%}%>
                         <!-- Widget Card Example -->
-                        
+                        <%try {%>
                         <%for(let j=0; j< boardWidget.length; j++){ %>
 
                         <%if(boardWidget[j].b_board_id == board[i].key){%>
@@ -539,10 +548,12 @@
 
                         <%}%>
                         <%}%>
+                        <%} catch (error) {}%>
                         
                     </div>
                     
                     <%}%>
+                    <%} catch (error) {}%>
                     <!-- <div class="card shadow col-md-12 mb-4">
                         
                         <div
