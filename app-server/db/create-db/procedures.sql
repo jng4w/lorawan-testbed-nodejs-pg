@@ -185,9 +185,11 @@ CREATE PROCEDURE public.process_new_payload(
     LANGUAGE plpgsql
     AS $$
 
+
+
 DECLARE 
-	enddev_id integer;
-	_key text;
+	_enddev_id integer;
+    _dev_type_id integer;
 
 BEGIN
 	INSERT INTO public."ENDDEV_PAYLOAD" (recv_timestamp, payload_data, enddev_id)
@@ -199,31 +201,40 @@ BEGIN
 EXCEPTION
 	-- there is no enddev exists -> insert new enddev
 	WHEN not_null_violation THEN
+		SELECT _id INTO _dev_type_id FROM public."DEV_TYPE" WHERE dev_type = new_dev_type;
 		INSERT INTO public."ENDDEV" (display_name, dev_id, dev_addr, join_eui, dev_eui, dev_type_id, dev_brand, dev_model, dev_band)
 		VALUES (new_dev_id, 
 			new_dev_id, 
 			new_dev_addr,
 			new_join_eui, 
 			new_dev_eui, 
-			(SELECT _id FROM public."DEV_TYPE" WHERE dev_type = new_dev_type), 
+			_dev_type_id,
 			new_dev_brand, 
 			new_dev_model, 
 			new_dev_band
-		) RETURNING _id INTO enddev_id;
+		) RETURNING _id INTO _enddev_id;
 
 		-- insert new sensor
-		FOR _key IN 
-			SELECT key FROM jsonb_each(new_payload_data)
-		LOOP
-			INSERT INTO public."SENSOR" (sensor_key, enddev_id)
-    		VALUES (_key, enddev_id);
-		END LOOP;
+		INSERT INTO public."SENSOR" (sensor_key, sensor_type, enddev_id)
+		SELECT jsonb_array_elements(dev_type_config->'sensor_list')->'key' AS sensor_key,
+			'sensor' AS sensor_type,
+			_enddev_id AS enddev_id
+		FROM public."DEV_TYPE" 
+		WHERE _id = _dev_type_id;
+
+		-- insert new controller
+		INSERT INTO public."SENSOR" (sensor_key, sensor_type, enddev_id)
+		SELECT jsonb_array_elements(dev_type_config->'controller_list')->'key' AS sensor_key,
+			'controller' AS sensor_type,
+			_enddev_id AS enddev_id
+		FROM public."DEV_TYPE" 
+		WHERE _id = _dev_type_id;
 
 		-- if come to here -> enddev is inserted -> insert payload again
 		INSERT INTO public."ENDDEV_PAYLOAD" (recv_timestamp, payload_data, enddev_id)
 		VALUES (new_recv_timestamp, 
 			new_payload_data, 
-			enddev_id
+			_enddev_id
 		);
 END;
 $$;

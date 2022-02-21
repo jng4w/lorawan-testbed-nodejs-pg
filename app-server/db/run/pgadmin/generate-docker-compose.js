@@ -16,6 +16,11 @@ services:
    PGADMIN_LISTEN_PORT: ${common_pgadmin['SERVER_PORT']}
   ports:
    - \"${common_pgadmin['SERVER_PORT']}:${common_pgadmin['SERVER_PORT']}\"
+  volumes:
+   - pgadmin:/var/lib/pgadmin
+
+volumes:
+ pgadmin:
 `;
 
 
