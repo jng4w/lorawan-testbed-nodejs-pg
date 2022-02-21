@@ -1,5 +1,7 @@
 common/
 
+db/run/pgadmin/volumes/
+
 streaming-broker/node_modules/
 streaming-broker/tts-bridge/using-emqx-bridge/emqx_bridge_mqtt.conf
 streaming-broker/emqx/conf/emqx_web_hook.conf
