@@ -10,7 +10,7 @@
     <%- include('../partials/libs.ejs') %>
 
 </head>
-
+<% try {%>
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -177,5 +177,5 @@
     <%- include('../partials/script.ejs') %>
 
 </body>
-
+<%} catch (error) {}%>
 </html>
