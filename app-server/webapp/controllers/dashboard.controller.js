@@ -18,7 +18,7 @@ exports.dashboardProcessing = async (req, res, next) => {
         // console.log((await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows);
         // console.log(req);
         // console.log(req.sessionStore._events.disconnect);
-        let dev_list = []
+        let dev_list = [];
         req.session.sensor.forEach((item)=>{
             dev_list.push(item.dev_id);
         });
@@ -41,7 +41,7 @@ exports.dashboardProcessing = async (req, res, next) => {
             boardWidget: boardWidget,
             widgetType: (await Index.selectWidgetType()).rows,
             sensor: req.session.sensor,
-            dev_list: dev_list,
+            dev_list: JSON.stringify(dev_list),
             client_id: req.session.dev.client_id,
             broker: broker,
             title: "Dashboard"

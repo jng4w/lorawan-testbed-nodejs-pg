@@ -30,7 +30,7 @@ exports.deviceProcessing = async (req, res, next) => {
             user: req.session.user,
             new_dev_id: new_dev_id,
             sensor: req.session.sensor,
-            dev_list: dev_list,
+            dev_list: JSON.stringify(dev_list),
             client_id: req.session.dev.client_id,
             broker: broker,
             title: "Device"
