@@ -223,8 +223,15 @@
                                                     </select>
                                                     
                                                     <select class="form-control mb-4" id="addSensorData-0" name="SensorData-0">
+<<<<<<< HEAD
                                                         <option selected value="">--<%= __('Select sensor or controller') %>--</option>
                                                         <option value=""></option>
+=======
+                                                        <option selected value="">--<%= __('Select sensor') %>--</option>
+                                                        <!-- <option value=""></option> -->
+                                                        <!-- <option value="2">AIRHUMID</option>
+                                                        <option value="3">ADC_CH0V</option> -->
+>>>>>>> 0afa307eb38315fd73f9158d381276a47d920938
                                                     </select>
                                                 </div>
                                             </div>
@@ -297,7 +304,7 @@
 
                     <div class="row">
                         
-                        <div class="col-xl-1 col-md-6 mb-4">
+                        <div class="col-xl-2 col-md-6 mb-4">
                             <div class="card shadow h-100 py-0">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -305,15 +312,17 @@
                                             <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
                                                 Control 1</div>
                                             <hr class="sidebar-divider">
-                                            <a class="btn btn-primary shadow-sm controller" role="button">
-                                                <span class="text"><%= __('Trigger') %></span>
-                                            </a>
+                                            <div class="align-items-center">
+                                                <a class="btn btn-lg btn-primary shadow-sm controller" role="button">
+                                                    <span class="text"><%= __('Trigger') %></span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-1 col-md-6 mb-4">
+                        <div class="col-xl-2 col-md-6 mb-4">
                             <div class="card shadow h-100 py-0">
                                 <div class="card-body">
                                     <div class="row no-gutters">
@@ -321,8 +330,10 @@
                                             <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
                                                 Switch 1</div>
                                             <hr class="sidebar-divider">
-                                            <input type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="dark"
-                                                    data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onchange="showChkState()">
+                                            <div class="align-items-center">
+                                                <input type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="dark" data-size="lg"
+                                                data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onchange="showChkState()">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -383,141 +394,180 @@
                         <%try {%>
                         <%for(let j=0; j< boardWidget.length; j++){ %>
 
-                        <%if(boardWidget[j].b_board_id == board[i].key){%>
-                            <%var config = boardWidget[j].config_dict; %>
-                            <%if(config.type == 'Card'){%>
-                                <div class="col-xl-3 col-md-6 mb-4">
-                                    <div class="card border-left-<%=config.view['Color of card']%> shadow h-100 py-2">
-                                        <div class="card-body">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="text-xs font-weight-bold text-<%=config.view['Color of card']%> text-uppercase mb-1">
-                                                        <%=boardWidget[j].w_display_name%></div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
-                                                    <div class="p mb-0 text-gray-800" id="timestamp-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>"><%= __('Last updated') %>: ___</div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="dropdown no-arrow">
-                                                        <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>-configure"
-                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                                        </a>
-                                                        <!-- Configure dropdown menu -->
-                                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                          aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
+                            <%if(boardWidget[j].b_board_id == board[i].key){%>
+                                <%var config = boardWidget[j].config_dict; %>
+                                <%if(config.type == 'Card'){%>
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-<%=config.view['Color of card']%> shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-<%=config.view['Color of card']%> text-uppercase mb-1">
+                                                            <%=boardWidget[j].w_display_name%></div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
+                                                        <div class="p mb-0 text-gray-800" id="timestamp-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>"><%= __('Last updated') %>: ___</div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="dropdown no-arrow">
+                                                            <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>-configure"
+                                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                                            </a>
+                                                            <!-- Configure dropdown menu -->
+                                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                            aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
 
-                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
-                                                            onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>%>')"><%= __('Configure widget') %></a>
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
+                                                                onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>%>')"><%= __('Configure widget') %></a>
 
-                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
-                                                            onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>')"><%= __('Delete widget') %></a>
-                                                            <script>
-                                                                function openEditWidgetModal(widget_id) {
-                                                                    var str = "Widget ID: " + widget_id;
-                                                                    $("#widget_id").html(str);
-                                                                    document.getElementById(`edit-widget_id`).value = widget_id;
-                                                                }
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
+                                                                onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>')"><%= __('Delete widget') %></a>
+                                                                <script>
+                                                                    function openEditWidgetModal(widget_id) {
+                                                                        var str = "Widget ID: " + widget_id;
+                                                                        $("#widget_id").html(str);
+                                                                        document.getElementById(`edit-widget_id`).value = widget_id;
+                                                                    }
 
-                                                                function openDeleteWidgetModal(widget_id) {
-                                                                    document.getElementById(`delete-widget_id`).value = widget_id;
-                                                                }
-                                                            </script>
+                                                                    function openDeleteWidgetModal(widget_id) {
+                                                                        document.getElementById(`delete-widget_id`).value = widget_id;
+                                                                    }
+                                                                </script>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                        
-                       <!------------------------------------------------------------------------------------------------------------------------>
-
-
-                              
-                            <%}else if(config.type == 'Chart'){%>
-                                <div class="card shadow col-md-12 mb-4">
-                        
-                                    <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-<%=config.view['Color of line']%>"><%=boardWidget[j].w_display_name%></h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" role="button" id="dropdownMenuLink"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                aria-labelledby="dropdownMenuLink">
-                                                <div class="dropdown-header">Dropdown Header:</div>
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="card-body">
-                                        <div class="chart-area">
-                                            <%let tmp1 = boardWidget[j]%>
-                                            <%let tmp = ''%>
-                                            <%let arr = []%>
-                                            
-                                            <%for(let k = 0; k < tmp1.e_dev_id.length; k++){%>
-                                                <%tmp+=`${tmp1.e_dev_id[k]} ${tmp1.s_sensor_key[k]} `%>
-                                                <%arr.push({dev: tmp1.e_dev_id[k], sensor: tmp1.s_sensor_key[k]})%>
-                                                
-                                            <%}%>
-                                            <canvas id="chart payload-data <%=tmp%><%=boardWidget[j].w_id%>"></canvas>
-                                            <script>
-                                                $("#chart payload-data <%=tmp%><%=boardWidget[j].w_id%>").data('id', {
-                                                    deviceSensor: '<%= arr.toString%>'.split(',')
-                                                });  
-                                            </script>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
                                 
-                            <%}else if(config.type == "Thresholds"){%>
-                                <div class="card shadow mb-4">
-                        
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                aria-labelledby="dropdownMenuLink">
-                                                <div class="dropdown-header">Dropdown Header:</div>
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
+                                <!------------------------------------------------------------------------------------------------------------------------>
+
+                                <%}else if(config.type == 'Chart'){%>
+                                    <div class="card shadow col-md-12 mb-4">
+                            
+                                        <div
+                                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                            <h6 class="m-0 font-weight-bold text-<%=config.view['Color of line']%>"><%=boardWidget[j].w_display_name%></h6>
+                                            <div class="dropdown no-arrow">
+                                                <a class="dropdown-toggle" role="button" id="dropdownMenuLink"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                    aria-labelledby="dropdownMenuLink">
+                                                    <div class="dropdown-header">Dropdown Header:</div>
+                                                    <a class="dropdown-item" href="#">Action</a>
+                                                    <a class="dropdown-item" href="#">Another action</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="#">Something else here</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-body">
+                                            <div class="chart-area">
+                                                <%let tmp1 = boardWidget[j]%>
+                                                <%let tmp = ''%>
+                                                <%let arr = []%>
+                                                
+                                                <%for(let k = 0; k < tmp1.e_dev_id.length; k++){%>
+                                                    <%tmp+=`${tmp1.e_dev_id[k]} ${tmp1.s_sensor_key[k]} `%>
+                                                    <%arr.push({dev: tmp1.e_dev_id[k], sensor: tmp1.s_sensor_key[k]})%>
+                                                    
+                                                <%}%>
+                                                <canvas id="chart payload-data <%=tmp%><%=boardWidget[j].w_id%>"></canvas>
+                                                <script>
+                                                    $("#chart payload-data <%=tmp%><%=boardWidget[j].w_id%>").data('id', {
+                                                        deviceSensor: '<%= arr.toString%>'.split(',')
+                                                    });  
+                                                </script>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                
+                                <!------------------------------------------------------------------------------------------------------------------------>
+
+                                <%}else if(config.type == "Thresholds"){%>
+                                    <div class="card shadow mb-4">
+                            
+                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                            <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
+                                            <div class="dropdown no-arrow">
+                                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                    aria-labelledby="dropdownMenuLink">
+                                                    <div class="dropdown-header">Dropdown Header:</div>
+                                                    <a class="dropdown-item" href="#">Action</a>
+                                                    <a class="dropdown-item" href="#">Another action</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="#">Something else here</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-body">
+                                            <div class="mb-1 small">Temperature</div>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar" role="progressbar" style="width: 62.4%"
+                                                    aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
+                                            </div>
+                                            <div class="mb-1 small">Humidity</div>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar" role="progressbar" style="width: 58.5%"
+                                                    aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
+                                            </div>
+                
+                                        </div>
+                                    </div>
+                                
+                                <!------------------------------------------------------------------------------------------------------------------------>
+
+                                <%}else if(config.type == 'Button'){%>
+                                    <div class="col-xl-2 col-md-6 mb-4">
+                                        <div class="card shadow h-100 py-0">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
+                                                            <%=boardWidget[j].w_display_name%></div>
+                                                        <hr class="sidebar-divider">
+                                                        <div class="align-items-center">
+                                                            <a class="btn btn-lg btn-<%=config.view['Color of button']%> shadow-sm controller" role="button">
+                                                                <span class="text"><%= __('Trigger') %></span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="card-body">
-                                        <div class="mb-1 small">Temperature</div>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar" role="progressbar" style="width: 62.4%"
-                                                aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
-                                        </div>
-                                        <div class="mb-1 small">Humidity</div>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar" role="progressbar" style="width: 58.5%"
-                                                aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
-                                        </div>
-            
-                                    </div>
-                                </div>
-                            
-                            
-                            <%}%>
 
-                        <%}%>
+                                <%}else if(config.type == 'Switch'){%>
+                                    <div class="col-xl-2 col-md-6 mb-4">
+                                        <div class="card shadow h-100 py-0">
+                                            <div class="card-body">
+                                                <div class="row no-gutters">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
+                                                            <%=boardWidget[j].w_display_name%></div>
+                                                        <hr class="sidebar-divider">
+                                                        <div class="align-items-center">
+                                                            <input type="checkbox" data-toggle="toggle" data-onstyle="<%=config.view['Color of switch checked']%>" data-offstyle="<%=config.view['Color of switch unchecked']%>" data-size="lg"
+                                                            data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onchange="showChkState()">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%}%>
+                                
+                            <%}%>
                         <%}%>
                         <%} catch (error) {}%>
                         
