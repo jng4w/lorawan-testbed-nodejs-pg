@@ -29,24 +29,10 @@ exports.loginProcessing = async (req, res, next) => {
         req.session.dev = {};
         
         req.session.dev.new_dev_id = null;
-        
-        
-        // console.log(req.session.user);
-
-        //retrive enddev metadata
-        // var deviceQuery = (await Index.selectDeviceFromCustomer(db_res.rows[0]._id)).rows;
-        // var dev = [];
-        // deviceQuery.forEach((item) => {
-        //     // console.log(item.dev_id);
-        //     dev.push({
-        //         dev_id: item.dev_id,
-        //         no_sensor: item.no_sensor
-        //     })
-        // })
-        // req.session.dev = dev;
 
         var sensorQuery = (await Index.selectDeviceSensorFromCustomer(db_res.rows[0]._id)).rows;
         req.session.sensor = sensorQuery;
+        console.log(req.session.sensor[0]['sensor_arr']);
         req.session.dev.client_id = (await generateClientBrokerId(req.session.user.id));
         
         let dev_list = []
@@ -62,9 +48,6 @@ exports.loginProcessing = async (req, res, next) => {
     else {
         res.render('main/login', {error_flag: 1})
     }
-    
-    
-
 }
 
 
