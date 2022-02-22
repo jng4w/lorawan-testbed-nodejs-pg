@@ -223,10 +223,15 @@
                                                     </select>
                                                     
                                                     <select class="form-control mb-4" id="addSensorData-0" name="SensorData-0">
+<<<<<<< HEAD
+                                                        <option selected value="">--<%= __('Select sensor or controller') %>--</option>
+                                                        <option value=""></option>
+=======
                                                         <option selected value="">--<%= __('Select sensor') %>--</option>
                                                         <!-- <option value=""></option> -->
                                                         <!-- <option value="2">AIRHUMID</option>
                                                         <option value="3">ADC_CH0V</option> -->
+>>>>>>> 0afa307eb38315fd73f9158d381276a47d920938
                                                     </select>
                                                 </div>
                                             </div>
@@ -249,12 +254,12 @@
                                                 
 
                                                 function addDeviceTrigger(replace){
-                                                    var sensor_list = JSON.parse(document.getElementById(`addDevice${replace}`).value).sensor_key_arr;
+                                                    var sensor_list = JSON.parse(document.getElementById(`addDevice${replace}`).value).sensor_arr;
                                                     
                                                     var Sensordata = document.getElementById(`addSensor${replace}`);
-                                                    Sensordata.innerHTML = '<option selected value="">--Select Sensor--</option>';
+                                                    Sensordata.innerHTML = `<option selected value="">--<%= __('Select sensor or controller') %>--</option>`;
                                                     sensor_list.forEach((item)=>{
-                                                        Sensordata.innerHTML += `<option value="${item}">${item}</option>`;
+                                                        Sensordata.innerHTML += `<option value="${item.sensor_key}">${item.sensor_key} (${item.sensor_type})</option>`;
                                                     })
                                                 }
 
@@ -375,33 +380,6 @@
                                     }
 	
                         </script>
-                        <!-- <div class="col-xl-2 col-md-12 mb-4">
-                            <div class="card border-left-primary shadow h-100">
-                                <div class="card-body">
-                                        <div class="col mr-1">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Control 1</div>
-                                            <a class="d-none d-sm-inline-block btn btn-primary shadow-sm" role="button">
-                                                <span class="text"><%= __('Trigger') %></span>
-                                            </a>
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-2 col-md-6 mb-4">
-                            <div class="card shadow mb-4">
-
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Controller 2</h6>
-                                </div>
-                                
-                                <div class="card-body">
-                                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="dark"
-                                            data-on="<%= __('On') %>" data-off="<%= __('Off') %>">
-                                </div>
-                            </div>
-                        </div> -->
-
                     </div>
 
                     <!-- Content Row -->
