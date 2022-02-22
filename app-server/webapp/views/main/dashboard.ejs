@@ -913,7 +913,7 @@
     const STORAGE_KEY = 'payload-storage';
     const MAX_SESSION_STORAGE_LENGTH = 20;
 
-    const devices = '<%= dev_list %>'.split(",");
+    const devices = JSON.parse('<%= dev_list %>');
 
     const streaming_broker_options = {
         // clientId: '<%= client_id %>',
