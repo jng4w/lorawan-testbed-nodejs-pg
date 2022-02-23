@@ -72,15 +72,15 @@ async function selectDeviceFromCustomer(id){
 async function selectDeviceSensorFromCustomer(id){
 
     const res = await client.query(
-        `select dev_id, array_agg(sensor_key) as sensor_key_arr
+        `select dev_id, array_agg(jsonb_build_object('sensor_key', S.sensor_key, 'sensor_type', S.sensor_type, 'sensor_config', S.sensor_config)) AS sensor_arr
         from
         public."OWN" as O, public."ENDDEV" as E, public."SENSOR" as S
         where
         O.enddev_id = E._id and
         E._id = S.enddev_id and
         O.profile_id = $1
-        group by
-        dev_id;    
+		group by
+		dev_id 
         `,
         [id]
     );
