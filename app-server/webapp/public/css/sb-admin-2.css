@@ -2953,7 +2953,7 @@ fieldset:disabled a.btn {
 }
 
 .btn-block-controller {
-  width: 10em;
+  width: 9em;
 }
 
 .btn-block + .btn-block {
@@ -11296,3 +11296,13 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 #battery {color: #2F69CA; font-weight: bold}
+
+.button-layout {
+  position: relative;
+}
+
+.button-layout-inside {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+}
