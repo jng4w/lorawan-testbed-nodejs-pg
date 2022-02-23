@@ -299,36 +299,37 @@
                         
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card shadow h-100 py-0">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
-                                                Control 1</div>
-                                            <hr class="sidebar-divider">
-                                            <div class="text-center">
-                                                <a class="btn btn-lg btn-primary shadow-sm btn-block-controller controller" role="button">
-                                                    <span class="text"><%= __('Trigger') %></span>
-                                                </a>
-                                            </div>
-                                        </div>
+                                <div class="card-header py-3 align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary text-center">Control 1</h6>
+                                </div>
+                                <div class="card-body button-layout">
+                                    <div class="text-center button-layout-inside">
+                                        <a class="btn btn-lg btn-primary shadow-sm btn-block-controller controller" role="button">
+                                            <span class="text"><%= __('Trigger') %></span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card shadow h-100 py-0">
+                                <div class="card-header py-3 align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary text-center">Switch 1</h6>
+                                </div>
                                 <div class="card-body">
-                                    <div class="row no-gutters">
+                                    <!-- <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
                                                 Switch 1</div>
-                                            <hr class="sidebar-divider">
+                                            <hr class="sidebar-divider"> -->
                                             <div class="text-center">
-                                                <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"><%= __('State') %></label>
+                                                <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"
+                                                    id="state-label">
+                                                    <%= __('State') %></label>
                                             </div>
                                             <div class="text-center">
-                                                <a class="btn btn-lg btn-primary shadow-sm btn-block-controller controller"
-                                                    role="button" aria-describedby="button_toggle" name="button_toggle" onclick="">
+                                                <a class="btn btn-lg btn-primary shadow-sm btn-block-controller"
+                                                    role="button" aria-describedby="button_toggle" name="button_toggle" onclick="switchClicked()">
                                                     <span class="text"><%= __('Switch') %></span>
                                                 </a>
                                             </div>
@@ -336,8 +337,8 @@
                                                 <input type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="dark" data-size="lg"
                                                 data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onchange="showChkState()">
                                             </div> -->
-                                        </div>
-                                    </div>
+                                        <!-- </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -346,7 +347,7 @@
                         </div>
 
                         <script>
-                            
+
                             function showChkState() {
                                         
                                         $('#chkState .badge').remove();
@@ -578,7 +579,9 @@
                                                             <%=boardWidget[j].w_display_name%></div>
                                                         <hr class="sidebar-divider">
                                                         <div class="text-center">
-                                                            <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"><%= __('State') %></label>
+                                                            <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"
+                                                            id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">
+                                                                <%= __('State') %></label>
                                                         </div>
                                                         <div class="text-center">
                                                             <a class="btn btn-lg btn-<%=config.view['Color of switch state 1']%> shadow-sm controller" role="button" aria-describedby="button_toggle" name="button_toggle">
@@ -1249,6 +1252,21 @@
             console.log(err);
         });
 
+    }
+
+    var toggled = true;
+    function switchClicked() {
+        // $(btn).toggleClass("btn-primary");
+         // $(btn).toggleClass("btn-danger");
+                                
+        if (toggled == true) {
+            document.getElementById('state-label').innerHTML = 'On';
+            toggled = false;
+        }
+        else {
+            document.getElementById('state-label').innerHTML = 'Off';
+            toggled = true;
+        }
     }
 
 </script>
