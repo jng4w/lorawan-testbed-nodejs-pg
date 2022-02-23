@@ -223,8 +223,9 @@ EXCEPTION
 		WHERE _id = _dev_type_id;
 
 		-- insert new controller
-		INSERT INTO public."SENSOR" (sensor_key, sensor_type, enddev_id)
+		INSERT INTO public."SENSOR" (sensor_key, sensor_config, sensor_type, enddev_id)
 		SELECT jsonb_array_elements(dev_type_config->'controller_list')->>'key' AS sensor_key,
+				jsonb_array_elements(dev_type_config->'controller_list')->'config' AS sensor_config,
 			'controller' AS sensor_type,
 			_enddev_id AS enddev_id
 		FROM public."DEV_TYPE" 
