@@ -41,5 +41,7 @@
 	"Off": "Tắt",
 	"Trigger": "Kích hoạt",
 	"Toggle": "Kích hoạt",
-	"Select \"Logout\" below if you are ready to end your current session.": "Select \"Logout\" below if you are ready to end your current session."
+	"Select \"Logout\" below if you are ready to end your current session.": "Select \"Logout\" below if you are ready to end your current session.",
+	"State": "State",
+	"Switch": "Switch"
 }
