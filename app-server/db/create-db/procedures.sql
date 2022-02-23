@@ -215,8 +215,9 @@ EXCEPTION
 		) RETURNING _id INTO _enddev_id;
 
 		-- insert new sensor
-		INSERT INTO public."SENSOR" (sensor_key, sensor_type, enddev_id)
+		INSERT INTO public."SENSOR" (sensor_key, sensor_config, sensor_type, enddev_id)
 		SELECT jsonb_array_elements(dev_type_config->'sensor_list')->>'key' AS sensor_key,
+				jsonb_array_elements(dev_type_config->'sensor_list') AS sensor_config,
 			'sensor' AS sensor_type,
 			_enddev_id AS enddev_id
 		FROM public."DEV_TYPE" 
@@ -225,7 +226,7 @@ EXCEPTION
 		-- insert new controller
 		INSERT INTO public."SENSOR" (sensor_key, sensor_config, sensor_type, enddev_id)
 		SELECT jsonb_array_elements(dev_type_config->'controller_list')->>'key' AS sensor_key,
-				jsonb_array_elements(dev_type_config->'controller_list')->'config' AS sensor_config,
+				jsonb_array_elements(dev_type_config->'controller_list') AS sensor_config,
 			'controller' AS sensor_type,
 			_enddev_id AS enddev_id
 		FROM public."DEV_TYPE" 
