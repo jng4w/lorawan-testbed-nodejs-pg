@@ -297,7 +297,7 @@
 
                     <div class="row">
                         
-                        <div class="col-xl-2 col-md-6 mb-4">
+                        <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card shadow h-100 py-0">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -305,8 +305,8 @@
                                             <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
                                                 Control 1</div>
                                             <hr class="sidebar-divider">
-                                            <div class="align-items-center">
-                                                <a class="btn btn-lg btn-primary shadow-sm controller" role="button">
+                                            <div class="text-center">
+                                                <a class="btn btn-lg btn-primary shadow-sm btn-block-controller controller" role="button">
                                                     <span class="text"><%= __('Trigger') %></span>
                                                 </a>
                                             </div>
@@ -315,7 +315,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-2 col-md-6 mb-4">
+                        <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card shadow h-100 py-0">
                                 <div class="card-body">
                                     <div class="row no-gutters">
@@ -323,10 +323,19 @@
                                             <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
                                                 Switch 1</div>
                                             <hr class="sidebar-divider">
-                                            <div class="align-items-center">
+                                            <div class="text-center">
+                                                <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"><%= __('State') %></label>
+                                            </div>
+                                            <div class="text-center">
+                                                <a class="btn btn-lg btn-primary shadow-sm btn-block-controller controller"
+                                                    role="button" aria-describedby="button_toggle" name="button_toggle" onclick="">
+                                                    <span class="text"><%= __('Switch') %></span>
+                                                </a>
+                                            </div>
+                                            <!-- <div class="align-items-center">
                                                 <input type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="dark" data-size="lg"
                                                 data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onchange="showChkState()">
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -540,7 +549,7 @@
                                         </div>
                                     </div>
 
-                                <%}else if(config.type == 'Switch'){%>
+                                <%}else if(config.type == 'Switch 1'){%>
                                     <div class="col-xl-2 col-md-6 mb-4">
                                         <div class="card shadow h-100 py-0">
                                             <div class="card-body">
@@ -552,6 +561,29 @@
                                                         <div class="align-items-center">
                                                             <input type="checkbox" data-toggle="toggle" data-onstyle="<%=config.view['Color of switch checked']%>" data-offstyle="<%=config.view['Color of switch unchecked']%>" data-size="lg"
                                                             data-on="<%= __('On') %>" data-off="<%= __('Off') %>" id="toggle-event" onchange="showChkState()">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <%}else if(config.type == 'Switch 2'){%>
+                                    <div class="col-xl-2 col-md-6 mb-4">
+                                        <div class="card shadow h-100 py-0">
+                                            <div class="card-body">
+                                                <div class="row no-gutters">
+                                                    <div class="col mr-2 align-items-center">
+                                                        <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
+                                                            <%=boardWidget[j].w_display_name%></div>
+                                                        <hr class="sidebar-divider">
+                                                        <div class="text-center">
+                                                            <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"><%= __('State') %></label>
+                                                        </div>
+                                                        <div class="text-center">
+                                                            <a class="btn btn-lg btn-<%=config.view['Color of switch state 1']%> shadow-sm controller" role="button" aria-describedby="button_toggle" name="button_toggle">
+                                                                <span class="text"><%= __('Switch') %></span>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>

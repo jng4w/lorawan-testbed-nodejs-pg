@@ -2952,6 +2952,10 @@ fieldset:disabled a.btn {
   width: 100%;
 }
 
+.btn-block-controller {
+  width: 10em;
+}
+
 .btn-block + .btn-block {
   margin-top: 0.5rem;
 }
