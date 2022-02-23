@@ -37,5 +37,9 @@
 	"Application": "Application",
 	"Trigger": "Trigger",
 	"On": "On",
-	"Off": "Off"
+	"Off": "Off",
+	"Switch": "Switch",
+	"Switch State": "Switch State",
+	"State": "State",
+	"Go": "Go"
 }
