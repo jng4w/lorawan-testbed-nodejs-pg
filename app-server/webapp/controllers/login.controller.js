@@ -32,7 +32,7 @@ exports.loginProcessing = async (req, res, next) => {
 
         var sensorQuery = (await Index.selectDeviceSensorFromCustomer(db_res.rows[0]._id)).rows;
         req.session.sensor = sensorQuery;
-        console.log(req.session.sensor[0]['sensor_arr']);
+        // console.log(req.session.sensor[0]['sensor_arr']);
         req.session.dev.client_id = (await generateClientBrokerId(req.session.user.id));
         
         let dev_list = []

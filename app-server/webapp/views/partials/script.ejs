@@ -19,3 +19,31 @@
 
 <!-- Custom scripts for all pages-->
 <script src="js/ui.js"></script>
+
+<script type="text/javascript">
+    let sidebarToggleButton = $('#sidebarToggle');
+    if (sidebarToggleButton) {
+      $("#sidebarToggle").on('click', function(e) {
+        // e.preventDefault();
+        $('body').toggleClass('sidebar-toggled');
+        $('.sidebar').toggleClass('toggled');
+
+        let isToggled = $('.sidebar').hasClass('toggled');
+        window.sessionStorage.setItem('IS_TOGGLED', isToggled);
+      });
+    }
+</script>
+<script type="text/javascript">
+    let isToggledCache = window.sessionStorage.getItem('IS_TOGGLED');
+    // sidebar-toggled -> istoggledcache == false
+    if (isToggledCache == 'true') {
+        console.log('isToggledCache True');
+        $('body').toggleClass('sidebar-toggled', true);
+        $('.sidebar').toggleClass('toggled', true);
+    }
+    else {
+        console.log('isToggledCache False');
+        $('body').toggleClass('sidebar-toggled', false);
+        $('.sidebar').toggleClass('toggled', false);
+    }
+</script>

@@ -2952,6 +2952,10 @@ fieldset:disabled a.btn {
   width: 100%;
 }
 
+.btn-block-controller {
+  width: 9em;
+}
+
 .btn-block + .btn-block {
   margin-top: 0.5rem;
 }
@@ -11292,3 +11296,13 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 #battery {color: #2F69CA; font-weight: bold}
+
+.button-layout {
+  position: relative;
+}
+
+.button-layout-inside {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+}
