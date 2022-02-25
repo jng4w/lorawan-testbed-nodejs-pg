@@ -15,10 +15,6 @@ client.connect(function(err) {
     try {
         if (err) throw err;
         console.log("Successfully connect to postgreSQL!");  
-        
-        // app.listen(port, () => {
-        //     console.log(`Example app listening at http://localhost:${port}`)
-        // })
     }
     catch(err){
         console.log(err);
@@ -105,7 +101,7 @@ async function selectBoardWidgetFromCustomer(id){
 
     const res = await client.query(
         `select  
-        array_agg(E.dev_id) as e_dev_id, array_agg(S.sensor_key) as s_sensor_key,
+        array_agg(E.dev_id) as e_dev_id, array_agg(S.sensor_key) as s_sensor_key, array_agg(S.sensor_config) as sensor_config,
         W._id as w_id,  W.display_name as w_display_name, B._id as b_board_id, B.display_name as b_display_name, 
          config_dict
                 from
