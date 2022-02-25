@@ -33,7 +33,6 @@ exports.dashboardProcessing = async (req, res, next) => {
 
         var boardWidget = (await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows;
         // console.log((await Index.selectBoardFromCustomer(req.session.user.id)).rows.length);
-        console.log(boardWidget[0]);
         res.render('main/dashboard', {
             
             user: req.session.user,
@@ -91,20 +90,18 @@ exports.addWidgetDashboardProcessing = async (req, res, next) => {
         }
 
         //UI_CONFIG col
-        let ui_config;
+        
         let w_type = body.WidgetType.split('-')[0];
+        let ui_config = (await Index.selectWidgetType(w_type)).rows[0].ui_config;
         for(let i in body){
             if(i.startsWith(`addWidgetType-${w_type}`)){
                 let data = i.split('-');
-                ui_config = (await Index.selectWidgetType(data[1])).rows[0].ui_config;
-                
-                
-                for(let j in ui_config.view){
-                    if(j ==data[2]){
-                        ui_config.view[j] = body[i].toLowerCase();
-                    }
-                    else ui_config.view[j] = null;
+
+                if(ui_config.view[data[2]]){
+                    ui_config.view[data[2]] = body[i].toLowerCase();         
                 }
+                else ui_config.view[data[2]] = null;
+
                 ui_config.numberOfDataSource.number = parseInt(body.no_sensor_data);
                 
             }

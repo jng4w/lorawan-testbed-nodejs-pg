@@ -396,7 +396,6 @@
                         <!-- Widget Card Example -->
                         <%try {%>
                         <%for(let j=0; j< boardWidget.length; j++){ %>
-
                             <%if(boardWidget[j].b_board_id == board[i].key){%>
                                 <%var config = boardWidget[j].config_dict; %>
                                 <%if(config.type == 'Card'){%>
@@ -580,11 +579,14 @@
                                                         <hr class="sidebar-divider">
                                                         <div class="text-center">
                                                             <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"
-                                                            id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">
-                                                                <%= __('State') %></label>
+                                                            id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>">
+                                                                <%= __('State')%>: ___</label>
                                                         </div>
+                                                        <!-- <%let sensor_config = JSON.stringify(boardWidget[j].sensor_config);%> -->
                                                         <div class="text-center">
-                                                            <a class="btn btn-lg btn-<%=config.view['Color of switch state 1']%> shadow-sm controller" role="button" aria-describedby="button_toggle" name="button_toggle">
+                                                            <a class="btn btn-lg btn-<%=config.view['Color of switch state 1']%> shadow-sm controller"
+                                                                role="button" aria-describedby="button_toggle" name="button_toggle" onclick="switch2Manager('<%=boardWidget[j].e_dev_id[0]%>',
+                                                                                                                                                            '<%=JSON.stringify(boardWidget[j].sensor_config)%>')">
                                                                 <span class="text"><%= __('Switch') %></span>
                                                             </a>
                                                         </div>
@@ -919,7 +921,7 @@
     const STORAGE_KEY = 'payload-storage';
     const MAX_SESSION_STORAGE_LENGTH = 20;
 
-    const devices = JSON.parse('<%= dev_list %>');
+    const devices = JSON.parse(`<%= dev_list %>`.replace(/&#34;/g, '"'));
 
     const streaming_broker_options = {
         // clientId: '<%= client_id %>',
@@ -1041,6 +1043,11 @@
                 for(let i in storage.payload){
                     
                     for(let j in storage.payload[i].payload_data){
+                        // SWITCH2
+                        document.querySelectorAll(`[id^=buttonstate-payload-data-${i}-${j}]`).forEach((item)=>{
+                                                            item.innerHTML = `<%= __('State') %>: ${storage.payload[i].payload_data[j].at(-1)}`;
+                        });
+                        // GRAPH
                         document.querySelectorAll(`[id^=timestamp-payload-data-${i}-${j}]`).forEach((item)=>{
                             item.innerHTML = `<%= __('Last updated') %>: ${storage.payload[i].recv_timestamp.at(-1)}`;                                 
                         });
@@ -1134,6 +1141,10 @@
                         storage.payload[dev_id].payload_data[i].shift();
                     }
                     storage.payload[dev_id].payload_data[i].push(parsed_message.payload_data[i]);
+                    //SWITCH2
+                    document.querySelectorAll(`[id^=buttonstate-payload-data-${dev_id}-${i}]`).forEach((item)=>{
+                                                        item.innerHTML = `<%= __('State') %>: ${parsed_message.payload_data[i]}`;
+                    });
 
                     //GRAPH
                     document.querySelectorAll(`[id^=timestamp-payload-data-${dev_id}-${i}]`).forEach((item)=>{
@@ -1254,19 +1265,21 @@
 
     }
 
-    var toggled = true;
-    function switchClicked() {
+    function switch2Manager(dev_id, sensor_config) {
         // $(btn).toggleClass("btn-primary");
-         // $(btn).toggleClass("btn-danger");
-                                
-        if (toggled == true) {
-            document.getElementById('state-label').innerHTML = 'On';
-            toggled = false;
-        }
-        else {
-            document.getElementById('state-label').innerHTML = 'Off';
-            toggled = true;
-        }
+        // $(btn).toggleClass("btn-danger");
+        let storage = clientStorage.getItem(STORAGE_KEY);
+        storage = JSON.parse(storage);
+        sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
+        
+        let status = storage.payload[dev_id].payload_data[sensor_config.status_key].at(-1);
+        // DO1_CTRL: {H, L}
+        delete sensor_config.state[status];
+        console.log(Object.keys(sensor_config.state)[0]);
+        let downlink_cmd = sensor_config.state[Object.keys(sensor_config.state)[0]].cmd;
+        console.log(downlink_cmd);
+        mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
+
     }
 
 </script>
