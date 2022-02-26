@@ -13,8 +13,13 @@ services:
   environment:
    POSTGRES_USER: ${common_pg['POSTGRES_USER']}
    POSTGRES_PASSWORD: ${common_pg['POSTGRES_PASSWORD']}
+  volumes:
+   - db-data:/var/lib/postgresql/data
   ports:
    - \"${common_pg['SERVER_PORT']}:${common_pg['SERVER_PORT']}\"
+volumes:
+  db-data:
+    driver: local
 `;
 
 

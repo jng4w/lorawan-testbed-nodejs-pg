@@ -351,34 +351,6 @@
                             function showChkState() {
                                         
                                         $('#chkState .badge').remove();
-                                        var chkBool = document.getElementById('toggle-event').checked;
-                                        
-                                        if(chkBool){
-                                            var msg = 
-                                                `{"downlinks": [{
-                                                    "f_port": 2,
-                                                    "frm_payload": "AwEA",
-                                                    "priority": "HIGH",
-                                                    "confirmed": true
-                                                }
-                                                ]
-                                                }`;
-                                            mqtt_publish("devices/eui-a8404111e1832b1c/down/push", msg);
-                                            console.log('msg');
-                                        }
-                                        else {
-                                            var msg = 
-                                                `{"downlinks": [{
-                                                    "f_port": 2,
-                                                    "frm_payload": "AwAA",
-                                                    "priority": "HIGH",
-                                                    "confirmed": true
-                                                }
-                                                ]
-                                                }`;
-                                            mqtt_publish("devices/eui-a8404111e1832b1c/down/push", msg);
-                                            console.log('msg');
-                                        }
                                         $('#chkState button').after('<div class="badge badge-success px-3 py-2 mb-2 mx-3">'+chkBool+'</div>');
                                     }
 	
@@ -568,7 +540,7 @@
                                         </div>
                                     </div>
 
-                                <%}else if(config.type == 'Switch 2'){%>
+                                <%}else if(config.type == 'Toggle button'){%>
                                     <div class="col-xl-2 col-md-6 mb-4">
                                         <div class="card shadow h-100 py-0">
                                             <div class="card-body">
@@ -584,7 +556,7 @@
                                                         </div>
                                                         <!-- <%let sensor_config = JSON.stringify(boardWidget[j].sensor_config);%> -->
                                                         <div class="text-center">
-                                                            <a class="btn btn-lg btn-<%=config.view['Color of switch state 1']%> shadow-sm controller"
+                                                            <a class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
                                                                 role="button" aria-describedby="button_toggle" name="button_toggle" onclick="switch2Manager('<%=boardWidget[j].e_dev_id[0]%>',
                                                                                                                                                             '<%=JSON.stringify(boardWidget[j].sensor_config)%>')">
                                                                 <span class="text"><%= __('Switch') %></span>
@@ -1274,9 +1246,9 @@
         
         let status = storage.payload[dev_id].payload_data[sensor_config.status_key].at(-1);
         // DO1_CTRL: {H, L}
-        delete sensor_config.state[status];
-        console.log(Object.keys(sensor_config.state)[0]);
-        let downlink_cmd = sensor_config.state[Object.keys(sensor_config.state)[0]].cmd;
+        delete sensor_config.cmd[status];
+        console.log(Object.keys(sensor_config.cmd)[0]);
+        let downlink_cmd = sensor_config.cmd[Object.keys(sensor_config.cmd)[0]];
         console.log(downlink_cmd);
         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
 
