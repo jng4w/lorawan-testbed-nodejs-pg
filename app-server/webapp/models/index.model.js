@@ -15,10 +15,6 @@ client.connect(function(err) {
     try {
         if (err) throw err;
         console.log("Successfully connect to postgreSQL!");  
-        
-        // app.listen(port, () => {
-        //     console.log(`Example app listening at http://localhost:${port}`)
-        // })
     }
     catch(err){
         console.log(err);
