@@ -101,11 +101,12 @@ exports.addWidgetDashboardProcessing = async (req, res, next) => {
                     ui_config.view[data[2]] = body[i].toLowerCase();         
                 }
                 else ui_config.view[data[2]] = null;
-
+                
                 ui_config.numberOfDataSource.number = parseInt(body.no_sensor_data);
                 
             }
         }
+        console.log(ui_config);
 
         console.log('data', device.toString(), sensor.toString() );
         await Index.insertWidgetToBoard(body.widget_name, ui_config, body.board_id, w_type, device.toString(), sensor.toString());
