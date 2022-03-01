@@ -21,7 +21,19 @@ services:
       - "8080:8080" 
       - "11883:11883"
       - "18083:18083"
+    volumes:
+      - vol-emqx-data:/opt/emqx/data
+      - vol-emqx-etc:/opt/emqx/etc
+      - vol-emqx-log:/opt/emqx/log
 
 networks:
   emqx-bridge:
     driver: bridge
+
+volumes:
+  vol-emqx-data:
+    name: vol-emqx-data
+  vol-emqx-etc:
+    name: vol-emqx-etc
+  vol-emqx-log:
+    name: vol-emqx-log
