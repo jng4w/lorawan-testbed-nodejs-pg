@@ -11,7 +11,7 @@
     <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script src="./../../public/js/base64ArrayBuffer.js"></script>
+    <script type="text/javascript" src="js/base64ArrayBuffer.js"></script>
     
     <%- include('../partials/libs.ejs') %>
 
@@ -749,7 +749,7 @@
     <!-- Page level custom scripts -->
     <script src="js/visuals/chart-area-demo.js"></script>
     <!-- <script src="js/visuals/chart-pie-demo.js"></script> -->
-    <script>
+    <script defer>
             document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
                 var data = $(item).attr('id').split(' ');
                 data.shift();
@@ -891,9 +891,7 @@
             }); 
     </script>
 
-<script>
-            
-
+<script defer>
     const streaming_broker_protocol = "ws"; //pass from server
     const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
     const streaming_broker_port = '<%= broker.port %>'; //pass from server
@@ -904,12 +902,9 @@
     const devices = JSON.parse(`<%= dev_list %>`.replace(/&#34;/g, '"'));
 
     const streaming_broker_options = {
-        // clientId: '<%= client_id %>',
-        clientId: 'suber',
-        // username: '<%= broker.id %>',
-        // password: '<%= broker.psw %>',
-        username: "anxYQc2AmG8fNcuaWaFA",
-        password: "xgeVOB89kyEVpHTfgKGg",
+        clientId: '<%= client_id %>',
+        username: '<%= broker.id %>',
+        password: '<%= broker.psw %>',
         keepalive: 120,
         protocolVersion: 5,
         clean: false,
@@ -1253,11 +1248,6 @@
     }
 
     function toggleButtonManager(dev_id, sensor_config, w_id) {
-        
-        
-        // $(this).addClass("disabled").prop("disabled", true);
-        // $(btn).toggleClass("btn-primary");
-        // $(btn).toggleClass("btn-danger");
         let storage = clientStorage.getItem(STORAGE_KEY);
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
@@ -1272,19 +1262,18 @@
         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
         
         let interval = setInterval(function(){
-            let timetag = document.getElementById(`buttontime-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`)
-            let timevalue = parseFloat(timetag.innerHTML)
+            let timetag = document.getElementById(`buttontime-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`);
+            let timevalue = parseFloat(timetag.innerHTML);
             
             if(timetag.innerHTML=='') {
-                
-                timetag.innerHTML = sensor_config.uplink_timeout
+                timetag.innerHTML = sensor_config.uplink_timeout;
 
             }
             else if(timevalue!=0)
-                timetag.innerHTML = (timevalue - 0.1).toFixed(1)
+                timetag.innerHTML = (timevalue - 0.1).toFixed(1);
             else {
-                timetag.innerHTML = "Expired"
-                clearInterval(interval)
+                timetag.innerHTML = "Expired";
+                clearInterval(interval);
             }
             
         }, 100);

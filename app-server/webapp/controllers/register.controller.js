@@ -26,7 +26,6 @@ function generate_code(length=6) {
 }
 
 function sendmail(email, code){
-
     var readHTMLFile = function(path, callback) {
         fs.readFile(path, {encoding: 'utf-8'}, function (err, html) {
             if (err) {
@@ -63,57 +62,62 @@ function sendmail(email, code){
 }
 
 exports.registerProcessing = async (req, res, next) => {
+    try {
+        const errors = validationResult(req);
 
-    const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.render('main/register', {
+                error_flag: 1,
+                message: "Invalid Phone number!"
+            })
+            return;
+        }
 
-    if (!errors.isEmpty()) {
-        res.render('main/register', {
-            error_flag: 1,
-            message: "Invalid Phone number!"
-        })
-        return;
-    }
-
-    var body = req.body;
-    var db_res = (await Index.checkProfileExistRegister(body.email, body.phone_number, body.psw)).rowCount;
-    
-    // (await Index.checkProfileExist(body.email, body.psw)).rowCount || 
-    //             (await Index.checkProfileExist(body.phone, body.psw)).rowCount;
-    if(!db_res){
-
-        req.session.vcode = generate_code();
-        sendmail(body.email, req.session.vcode);
-        req.session.email = body.email;
-        req.session.phone = body.phone;
-        req.session.psw = body.psw;
-        req.session.name = body.fname + " " + body.lname;
+        var body = req.body;
+        var db_res = (await Index.checkProfileExistRegister(body.email, body.phone_number, body.psw)).rowCount;
         
-        res.render('main/verify', {
-            error_flag: 0,
-            message: ""
-        });
-    }
-    else {
-        res.render('main/register', {
-            error_flag: 1,
-            message: "Email/Phone number already existed!"
-        })
+        if(!db_res){
+
+            req.session.vcode = generate_code();
+            sendmail(body.email, req.session.vcode);
+            req.session.email = body.email;
+            req.session.phone = body.phone;
+            req.session.psw = body.psw;
+            req.session.name = body.fname + " " + body.lname;
+            
+            res.render('main/verify', {
+                error_flag: 0,
+                message: ""
+            });
+        }
+        else {
+            res.render('main/register', {
+                error_flag: 1,
+                message: "Email/Phone number already existed!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 
 exports.verifyProcessing = async (req, res, next) => {
-    if(req.body.code == req.session.vcode){
-        var body = req.session;
-        var db_res = await Index.insertProfile(body.email, body.phone, body.psw, 'CUSTOMER', body.name);
-        delete req.session.email;
-        delete req.session.phone;
-        delete req.session.psw;
-        delete req.session.name; 
-        res.render('main/noti', {
-            error_flag: 0,
-            success_flag: 1,
-            message: "Register successfully!"
-        })
+    try {
+        if(req.body.code == req.session.vcode){
+            var body = req.session;
+            var db_res = await Index.insertProfile(body.email, body.phone, body.psw, 'CUSTOMER', body.name);
+            delete req.session.email;
+            delete req.session.phone;
+            delete req.session.psw;
+            delete req.session.name; 
+            res.render('main/noti', {
+                error_flag: 0,
+                success_flag: 1,
+                message: "Register successfully!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 

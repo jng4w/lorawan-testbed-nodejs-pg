@@ -5,10 +5,6 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
-    // Show logout form
-
-  
-    //res.render('index', {result: result});
 });
 
 module.exports = router;
