@@ -16,7 +16,7 @@ exports.hookProcessing = async (req, res, next) => {
             return;
         }
 
-        else if (req.body.node != `emqx@${common_emqx['SERVER_ADDR']}`) {
+        else if (req.body.node != `emqx@${common_emqx['SERVER_ADDR_INSIDE_DOCKER']}`) {
             res.status(400).end();
             return;
         }
