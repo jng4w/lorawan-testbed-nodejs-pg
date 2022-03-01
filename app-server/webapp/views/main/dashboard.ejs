@@ -550,7 +550,9 @@
                                                             <%=boardWidget[j].w_display_name%></div>
                                                         <hr class="sidebar-divider">
                                                         <div class="text-center">
-                                                            <label id="buttontime-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>" class="text-xs text-muted text-center"></label>
+                                                            <label id="buttontime-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>" 
+                                                                class="text-xs text-muted text-center"
+                                                                style="visibility: hidden;">0</label>
                                                             </br>
                                                             <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"
                                                             id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>">
@@ -1118,14 +1120,28 @@
                     }
                     storage.payload[dev_id].payload_data[i].push(parsed_message.payload_data[i]);
                     //SWITCH2
+                    console.log('i: ', i)
                     document.querySelectorAll(`[id^=buttonstate-payload-data-${dev_id}-${i}]`).forEach((item)=>{
                         console.log(item.id)
-                                                        var data = $(`#${item.id}`).data('id')
-                                                        console.log(item.id.substring(25))
-                                                        clearInterval(data.interval);
-                                                        document.getElementById(`buttontime-payload-data-${item.id.substring(25)}`).innerHTML = '';
-                                                        document.getElementById(`button-payload-data-${item.id.substring(25)}`)["disabled"] = false;
-                                                        item.innerHTML = `<%= __('State') %>: ${parsed_message.payload_data[i]}`;
+                        try {
+                            if(item.innerHTML != `<%= __('State') %>: ${parsed_message.payload_data[i]}`){
+                                var data = $(`#${item.id}`).data('id')
+                                console.log(item.id.substring(25))
+                                if(data) clearInterval(data.interval);
+                                document.getElementById(`buttontime-payload-data-${item.id.substring(25)}`).style.visibility = 'hidden';
+                                document.getElementById(`buttontime-payload-data-${item.id.substring(25)}`).innerHTML = 0;
+                                
+                                document.getElementById(`button-payload-data-${item.id.substring(25)}`)["disabled"] = false;
+                                document.getElementById(`button-payload-data-${item.id.substring(25)}`).style.pointerEvents="auto";
+                                item.innerHTML = `<%= __('State') %>: ${parsed_message.payload_data[i]}`;
+                            }
+                                
+                        }
+                        catch (err) {
+
+                        }
+                                                        
+                        
                     });
 
                     //GRAPH
@@ -1252,6 +1268,7 @@
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
         document.getElementById(`button-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`)["disabled"] = true;
+        document.getElementById(`button-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`).style.pointerEvents="none";
 
         let status = storage.payload[dev_id].payload_data[sensor_config.status_key].at(-1);
         // DO1_CTRL: {H, L}
@@ -1265,9 +1282,10 @@
             let timetag = document.getElementById(`buttontime-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`);
             let timevalue = parseFloat(timetag.innerHTML);
             
-            if(timetag.innerHTML=='') {
+            if(timetag.innerHTML=='0') {
+                
                 timetag.innerHTML = sensor_config.uplink_timeout;
-
+                document.getElementById(`buttontime-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`).style.visibility = 'visible';
             }
             else if(timevalue!=0)
                 timetag.innerHTML = (timevalue - 0.1).toFixed(1);
