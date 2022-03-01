@@ -550,17 +550,22 @@
                                                             <%=boardWidget[j].w_display_name%></div>
                                                         <hr class="sidebar-divider">
                                                         <div class="text-center">
+                                                            <label id="buttontime-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>" class="text-xs text-muted text-center"></label>
+                                                            </br>
                                                             <label for="button_toggle" class="text font-weight-bold text-uppercase text-center"
                                                             id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>">
                                                                 <%= __('State')%>: ___</label>
                                                         </div>
+                                                        
                                                         <!-- <%let sensor_config = JSON.stringify(boardWidget[j].sensor_config);%> -->
                                                         <div class="text-center">
-                                                            <a class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
-                                                                role="button" aria-describedby="button_toggle" name="button_toggle" onclick="switch2Manager('<%=boardWidget[j].e_dev_id[0]%>',
-                                                                                                                                                            '<%=JSON.stringify(boardWidget[j].sensor_config)%>')">
+                                                            <button class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
+                                                                id="button-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>"
+                                                                role="button" aria-describedby="button_toggle" name="button_toggle" onclick="toggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
+                                                                                                                                                            '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
+                                                                                                                                                            '<%=boardWidget[j].w_id%>')">
                                                                 <span class="text"><%= __('Switch') %></span>
-                                                            </a>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -716,13 +721,16 @@
                 <div class="modal-body"><%= __('Select Logout below if you are ready to end your current session') %>.</div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
+                    
                     <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
                     
                     <form action="../login/logout" method="post">
                         <!-- <a  onclick="this.parentNode.submit();">Logout</a> -->
+                        
                         <input type="submit" class="btn btn-primary" onclick='clientStorage.removeItem(STORAGE_KEY);' value="<%= __('Logout') %>">
                     </form>
                 </div>
+                
             </div>
         </div>
     </div> 
@@ -1017,6 +1025,7 @@
                     for(let j in storage.payload[i].payload_data){
                         // SWITCH2
                         document.querySelectorAll(`[id^=buttonstate-payload-data-${i}-${j}]`).forEach((item)=>{
+                                                            
                                                             item.innerHTML = `<%= __('State') %>: ${storage.payload[i].payload_data[j].at(-1)}`;
                         });
                         // GRAPH
@@ -1115,6 +1124,12 @@
                     storage.payload[dev_id].payload_data[i].push(parsed_message.payload_data[i]);
                     //SWITCH2
                     document.querySelectorAll(`[id^=buttonstate-payload-data-${dev_id}-${i}]`).forEach((item)=>{
+                        console.log(item.id)
+                                                        var data = $(`#${item.id}`).data('id')
+                                                        console.log(item.id.substring(25))
+                                                        clearInterval(data.interval);
+                                                        document.getElementById(`buttontime-payload-data-${item.id.substring(25)}`).innerHTML = '';
+                                                        document.getElementById(`button-payload-data-${item.id.substring(25)}`)["disabled"] = false;
                                                         item.innerHTML = `<%= __('State') %>: ${parsed_message.payload_data[i]}`;
                     });
 
@@ -1237,13 +1252,17 @@
 
     }
 
-    function switch2Manager(dev_id, sensor_config) {
+    function toggleButtonManager(dev_id, sensor_config, w_id) {
+        
+        
+        // $(this).addClass("disabled").prop("disabled", true);
         // $(btn).toggleClass("btn-primary");
         // $(btn).toggleClass("btn-danger");
         let storage = clientStorage.getItem(STORAGE_KEY);
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
-        
+        document.getElementById(`button-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`)["disabled"] = true;
+
         let status = storage.payload[dev_id].payload_data[sensor_config.status_key].at(-1);
         // DO1_CTRL: {H, L}
         delete sensor_config.cmd[status];
@@ -1251,8 +1270,30 @@
         let downlink_cmd = sensor_config.cmd[Object.keys(sensor_config.cmd)[0]];
         console.log(downlink_cmd);
         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
+        
+        let interval = setInterval(function(){
+            let timetag = document.getElementById(`buttontime-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`)
+            let timevalue = parseFloat(timetag.innerHTML)
+            
+            if(timetag.innerHTML=='') {
+                
+                timetag.innerHTML = sensor_config.uplink_timeout
 
+            }
+            else if(timevalue!=0)
+                timetag.innerHTML = (timevalue - 0.1).toFixed(1)
+            else {
+                timetag.innerHTML = "Expired"
+                clearInterval(interval)
+            }
+            
+        }, 100);
+
+        $(`#buttonstate-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`).data('id', {
+            interval: interval
+        });
     }
+
 
 </script>
 </body>
