@@ -67,9 +67,7 @@
                                         <tr>
                                             <!-- Device name -->
                                             <td class="align-middle"><%=sensor[i].dev_id%></td>                                
-                                            <!-- Number of sensors -->
-                                            <!-- <td class="align-middle"><%=sensor[i].sensor_arr.length%></td> -->
-                                            <!-- Data -->
+
                                             <td class="align-middle">     
                                                 <div class="row row-cols-md-2 no-gutters">
                                                     <% let ss_batv = 0;%>
@@ -77,7 +75,7 @@
                                                     <% try {%>
                                                     <% for(let j=0; j< ss_key.length; j++){
                                                         if(ss_key[j].sensor_key == 'BatV'){
-                                                            ss_batv=ss_key[j].sensor_key;
+                                                            ss_batv=ss_key[j];
                                                         }
                                                         else{%>
                                                             <% if(ss_key[j].sensor_type=='sensor') {%>
@@ -89,7 +87,11 @@
                                                 </div>
                                             </td>
                                             <!-- Battery -->
-                                            <td class="align-middle text-primary font-weight-bold" id="payload-data-<%=sensor[i].dev_id%>-<%=ss_batv%>">__</td>
+                                            <% if (ss_batv != 0) { %>
+                                                <td class="align-middle text-primary font-weight-bold"> <span id="payload-data-<%=sensor[i].dev_id%>-<%=ss_batv.sensor_key%>">___</span> <span> <i><%=ss_batv.sensor_config.unit%></i> </span> </td>
+                                            <% } else { %>
+                                                <td class="align-middle text-primary font-weight-bold"> <span>___</span></td>
+                                            <% } %>
                                             <!-- Configure button -->
                                             <td class="align-middle">
                                                 <button type="button" id="<%=sensor[i].dev_id%>" class="btn btn-light btn-sm"
@@ -281,13 +283,71 @@
 
         const sub_topics = [];
         devices.forEach((device_id) => {
-            sub_topics.push({
+        sub_topics.push(
+            {
                 'topic': `devices/${device_id}/up/payload`,
                 'options': {
                     'qos': 0
                 }
-            });
-        });
+            },
+
+            {
+                'topic': `devices/${device_id}/join`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/ack`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/nack`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/queued`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/sent`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/down/failed`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/service/data`,
+                'options': {
+                    'qos': 0
+                }
+            },
+
+            {
+                'topic': `devices/${device_id}/location/solved`,
+                'options': {
+                    'qos': 0
+                }
+            },
+        );
+    });
             
         const streaming_broker_mqttclient = mqtt.connect(
             `${streaming_broker_protocol}://${streaming_broker_addr}:${streaming_broker_port}/mqtt`, 
@@ -397,6 +457,42 @@
                         
                     }
                     clientStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+                }
+
+                else if (topic == `devices/${dev_id}/join`) {
+
+                }
+
+                else if (topic == `devices/${dev_id}/down/ack`) {
+
+                }
+
+                else if (topic == `devices/${dev_id}/down/nack`) {
+                    
+                }
+
+                else if (topic == `devices/${dev_id}/down/failed`) {
+                    
+                }
+
+                else if (topic == `devices/${dev_id}/down/queued`) {
+                    
+                }
+
+                else if (topic == `devices/${dev_id}/down/sent`) {
+                    
+                }
+
+                else if (topic == `devices/${dev_id}/service/data`) {
+                    
+                }
+
+                else if (topic == `devices/${dev_id}/location/solved`) {
+                    
+                }
+
+                else {
+
                 }
             } catch (err) {
                 console.log(err);
