@@ -23,7 +23,7 @@
 	"Display data": "Hiển thị dữ liệu",
 	"Delete this widget?": "Xóa widget này?",
 	"Ready to leave?": "Xác nhận rời khỏi?",
-	"Select Logout below if you are ready to end your current session": "Chọn Logout nếu bạn muốn thoát khỏi ứng dụng",
+	"Select Logout below if you are ready to end your current session": "Chọn \"Đăng xuất\" nếu bạn muốn thoát khỏi ứng dụng",
 	"Device List": "Danh sách thiết bị",
 	"Add device": "Thêm thiết bị",
 	"Device name": "Tên thiết bị",
@@ -40,8 +40,8 @@
 	"On": "Bật",
 	"Off": "Tắt",
 	"Trigger": "Kích hoạt",
-	"Toggle": "Kích hoạt",
-	"Select \"Logout\" below if you are ready to end your current session.": "Select \"Logout\" below if you are ready to end your current session.",
-	"State": "State",
-	"Switch": "Switch"
+	"Select \"Logout\" below if you are ready to end your current session.": "Chọn \"Đăng xuất\" phía dưới nếu bạn đã sẵn sàng thoát khỏi phiên.",
+	"State": "Trạng thái",
+	"Switch": "Đổi",
+	"Toggle": "Đảo"
 }
