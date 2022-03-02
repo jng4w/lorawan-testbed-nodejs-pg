@@ -317,7 +317,7 @@
                                                     <div class="col mr-2">
                                                         <div class="text-xs font-weight-bold text-<%=config.view['Color of card']%> text-uppercase mb-1">
                                                             <%=boardWidget[j].w_display_name%></div>
-                                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">___</div>  <!--31.2&#176;C -->
+                                                        <div class="h5 mb-0 text-gray-800"><span class="font-weight-bold" id="payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>">___</span> <span> <i><%=boardWidget[j].sensor_config[0].unit%></i> </span></div>  <!--31.2&#176;C -->
                                                         <div class="p mb-0 text-xs text-black-50" id="timestamp-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>"><%= __('Last updated') %>: ___</div>
                                                     </div>
                                                     <div class="col-auto">
