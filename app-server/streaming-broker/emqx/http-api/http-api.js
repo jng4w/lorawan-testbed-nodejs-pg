@@ -3,82 +3,84 @@ const { emqx_http } = require('./http-client.js');
 function add_client_acl_on_dev_topic(client_id, dev_list) {
     const acl_batch = [];
     dev_list.forEach((dev_id) => {
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/up/payload`,
-            action: `sub`,
-            access: `allow`
-        });
-        
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/join`,
-            action: `sub`,
-            access: `allow`
-        });
+        acl_batch.push(
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/up/payload`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/down/ack`,
-            action: `sub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/join`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/down/nack`,
-            action: `sub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/ack`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/down/failed`,
-            action: `sub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/nack`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/down/queued`,
-            action: `sub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/failed`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/down/sent`,
-            action: `sub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/queued`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/service/data`,
-            action: `sub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/sent`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/location/solved`,
-            action: `sub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/service/data`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/down/push`,
-            action: `pub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/location/solved`,
+                action: `sub`,
+                access: `allow`
+            },
 
-        acl_batch.push({
-            clientid: `${client_id}`,
-            topic: `devices/${dev_id}/down/replace`,
-            action: `pub`,
-            access: `allow`
-        });
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/push`,
+                action: `pub`,
+                access: `allow`
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/replace`,
+                action: `pub`,
+                access: `allow`
+            }
+        );
     });
     // console.log('acl_batch ', acl_batch);
     return emqx_http.post('api/v4/acl', acl_batch)
@@ -216,6 +218,76 @@ function get_acl_list_one_clientid(clientid, limit) {
     })
 }
 
+function unsubscribe_dev_topic_of_clientid(client_id, dev_list) {
+    const topic_batch = [];
+    dev_list.forEach((dev_id) => {
+        topic_batch.push(
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/up/payload`
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/join`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/ack`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/nack`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/failed`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/queued`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/sent`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/service/data`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/location/solved`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/push`,
+            },
+
+            {
+                clientid: `${client_id}`,
+                topic: `devices/${dev_id}/down/replace`,
+            }
+        );
+    });
+
+    return emqx_http.post(`/api/v4/mqtt/unsubscribe_batch`, topic_batch)
+    .then((res) => {
+        return res;
+    })
+    .catch((err) => {
+        return err;
+    });
+}
+
 module.exports = {
     add_client_acl_on_dev_topic,
     del_client_acl_on_dev_topic,
@@ -223,7 +295,8 @@ module.exports = {
     get_client_list_with_username,
     get_acl_list_all_clientid,
     get_acl_list_one_clientid,
-    delete_acl_clientid_on_topic
+    delete_acl_clientid_on_topic,
+    unsubscribe_dev_topic_of_clientid
 }
 
 
