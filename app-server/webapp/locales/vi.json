@@ -44,5 +44,7 @@
 	"State": "Trạng thái",
 	"Switch": "Đổi",
 	"Toggle": "Đảo",
+	"Delete this board": "Xóa bảng này",
+	"Delete this board?": "Muốn xóa bảng này?",
 	"Delete this device?": "Delete this device?"
 }
