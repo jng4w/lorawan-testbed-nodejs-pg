@@ -98,7 +98,71 @@ async function del_client_acl_on_dev_topic(client_id, dev_list) {
         })
         .catch((err) => {
             console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/join`)}`)
+        .then((res) => {
+            console.log(res);
         })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/down/ack`)}`)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/down/nack`)}`)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/down/failed`)}`)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/down/queued`)}`)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/down/push`)}`)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/service/data`)}`)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        await emqx_http.delete(`api/v4/acl/clientid/${encodeURIComponent(client_id)}/topic/${encodeURIComponent(`devices/${dev_id}/location/solved`)}`)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     });
 }
 
