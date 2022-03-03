@@ -68,19 +68,14 @@ exports.configureDeviceProcessing = async (req, res, next) => {
 }
 
 exports.deleteDeviceProcessing = async (req, res, next) => {
-    // try {    
-    //     console.log(req.body.device_id);
-    // } catch (error) {
-    //     console.log(error);
-    // }
     try {
         if(req.session.login){
-            // console.log(req.body.widget_id);
             console.log(req.session.user.id, req.body.device_id)
             await Index.deleteDeviceFromCustomer(req.session.user.id, req.body.device_id);
 
+            await emqxHttp.unsubscribe_dev_topic_of_clientid(req.session.dev.client_id, [req.body.device_id]);
             await emqxHttp.del_client_acl_on_dev_topic(req.session.dev.client_id, [req.body.device_id]);
-            //viết hàm unsubscribe emqx - Gô
+
             req.session.dev.new_dev_id = req.body.enddev_id;
             req.session.sensor = (await Index.selectDeviceSensorFromCustomer(req.session.user.id)).rows;
             res.redirect('../device');
