@@ -7,6 +7,8 @@ router.get('/', deviceController.deviceProcessing);
 
 router.post('/add', deviceController.addDeviceProcessing);
 
-router.post('/configure', deviceController.configureDeviceProcessing);
+router.post('/configure-device', deviceController.configureDeviceProcessing);
+
+router.post('/delete-device', deviceController.deleteDeviceProcessing);
 
 module.exports = router;

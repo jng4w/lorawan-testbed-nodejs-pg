@@ -186,6 +186,27 @@ async function insertWidgetToBoard(display_name, config_dict, board_id, widget_t
     return res;
 }
 
+async function deleteWidgetFromBoard(widget_id) {
+    const res = await client.query(
+        `DELETE FROM public."WIDGET"
+            WHERE _id = $1; 
+        `,
+        [widget_id]
+    );
+    return res;
+}
+
+async function deleteDeviceFromCustomer(profile_id, dev_id) {
+    const res = await client.query(
+        `DELETE FROM public."OWN"
+            WHERE profile_id = $1 AND enddev_id IN (SELECT _id FROM public."ENDDEV" WHERE dev_id = $2);
+        `,
+        [profile_id, dev_id]
+    );
+    return res;
+}
+
+
 module.exports = {
     checkProfileExist: checkProfileExist,
     checkProfileExistRegister: checkProfileExistRegister,
@@ -197,5 +218,7 @@ module.exports = {
     insertDeviceToCustomer: insertDeviceToCustomer,
     insertBoardToCustomer: insertBoardToCustomer,
     selectWidgetType: selectWidgetType,
-    insertWidgetToBoard: insertWidgetToBoard
+    insertWidgetToBoard: insertWidgetToBoard,
+    deleteWidgetFromBoard: deleteWidgetFromBoard,
+    deleteDeviceFromCustomer: deleteDeviceFromCustomer
 }

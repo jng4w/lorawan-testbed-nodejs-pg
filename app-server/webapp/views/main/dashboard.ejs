@@ -331,10 +331,10 @@
                                                             aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
 
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
-                                                                onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>%>')"><%= __('Configure widget') %></a>
+                                                                onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
 
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
-                                                                onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>')"><%= __('Delete widget') %></a>
+                                                                onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
                                                                 <script>
                                                                     function openEditWidgetModal(widget_id) {
                                                                         var str = "Widget ID: " + widget_id;
@@ -369,11 +369,25 @@
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                     aria-labelledby="dropdownMenuLink">
-                                                    <div class="dropdown-header">Dropdown Header:</div>
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
+                                                    <!-- <div class="dropdown-header">Dropdown Header:</div> -->
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
+                                                                onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
+
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
+                                                                onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
+                                                                <script>
+                                                                    function openEditWidgetModal(widget_id) {
+                                                                        var str = "Widget ID: " + widget_id;
+                                                                        $("#widget_id").html(str);
+                                                                        document.getElementById(`edit-widget_id`).value = widget_id;
+                                                                    }
+
+                                                                    function openDeleteWidgetModal(widget_id) {
+                                                                        document.getElementById(`delete-widget_id`).value = widget_id;
+                                                                    }
+                                                                </script>
+                                                    <!-- <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="#">Something else here</a> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -554,10 +568,10 @@
                                                             aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
 
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
-                                                                onclick="openEditWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>%>')"><%= __('Configure widget') %></a>
+                                                                onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
 
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
-                                                                onclick="openDeleteWidgetModal('<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>')"><%= __('Delete widget') %></a>
+                                                                onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
                                                                 <script>
                                                                     function openEditWidgetModal(widget_id) {
                                                                         var str = "Widget ID: " + widget_id;
@@ -698,12 +712,18 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Delete') %></button>
+                    <!-- <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Delete') %></button> -->
                     <!-- action="widget/delete" -->
-                    <form method="post" action="" class="user">
-                        <input type="hidden" class="form-control form-control-user" id='delete-widget_id' value="">
-                        <button class="btn btn-primary" type="submit"><%= __('Cancel') %></button>
-                    </form>
+                    <form method="post" action="dashboard/delete-widget" class="user">
+                        
+                        <input type="hidden" class="form-control form-control-user" name="widget_id" id='delete-widget_id' value="">
+                        <button class="btn btn-primary" type="submit"><%= __('Delete') %></button>
+                    </form>  
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>  
+                                        
+                                    
+                        
+                    
                 </div>
             </div>
         </div>
