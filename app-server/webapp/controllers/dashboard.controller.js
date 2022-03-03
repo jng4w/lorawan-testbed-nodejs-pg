@@ -117,6 +117,23 @@ exports.addWidgetDashboardProcessing = async (req, res, next) => {
     }
 }
 
+exports.deleteWidgetDashboardProcessing = async (req, res, next) => {
+    try {
+        if(req.session.login){
+            console.log(req.body.widget_id);
+            await Index.deleteWidgetFromBoard(req.body.widget_id);
+            res.redirect('../dashboard');
+        }
+        else {
+            res.redirect('../login');
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 
 

@@ -42,5 +42,6 @@
 	"Switch State": "Switch State",
 	"State": "State",
 	"Go": "Go",
-	"Toggle": "Toggle"
+	"Toggle": "Toggle",
+	"Delete this device?": "Delete this device?"
 }

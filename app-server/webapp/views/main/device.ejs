@@ -98,6 +98,11 @@
                                                         onclick="openUniqueDeviceModal('<%=sensor[i].dev_id%>')" data-toggle="modal" data-target="#configureDeviceModal">
                                                     <%= __('Configure') %>
                                                 </button>
+                                                
+                                                <button type="button" id="<%=sensor[i].dev_id%>" class="btn btn-light btn-sm"
+                                                    onclick="openUniqueDeleteDeviceModal('<%=sensor[i].dev_id%>')" data-toggle="modal" data-target="#deleteDeviceModal">
+                                                <%= __('Delete') %>
+                                            </button>
                                             </td>
                                         </tr>
                                         <%};%>
@@ -173,11 +178,49 @@
         </div>
     </div>
 
+    <div class="modal fade" id="deleteDeviceModal" tabindex="-1"
+        role="dialog" aria-labelledby="deleteDeviceModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Modal header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteDeviceModalLabel"><%= __('Delete this device?') %></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">Select <b style="color: #2F69CA">Delete</b> button to remove this device from the your account.
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <!-- <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Delete') %></button> -->
+                    <!-- action="widget/delete" -->
+                    <form method="post" action="device/delete-device" class="user">
+                        
+                        <input type="hidden" class="form-control form-control-user" name="device_id" id='delete-device_id' value="">
+                        <button class="btn btn-primary" type="submit"><%= __('Delete') %></button>
+                    </form>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>  
+                                        
+                                    
+                        
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function openUniqueDeviceModal(device_id) {
             var str = "Device ID: " + device_id;
             $("#device_id").html(str);
             document.getElementById(`configure-device_id`).value = device_id;
+        }
+        function openUniqueDeleteDeviceModal(device_id) {
+            
+            document.getElementById(`delete-device_id`).value = device_id;
         }
     </script>
 
