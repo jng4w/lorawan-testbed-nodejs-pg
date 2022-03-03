@@ -206,6 +206,16 @@ async function deleteDeviceFromCustomer(profile_id, dev_id) {
     return res;
 }
 
+async function deleteBoardFromCustomer(board_id) {
+    const res = await client.query(
+        `DELETE FROM public."BOARD"
+        WHERE _id = $1;
+        `,
+        [board_id]
+    );
+    return res;
+}
+
 
 module.exports = {
     checkProfileExist: checkProfileExist,
@@ -220,5 +230,6 @@ module.exports = {
     selectWidgetType: selectWidgetType,
     insertWidgetToBoard: insertWidgetToBoard,
     deleteWidgetFromBoard: deleteWidgetFromBoard,
-    deleteDeviceFromCustomer: deleteDeviceFromCustomer
+    deleteDeviceFromCustomer: deleteDeviceFromCustomer,
+    deleteBoardFromCustomer: deleteBoardFromCustomer
 }

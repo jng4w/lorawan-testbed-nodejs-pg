@@ -63,6 +63,7 @@
                                 </a>
 
                             </div>
+                            
                             <script>
                                 function selectBoard(board_id, board_name){
                                     document.getElementById("changeDashboard").innerHTML = board_name;
@@ -72,9 +73,19 @@
                                     }
                                     document.getElementById(`board-${board_id}`).style = "display: visibility;";
                                     document.getElementById(`add-widget-board_id`).value = board_id;
+                                    document.getElementById(`delete-board_id`).value = board_id;
+                                    console.log(document.getElementById(`delete-board_id`).value)
                                 }
                             </script>
+                            <%if(board.length){%>
+                            <a class="d-none d-sm-inline-block btn btn-sm btn-light shadow-sm"
+                            role="button" data-toggle="modal" data-target="#deleteBoardModal">
+
+                            <i class="fas fa-times fa-sm text-black-50"></i>&nbsp;<%= __('Delete this board') %>
+                            </a>
+                            <%}%>
                         </div>
+                        
                         <%if(board.length){%>
                             
                         
@@ -118,7 +129,40 @@
                                 </div>
                             </div>
                         </div>
+                        <%if(board.length){%>
+                        <!-- Delete Board Modal-->
+                        <div class="modal fade" id="deleteBoardModal" tabindex="-1"
+                            role="dialog" aria-labelledby="deleteBoardModalLabel" aria-hidden="true">
 
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <!-- Modal header -->
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteBoardModalLabel"><%= __('Delete this board?') %></h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <!-- Modal body -->
+                                    <div class="modal-body">Select <b style="color: #2F69CA">Delete</b> button to remove this board.
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <!-- <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Delete') %></button> -->
+                                        <!-- action="widget/delete" -->
+                                        <form method="post" action="dashboard/delete-board" class="user">
+                                            
+                                            <input type="hidden" class="form-control form-control-user" name="board_id" id='delete-board_id' value="<%= board[0].key%>">
+                                            
+                                            <button class="btn btn-primary" type="submit"><%= __('Delete') %></button>
+                                        </form>
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>  
+                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%}%>
                         <!-- Add Widget Modal-->
                         <div class="modal fade" id="addWidgetModal" tabindex="-1" role="dialog" aria-labelledby="addWidgetModalLabel"
                         aria-hidden="true">
