@@ -43,5 +43,8 @@
 	"Select \"Logout\" below if you are ready to end your current session.": "Chọn \"Đăng xuất\" phía dưới nếu bạn đã sẵn sàng thoát khỏi phiên.",
 	"State": "Trạng thái",
 	"Switch": "Đổi",
-	"Toggle": "Đảo"
+	"Toggle": "Đảo",
+	"Delete this board": "Xóa bảng này",
+	"Delete this board?": "Muốn xóa bảng này?",
+	"Delete this device?": "Delete this device?"
 }

@@ -21,6 +21,7 @@
 	"Display data": "Display data",
 	"Delete this widget?": "Delete this widget?",
 	"Delete": "Delete",
+	
 	"Ready to leave?": "Ready to leave?",
 	"Select Logout below if you are ready to end your current session": "Select Logout below if you are ready to end your current session",
 	"Device List": "Device List",
@@ -43,5 +44,8 @@
 	"State": "State",
 	"Go": "Go",
 	"Toggle": "Toggle",
-	"Delete this device?": "Delete this device?"
+	"Delete this device?": "Delete this device?",
+	"Delete board": "Delete board",
+	"Delete this board": "Delete this board",
+	"Delete this board?": "Delete this board?"
 }

@@ -29,6 +29,7 @@ exports.dashboardProcessing = async (req, res, next) => {
 
             var boardWidget = (await Index.selectBoardWidgetFromCustomer(req.session.user.id)).rows;
             // console.log((await Index.selectBoardFromCustomer(req.session.user.id)).rows.length);
+            console.log(boardWidget)
             res.render('main/dashboard', {
                 
                 user: req.session.user,
@@ -122,6 +123,22 @@ exports.deleteWidgetDashboardProcessing = async (req, res, next) => {
         if(req.session.login){
             console.log(req.body.widget_id);
             await Index.deleteWidgetFromBoard(req.body.widget_id);
+            res.redirect('../dashboard');
+        }
+        else {
+            res.redirect('../login');
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+exports.deleteBoardDashboardProcessing = async (req, res, next) => {
+    try {
+        if(req.session.login){
+            console.log(req.body.board_id);
+            await Index.deleteBoardFromCustomer(req.body.board_id);
             res.redirect('../dashboard');
         }
         else {
