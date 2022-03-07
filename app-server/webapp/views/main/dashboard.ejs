@@ -647,13 +647,13 @@
     
                                                         <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[0]%>-<%=boardWidget[j].w_id%>"></div>
                                                         <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[1]%>-<%=boardWidget[j].w_id%>"></div>
-                                                        <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>">UPDATED</div>
+                                                        <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].w_id%>">UPDATED</div>
                                                     </div>
 
                                                     <div class="col-auto">
                                                         <div class="text-center">
                                                             <button class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
-                                                                id="button-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].w_id%>"
+                                                                id="button-payload-data-<%=boardWidget[j].w_id%>"
                                                                 role="button" aria-describedby="button_toggle" name="button_toggle" onclick="tripleWayToggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
                                                                                                                                                             '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
                                                                                                                                                             '<%=boardWidget[j].w_id%>')">
@@ -668,6 +668,72 @@
                                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                                             </a>
+                                                            <!-- Configure dropdown menu -->
+                                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                            aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
+
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
+                                                                onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
+
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
+                                                                onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
+                                                                <script>
+                                                                    function openEditWidgetModal(widget_id) {
+                                                                        var str = "Widget ID: " + widget_id;
+                                                                        $("#widget_id").html(str);
+                                                                        document.getElementById(`edit-widget_id`).value = widget_id;
+                                                                    }
+
+                                                                    function openDeleteWidgetModal(widget_id) {
+                                                                        document.getElementById(`delete-widget_id`).value = widget_id;
+                                                                    }
+                                                                </script>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%}else if(config.type == '3-way toggle switch'){%> 
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-<%=config.view['Color of button state 1']%> shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                            <%=boardWidget[j].w_display_name%></div>
+    
+                                                        <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[0]%>-<%=boardWidget[j].w_id%>"></div>
+                                                        <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[1]%>-<%=boardWidget[j].w_id%>"></div>
+                                                        <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].w_id%>">UPDATED</div>
+                                                    </div>
+
+                                                    <div class="col-auto">
+                                                        <div class="text-center">
+                                                            <!-- <button class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
+                                                                id="button-payload-data-<%=boardWidget[j].w_id%>"
+                                                                role="button" aria-describedby="button_toggle" name="button_toggle" onclick="tripleWayToggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
+                                                                                                                                                            '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
+                                                                                                                                                            '<%=boardWidget[j].w_id%>')">
+                                                                <span class="text"><%= __('Toggle') %></span>
+                                                            </button> -->
+                                                            <label class="switch">
+                                                                <input id="button-payload-data-<%=boardWidget[j].w_id%>" type="checkbox" onclick="tripleWayToggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
+                                                                '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
+                                                                '<%=boardWidget[j].w_id%>')" checked>
+                                                                <span class="slider round"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-auto">
+                                                        <div class="dropdown no-arrow">
+                                                            <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>-configure"
+                                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                                            </a>
+                                                            
                                                             <!-- Configure dropdown menu -->
                                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                             aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
@@ -1258,14 +1324,19 @@
                         try {
                             if(item.innerHTML != `${parsed_message.payload_data[i]}`){
                                 var data = $(`#${item.id}`).data('id');
+                                var path = item.id.split('-').pop();
                                 if(data) {
                                     clearInterval(data.interval);
+                                    
+                                    document.getElementById(`buttontime-payload-data-${path}`).innerHTML = 'UPDATED';
+                                    document.getElementById(`button-payload-data-${path}`)["disabled"] = false;
+                                    document.getElementById(`button-payload-data-${path}`).style.pointerEvents="auto";
+                                    
+                                    
                                 }
-                                var path = item.id.split('-').pop();
-                                document.getElementById(`buttontime-payload-data-${path}`).innerHTML = 'UPDATED';
-                                document.getElementById(`button-payload-data-${path}`)["disabled"] = false;
-                                document.getElementById(`button-payload-data-${path}`).style.pointerEvents="auto";
                                 item.innerHTML = `${parsed_message.payload_data[i]}`;
+                                console.log(path);
+                                
                             }
                                 
                         }
@@ -1429,6 +1500,7 @@
             interval: interval
         });
     }
+    
     function tripleWayToggleButtonManager(dev_id, sensor_config, w_id) {
         console.log(sensor_config)
 
@@ -1436,8 +1508,8 @@
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
 
-        // document.getElementById(`button-payload-data-${w_id}`)["disabled"] = true;
-        // document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="none";
+        document.getElementById(`button-payload-data-${w_id}`)["disabled"] = true;
+        document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="none";
         
         let status = []
         
@@ -1446,7 +1518,7 @@
         });
         
         // delete sensor_config.cmd[];
-        let downlink_cmd;
+        let downlink_cmd=sensor_config.cmd[sensor_config.status_val[0].state];;
         sensor_config.status_val.forEach((element, index) => {
             //Find current state
             
@@ -1456,42 +1528,33 @@
                 else downlink_cmd=sensor_config.cmd[sensor_config.status_val[index+1].state];
                 
             }
+            
         });
-       
-        // for (let key in sensor_config.status_val) {
-        //     if(JSON.stringify(sensor_config.status_val[key])===JSON.stringify(status)) {
-        //         if(key==sensor_config.status_val.length-1) downlink_cmd=sensor_config.cmd[Object.keys(sensor_config.status_val)[0]];
-        //         else downlink_cmd=sensor_config.cmd[Object.keys(sensor_config.status_val)[index+1]];
-                
-        //     }
-        // }
 
         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
         
-        // let interval = setInterval(function(){
-        //     let timetag = document.getElementById(`buttontime-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`);
-        //     let timevalue = parseFloat(timetag.innerHTML);
-        //     //intialize counter
-        //     if(timetag.innerHTML=='UPDATED' || timetag.innerHTML=='0' || timetag.innerHTML=='EXPIRED') {
-        //         timetag.innerHTML = sensor_config.uplink_timeout;
-        //     }
-
-        //     else if (timevalue!=0) {
-        //         timetag.innerHTML = (timevalue - 0.1).toFixed(1);
-        //     }
-
-        //     else {
-        //         timetag.innerHTML = "EXPIRED";
-        //         clearInterval(interval);
-        //         document.getElementById(`button-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`)["disabled"] = false;
-        //         document.getElementById(`button-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`).style.pointerEvents="auto";
-        //     }
+        let interval = setInterval(function(){
+            let timetag = document.getElementById(`buttontime-payload-data-${w_id}`);
+            let timevalue = parseFloat(timetag.innerHTML);
+            //intialize counter
+            if(timetag.innerHTML=='UPDATED' || timetag.innerHTML=='0' || timetag.innerHTML=='EXPIRED') {
+                timetag.innerHTML = sensor_config.uplink_timeout;
+            }
+            else if (timevalue!=0) {
+                timetag.innerHTML = (timevalue - 0.1).toFixed(1);
+            }
+            else {
+                timetag.innerHTML = "EXPIRED";
+                clearInterval(interval);
+                document.getElementById(`button-payload-data-${w_id}`)["disabled"] = false;
+                document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="auto";
+            }
             
-        // }, 100);
+        }, 100);
 
-        // $(`#buttonstate-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`).data('id', {
-        //     interval: interval
-        // });
+        $(`#triplewaybuttonstate-payload-data-${dev_id}-${sensor_config.status_key[sensor_config.status_key.length-1]}-${w_id}`).data('id', {
+            interval: interval
+        });
     }
 
 </script>
