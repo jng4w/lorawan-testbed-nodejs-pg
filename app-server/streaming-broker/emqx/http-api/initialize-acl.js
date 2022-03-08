@@ -34,6 +34,12 @@ emqx_http.post('api/v4/acl', [
     },
     {
         clientid: `${common_emqx["PREPROCESSOR_CLIENT_ID"]}`,
+        topic: `devices/+/join`,
+        action: `sub`,
+        access: `allow`
+    },
+    {
+        clientid: `${common_emqx["PREPROCESSOR_CLIENT_ID"]}`,
         topic: `devices/+/up/mixed`,
         action: `pub`,
         access: `allow`
@@ -42,12 +48,6 @@ emqx_http.post('api/v4/acl', [
         clientid: `${common_emqx["PREPROCESSOR_CLIENT_ID"]}`,
         topic: `devices/+/up/payload`,
         action: `pub`,
-        access: `allow`
-    },
-    {
-        clientid: `${common_emqx["PREPROCESSOR_CLIENT_ID"]}`,
-        topic: `devices/+/down/push/raw`,
-        action: `sub`,
         access: `allow`
     },
     {

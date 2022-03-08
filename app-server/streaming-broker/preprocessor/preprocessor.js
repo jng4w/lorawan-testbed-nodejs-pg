@@ -33,8 +33,9 @@ const sub_topics = [
             'qos': 0
         }
     },
+
     {
-        'topic': `devices/+/down/push/raw`,
+        'topic': `devices/+/join`,
         'options': {
             'qos': 0
         }
@@ -142,41 +143,41 @@ function streaming_broker_message_handler(topic, message, packet)
         }
     }
 
-    //DOWNLINK PUSH
-    else if (topic == `devices/${topic_levels[1]}/down/push/raw`) {
-        //parse msg
-        let downlink_payload = JSON.parse(message);
-
-        downlink_payload = 
-        {
-            "downlinks": [
-                {
-                    "f_port": downlink_payload['f_port'],
-                    "frm_payload": downlink_payload['frm_payload_base64'],
-                    "priority": "HIGH",
-                    "confirmed": true
-                }
-            ]
-        };
-    
-        let pub_topics = [
+    //INITIAL CONFIG DEV VIA DOWNLINK WHEN DEV JOINING
+    else if (topic == `devices/${topic_levels[1]}/join`) {
+        let join_msg = JSON.parse(message);
+        if (topic_levels[1] == "eui-a8404111e1832b1c") {
+            let downlink_payload = 
             {
-                'topic': `devices/${topic_levels[1]}/down/push`,
-                'msg': JSON.stringify(downlink_payload),
-                'options': {
-                    qos: 0,
-                    dup: false,
-                    retain: false
+                "downlinks": [
+                    {
+                        "f_port": 1,
+                        "frm_payload": "AwEA",
+                        "priority": "HIGHEST",
+                        "confirmed": true
+                    }
+                ]
+            };
+        
+            let pub_topics = [
+                {
+                    'topic': `devices/${topic_levels[1]}/down/push`,
+                    'msg': JSON.stringify(downlink_payload),
+                    'options': {
+                        qos: 0,
+                        dup: false,
+                        retain: false
+                    }
                 }
+            ];
+        
+            try {
+                pub_topics.forEach((topic) => {
+                    streaming_broker_mqttclient.publish(topic['topic'], topic['msg'], topic['options']);
+                });
+            } catch (err) {
+                console.log(err);
             }
-        ];
-    
-        try {
-            pub_topics.forEach((topic) => {
-                streaming_broker_mqttclient.publish(topic['topic'], topic['msg'], topic['options']);
-            });
-        } catch (err) {
-            console.log(err);
         }
     }
 }
