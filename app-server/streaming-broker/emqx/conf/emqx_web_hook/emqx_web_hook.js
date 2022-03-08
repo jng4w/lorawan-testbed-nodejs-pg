@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}/../../../common/emqx.json`));
-const common_webapp = JSON.parse(fs.readFileSync(`${__dirname}/../../../common/webapp.json`));
+const common_emqx = JSON.parse(fs.readFileSync(`${__dirname}../../../../common/emqx.json`));
+const common_webapp = JSON.parse(fs.readFileSync(`${__dirname}../../../../common/webapp.json`));
 
 function emqx_web_hook() {
     const content = 
