@@ -15,8 +15,10 @@ exports.dashboardProcessing = async (req, res, next) => {
     try {
         if(req.session.login){
             let dev_list = [];
+            let dev_type_id = [];
             req.session.sensor.forEach((item)=>{
                 dev_list.push(item.dev_id);
+                dev_type_id.push(item.dev_type_id);
             });
             
             await emqxHttp.add_client_acl_on_dev_topic(req.session.dev.client_id, dev_list );
@@ -38,6 +40,7 @@ exports.dashboardProcessing = async (req, res, next) => {
                 widgetType: (await Index.selectWidgetType()).rows,
                 sensor: req.session.sensor,
                 dev_list: JSON.stringify(dev_list),
+                dev_type_id: JSON.stringify(dev_type_id),
                 client_id: req.session.dev.client_id,
                 broker: broker,
                 title: "Dashboard"
@@ -82,6 +85,7 @@ exports.addWidgetDashboardProcessing = async (req, res, next) => {
             //List device, sensor
             let device = [];
             let sensor = [];
+            
             for(let i=0; i < no_sensor_data; i++){
                 device.push(JSON.parse(body[`DeviceData-${i}`]).dev_id);
                 sensor.push(body[`SensorData-${i}`]);
@@ -139,6 +143,23 @@ exports.deleteBoardDashboardProcessing = async (req, res, next) => {
         if(req.session.login){
             console.log(req.body.board_id);
             await Index.deleteBoardFromCustomer(req.body.board_id);
+            res.redirect('../dashboard');
+        }
+        else {
+            res.redirect('../login');
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+exports.configBoardDashboardProcessing = async (req, res, next) => {
+    try {
+        if(req.session.login){
+            
+            // console.log(req.body.board_id, req.body.board_name)
+            await Index.updateBoardFromCustomer(req.body.board_id, req.body.board_name);
             res.redirect('../dashboard');
         }
         else {

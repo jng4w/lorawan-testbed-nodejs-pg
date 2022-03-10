@@ -74,15 +74,24 @@
                                     document.getElementById(`board-${board_id}`).style = "display: visibility;";
                                     document.getElementById(`add-widget-board_id`).value = board_id;
                                     document.getElementById(`delete-board_id`).value = board_id;
-                                    console.log(document.getElementById(`delete-board_id`).value)
+                                    document.getElementById(`config-board_id`).value = board_id;
+                                    // console.log(document.getElementById(`delete-board_id`).value)
                                 }
                             </script>
                             <%if(board.length){%>
+                            <a class="d-none d-sm-inline-block btn btn-sm btn-light shadow-sm"
+                            role="button" data-toggle="modal" data-target="#configBoardModal">
+
+                            <i class="fas fa-pen fa-sm text-black-50"></i>&nbsp;<%= __('Config this board') %>
+                            </a>
+
                             <a class="d-none d-sm-inline-block btn btn-sm btn-light shadow-sm"
                             role="button" data-toggle="modal" data-target="#deleteBoardModal">
 
                             <i class="fas fa-times fa-sm text-black-50"></i>&nbsp;<%= __('Delete this board') %>
                             </a>
+
+                            
                             <%} %>
                         </div>
                         
@@ -130,6 +139,39 @@
                             </div>
                         </div>
                         <%if(board.length){%>
+                        <!-- Config Board Modal-->
+                        <div class="modal fade" id="configBoardModal" tabindex="-1" role="dialog" aria-labelledby="configBoardModalLabel"
+                        aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="configBoardModalLabel"><%= __('Add board') %></h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- action="device/configure" -->
+                                        <form method="post" action="dashboard/config-board" class="user">
+                                            <!-- Input type Text -->
+                                            
+                                            <label for="board_name"><%= __('Board name') %></label>
+                                
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                    id="configBoardName" aria-describedby="board_name"
+                                                    placeholder="Enter Board name" name="board_name">
+                                            </div>
+                                            <input type="hidden" class="form-control form-control-user" name="board_id" id='config-board_id' value="<%= board[0].key%>">
+                                            <input type="submit" id="add_board" value="<%= __('Confirm changes') %>" class="btn btn-primary btn-user btn-block">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal"><%= __('Cancel') %></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Delete Board Modal-->
                         <div class="modal fade" id="deleteBoardModal" tabindex="-1"
                             role="dialog" aria-labelledby="deleteBoardModalLabel" aria-hidden="true">
@@ -162,6 +204,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        
                         <%}%>
                         <!-- Add Widget Modal-->
                         <div class="modal fade" id="addWidgetModal" tabindex="-1" role="dialog" aria-labelledby="addWidgetModalLabel"
@@ -703,7 +747,7 @@
                                                     <div class="col mr-2">
                                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                             <%=boardWidget[j].w_display_name%></div>
-    
+                                                            <!-- style="display: none;" -->
                                                         <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[0]%>-<%=boardWidget[j].w_id%>"></div>
                                                         <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[1]%>-<%=boardWidget[j].w_id%>"></div>
                                                         <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].w_id%>">UPDATED</div>
@@ -718,12 +762,15 @@
                                                                                                                                                             '<%=boardWidget[j].w_id%>')">
                                                                 <span class="text"><%= __('Toggle') %></span>
                                                             </button> -->
+                                                            <span class="p text-xs"
+                                                            id="triplewaybuttonstate-payload-data-state0-<%=boardWidget[j].w_id%>"><%=boardWidget[j].sensor_config[0].status_val[0].state%></span>
                                                             <label class="switch">
                                                                 <input id="button-payload-data-<%=boardWidget[j].w_id%>" type="checkbox" onclick="tripleWayToggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
                                                                 '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
                                                                 '<%=boardWidget[j].w_id%>')" checked>
-                                                                <span class="slider round"></span>
+                                                                <span class="slider round" id="slider-payload-data-<%=boardWidget[j].w_id%>"></span>
                                                             </label>
+                                                            <span class="p text-xs" id="triplewaybuttonstate-payload-data-state1-<%=boardWidget[j].w_id%>"><%=boardWidget[j].sensor_config[0].status_val[1].state%></span>
                                                         </div>
                                                     </div>
 
@@ -743,7 +790,13 @@
 
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
                                                                 onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
-                                                                <script>
+                                                                <script defer>
+                                                                    $(`#button-payload-data-<%=boardWidget[j].w_id%>`).data('id', 
+                                                                        JSON.parse(`<%=JSON.stringify(boardWidget[j].sensor_config) %>`.replace(/&#34;/g, '"'))
+                                                                    );
+                                                                    console.log(`#button-payload-data-<%=boardWidget[j].w_id%>`);
+                                                                    console.log( $(`#button-payload-data-<%=boardWidget[j].w_id%>`).data('id'));
+
                                                                     function openEditWidgetModal(widget_id) {
                                                                         var str = "Widget ID: " + widget_id;
                                                                         $("#widget_id").html(str);
@@ -754,6 +807,7 @@
                                                                         document.getElementById(`delete-widget_id`).value = widget_id;
                                                                     }
                                                                 </script>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -761,6 +815,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 <%}%>
                                 
                                     
@@ -936,16 +991,17 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
+    
     <!-- Global level plugins --> 
     <%- include('../partials/script.ejs') %>
-
+    
     <!-- Page level plugins -->
     <script src="vendor/chart.js/Chart.min.js"></script>
     
     <!-- Page level custom scripts -->
     <script src="js/visuals/chart-area-demo.js"></script>
     <!-- <script src="js/visuals/chart-pie-demo.js"></script> -->
+    
     <script defer>
             document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
                 var data = $(item).attr('id').split(' ');
@@ -1078,6 +1134,7 @@
     const MAX_SESSION_STORAGE_LENGTH = 20;
 
     const devices = JSON.parse(`<%= dev_list %>`.replace(/&#34;/g, '"'));
+    const device_type = JSON.parse(`<%= dev_type_id %>`.replace(/&#34;/g, '"'));
 
     const streaming_broker_options = {
         clientId: '<%= client_id %>',
@@ -1202,6 +1259,37 @@
                         });
                         document.querySelectorAll(`[id^=triplewaybuttonstate-payload-data-${i}-${j}]`).forEach((item)=>{                               
                             item.innerHTML = `${storage.payload[i].payload_data[j].at(-1)}`;
+                            
+                            var path = item.id.split('-').pop();
+                            let sensor_config = $(`#button-payload-data-${path}`).data('id');
+                            
+                            
+                            //FIND CURRENT STATE
+                            if(sensor_config) {
+                                
+                                if(j!=sensor_config[0].status_key.at(-1)) return
+                                let status = []
+                                
+                                sensor_config[0].status_key.forEach(element => {
+                                    status.push(document.getElementById(`triplewaybuttonstate-payload-data-${i}-${element}-${path}`).innerHTML)
+                                    // status.push();
+                                });
+                                // delete sensor_config.cmd[];
+                                let downlink_cmd=sensor_config[0].cmd[sensor_config[0].status_val[0].state];
+                                sensor_config[0].status_val.forEach((element, index) => {
+                                    //Find current state
+                                    
+                                    if(JSON.stringify(element.val)===JSON.stringify(status)) {
+                                        
+                                        if(index==0) document.getElementById(`button-payload-data-${path}`).checked= false;
+                                        else document.getElementById(`button-payload-data-${path}`).checked= true;
+                                        
+                                    }
+                                    
+                                });
+
+                                
+                            }
                         });
 
                         // GRAPH
@@ -1253,6 +1341,7 @@
         }
         
     }
+    
     
     //MESSAGE SEND HERE
     function streaming_broker_message_handler(topic, message, packet)
@@ -1310,6 +1399,7 @@
                                 document.getElementById(`buttontime-payload-data-${item.id.substring(25)}`).innerHTML = 'UPDATED';
                                 document.getElementById(`button-payload-data-${item.id.substring(25)}`)["disabled"] = false;
                                 document.getElementById(`button-payload-data-${item.id.substring(25)}`).style.pointerEvents="auto";
+                                
                                 item.innerHTML = `<%= __('State') %>: ${parsed_message.payload_data[i]}`;
                             }
                                 
@@ -1320,28 +1410,65 @@
                                                         
                         
                     });
+                    
                     document.querySelectorAll(`[id^=triplewaybuttonstate-payload-data-${dev_id}-${i}]`).forEach((item)=>{
                         try {
+                            
                             if(item.innerHTML != `${parsed_message.payload_data[i]}`){
                                 var data = $(`#${item.id}`).data('id');
                                 var path = item.id.split('-').pop();
+                                
                                 if(data) {
+    
+                                    
+
                                     clearInterval(data.interval);
                                     
                                     document.getElementById(`buttontime-payload-data-${path}`).innerHTML = 'UPDATED';
                                     document.getElementById(`button-payload-data-${path}`)["disabled"] = false;
                                     document.getElementById(`button-payload-data-${path}`).style.pointerEvents="auto";
-                                    
-                                    
+                                    document.getElementById(`slider-payload-data-${path}`).style["background-color"]="#2196F3";
+
                                 }
                                 item.innerHTML = `${parsed_message.payload_data[i]}`;
-                                console.log(path);
+
+                                let sensor_config = $(`#button-payload-data-${path}`).data('id');
+                                    
+
+                                //FIND CURRENT STATE
+                                if(sensor_config) {
+                                    if(i != sensor_config[0].status_key.at(-1)) return;
+                                    let status = []
+                                    
+                                    sensor_config[0].status_key.forEach(element => {
+                                        
+                                        status.push(document.getElementById(`triplewaybuttonstate-payload-data-${dev_id}-${element}-${path}`).innerHTML);
+                                    });
+                                    // delete sensor_config.cmd[];
+                                    let downlink_cmd=sensor_config[0].cmd[sensor_config[0].status_val[0].state];
+                                    sensor_config[0].status_val.forEach((element, index) => {
+                                        //Find current state
+                                        
+                                        if(JSON.stringify(element.val)===JSON.stringify(status)) {
+                                            
+                                            if(index==0) document.getElementById(`button-payload-data-${path}`).checked= false;
+                                            else document.getElementById(`button-payload-data-${path}`).checked= true;
+                                            
+                                        }
+                                        
+                                    });
+
+                                    
+                                }
+                                
+                                
+                                // console.log(path);
                                 
                             }
                                 
                         }
                         catch (err) {
-
+                            console.log(err)
                         }
                                                         
                         
@@ -1391,7 +1518,12 @@
             }
 
             else if (topic == `devices/${dev_id}/join`) {
-
+                // devices.forEach((element, index) => {
+                //     if(element==dev_id && device_type[index]==4){
+                //         let downlink_cmd=sensor_config.cmd[sensor_config.status_val[0].state];
+                //         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
+                //     }
+                // });
             }
 
             else if (topic == `devices/${dev_id}/down/ack`) {
@@ -1503,14 +1635,14 @@
     
     function tripleWayToggleButtonManager(dev_id, sensor_config, w_id) {
         console.log(sensor_config)
-
+        
         let storage = clientStorage.getItem(STORAGE_KEY);
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
 
         document.getElementById(`button-payload-data-${w_id}`)["disabled"] = true;
         document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="none";
-        
+        document.getElementById(`slider-payload-data-${w_id}`).style["background-color"]="#B1D9FA";
         let status = []
         
         sensor_config.status_key.forEach(element => {
@@ -1518,7 +1650,7 @@
         });
         
         // delete sensor_config.cmd[];
-        let downlink_cmd=sensor_config.cmd[sensor_config.status_val[0].state];;
+        let downlink_cmd=sensor_config.cmd[sensor_config.status_val[0].state];
         sensor_config.status_val.forEach((element, index) => {
             //Find current state
             
@@ -1542,12 +1674,15 @@
             }
             else if (timevalue!=0) {
                 timetag.innerHTML = (timevalue - 0.1).toFixed(1);
+                
             }
             else {
                 timetag.innerHTML = "EXPIRED";
                 clearInterval(interval);
                 document.getElementById(`button-payload-data-${w_id}`)["disabled"] = false;
                 document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="auto";
+                document.getElementById(`slider-payload-data-${w_id}`).style["background-color"]="#2196F3";
+                document.getElementById(`button-payload-data-${w_id}`).checked = !document.getElementById(`button-payload-data-${w_id}`).checked;
             }
             
         }, 100);

@@ -6,8 +6,10 @@ exports.deviceProcessing = async (req, res, next) => {
     try {
         if(req.session.login){
             let dev_list = []
+            let dev_type_id = []
             req.session.sensor.forEach((item)=>{
                 dev_list.push(item.dev_id);
+                dev_type_id.push(item.dev_type_id);
             });
             
             var new_dev_id = req.session.dev.new_dev_id;
@@ -25,6 +27,7 @@ exports.deviceProcessing = async (req, res, next) => {
                 new_dev_id: new_dev_id,
                 sensor: req.session.sensor,
                 dev_list: JSON.stringify(dev_list),
+                dev_type_id: JSON.stringify(dev_type_id),
                 client_id: req.session.dev.client_id,
                 broker: broker,
                 title: "Device"
