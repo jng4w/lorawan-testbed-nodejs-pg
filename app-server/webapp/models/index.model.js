@@ -68,15 +68,15 @@ async function selectDeviceFromCustomer(id){
 async function selectDeviceSensorFromCustomer(id){
 
     const res = await client.query(
-        `select dev_id, array_agg(jsonb_build_object('sensor_key', S.sensor_key, 'sensor_type', S.sensor_type, 'sensor_config', S.sensor_config)) AS sensor_arr
-        from
-        public."OWN" as O, public."ENDDEV" as E, public."SENSOR" as S
-        where
-        O.enddev_id = E._id and
-        E._id = S.enddev_id and
-        O.profile_id = $1
-		group by
-		dev_id 
+            `select dev_id, dev_type_id, array_agg(jsonb_build_object('sensor_key', S.sensor_key, 'sensor_type', S.sensor_type, 'sensor_config', S.sensor_config)) AS sensor_arr
+            from
+            public."OWN" as O, public."ENDDEV" as E, public."SENSOR" as S
+            where
+            O.enddev_id = E._id and
+            E._id = S.enddev_id and
+            O.profile_id = $1
+            group by
+            dev_id, dev_type_id
         `,
         [id]
     );
@@ -216,6 +216,17 @@ async function deleteBoardFromCustomer(board_id) {
     return res;
 }
 
+async function updateBoardFromCustomer(board_id, board_name) {
+    const res = await client.query(
+        `UPDATE public."BOARD"
+        SET display_name=$2
+        WHERE _id=$1;
+        `,
+        [board_id, board_name]
+    );
+    return res;
+}
+
 
 module.exports = {
     checkProfileExist: checkProfileExist,
@@ -231,5 +242,6 @@ module.exports = {
     insertWidgetToBoard: insertWidgetToBoard,
     deleteWidgetFromBoard: deleteWidgetFromBoard,
     deleteDeviceFromCustomer: deleteDeviceFromCustomer,
-    deleteBoardFromCustomer: deleteBoardFromCustomer
+    deleteBoardFromCustomer: deleteBoardFromCustomer,
+    updateBoardFromCustomer: updateBoardFromCustomer
 }

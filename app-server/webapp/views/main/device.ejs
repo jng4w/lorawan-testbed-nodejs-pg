@@ -307,6 +307,7 @@
         const MAX_SESSION_STORAGE_LENGTH= 20;
 
         const devices = JSON.parse(`<%= dev_list %>`.replace(/&#34;/g, '"'));
+        const device_type = JSON.parse(`<%= dev_type_id %>`.replace(/&#34;/g, '"'));
         //pass from server
         const streaming_broker_options = {
             clientId: '<%= client_id %>',
@@ -492,7 +493,7 @@
                         storage.payload[dev_id].payload_data[i].push(parsed_message.payload_data[i]);
                         
                         clientStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
-                        console.log("zxczxc", `payload-data-${dev_id}-${i}`)
+                        // console.log("zxczxc", `payload-data-${dev_id}-${i}`)
                         document.getElementById(`payload-data-${dev_id}-${i}`).innerHTML = parsed_message.payload_data[i];
                         
                     }
@@ -500,7 +501,13 @@
                 }
 
                 else if (topic == `devices/${dev_id}/join`) {
-
+                    
+                    // devices.forEach((element, index) => {
+                    //     if(element==dev_id && device_type[index]==4){
+                    //         let downlink_cmd=sensor_config.cmd[sensor_config.status_val[0].state];
+                    //         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
+                    //     }
+                    // });
                 }
 
                 else if (topic == `devices/${dev_id}/down/ack`) {
