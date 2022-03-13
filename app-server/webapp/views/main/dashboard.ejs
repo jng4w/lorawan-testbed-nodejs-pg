@@ -79,19 +79,32 @@
                                 }
                             </script>
                             <%if(board.length){%>
-                            <a class="d-none d-sm-inline-block btn btn-sm btn-light shadow-sm"
-                            role="button" data-toggle="modal" data-target="#configBoardModal">
-
-                            <i class="fas fa-pen fa-sm text-black-50"></i>&nbsp;<%= __('Config this board') %>
-                            </a>
-
-                            <a class="d-none d-sm-inline-block btn btn-sm btn-light shadow-sm"
-                            role="button" data-toggle="modal" data-target="#deleteBoardModal">
-
-                            <i class="fas fa-times fa-sm text-black-50"></i>&nbsp;<%= __('Delete this board') %>
-                            </a>
-
                             
+
+                            <div class="d-none d-sm-inline-block btn btn-sm">
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="this-board-configure"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <!-- Configure dropdown menu -->
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="this-board-configure">
+
+                                        <a class="dropdown-item"
+                                        role="button" data-toggle="modal" data-target="#configBoardModal">
+            
+                                        <i class="fas fa-pen fa-sm text-black-50"></i>&nbsp;<%= __('Config this board') %>
+                                        </a>
+            
+                                        <a class="dropdown-item"
+                                        role="button" data-toggle="modal" data-target="#deleteBoardModal">
+            
+                                        <i class="fas fa-times fa-sm text-black-50"></i>&nbsp;<%= __('Delete this board') %>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             <%} %>
                         </div>
                         
