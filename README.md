@@ -17,6 +17,8 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
+--- 
+
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -39,6 +41,8 @@
     <a href="">Request Feature</a>
   </p>
 </div>
+
+---
 
 <!-- TABLE OF CONTENTS -->
 <details>
