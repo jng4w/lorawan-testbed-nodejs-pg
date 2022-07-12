@@ -64,7 +64,7 @@
 
 # About
 
-This project proposes a LoRaWAN-based IoT testbed for performance investigation, including hardware and software components with respect to LoRaWAN network architecture specification. Additionally, the proposed testbed employs an efficient and reliable mechanism for status synchronization between a physical control device and a web-app-based control device to reduce the uplink frequency for saving power. The experimental results show that the packet loss rate is proportional to the distance between the gateway and end-devices, and is affected by building walls, obstacles, and hardware capabilities. Moreover, leveraging a network server and MQTT broker with high availability and scalability enables our proposed testbed to possibly accommodate up to 4000 users accessing the web application deployed on a server with a dual-core CPU and 2GB RAM without failure.
+>This project proposes a LoRaWAN-based IoT testbed for performance investigation, including hardware and software components with respect to LoRaWAN network architecture specification. Additionally, the proposed testbed employs an efficient and reliable mechanism for status synchronization between a physical control device and a web-app-based control device to reduce the uplink frequency for saving power. The experimental results show that the packet loss rate is proportional to the distance between the gateway and end-devices, and is affected by building walls, obstacles, and hardware capabilities. Moreover, leveraging a network server and MQTT broker with high availability and scalability enables our proposed testbed to possibly accommodate up to 4000 users accessing the web application deployed on a server with a dual-core CPU and 2GB RAM without failure.
 
 
 # Built with
