@@ -78,13 +78,13 @@
 ## Network Infrastructure
 |Components |Spec Descriptions |
 | :---      |   :---            |
-|Network Server| <div style="padding: 4px 6px; border: 0px solid blue;  height:30px;">[![tts][tts]][tts-url]</div> |
+|Network Server| <div style=" background-color: #FFFFFF; padding: 4px 6px; border: 0px solid blue;  height:30px;">[![tts][tts]][tts-url]</div> |
 
 ## Software-base Infrastructure
 |Components |Spec Descriptions |
 | :---      |   :---            |
 |Application Server| *VPS (dual-core CPU, 2GB RAM)* |
-|Streaming Broker| <div style="padding: 0px 6px; border: 1px solid; width:80px; height:30px;">[![EMQX][EMQX]][EMQX-url]</div>|
+|Streaming Broker| <div style=" background-color: #FFFFFF; padding: 0px 6px; border: 1px solid; width:80px; height:30px;">[![EMQX][EMQX]][EMQX-url]</div>|
 |Database|[![PostgreSQL][postgresql]][postgresql-url]|
 |Web Server| [![NodeJS][nodejs]][nodejs-url]|
 |Web Application|[![ExpressJS][Expressjs]][Expressjs-url]|
