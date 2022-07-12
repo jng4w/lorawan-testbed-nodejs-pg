@@ -1,7 +1,9 @@
 [projectname]:  lorawan-testbed
 [projectauthor]: kysudua
 [linkedin]: xdtn7
+
 <link href="style.css" rel="stylesheet"></link>
+
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
