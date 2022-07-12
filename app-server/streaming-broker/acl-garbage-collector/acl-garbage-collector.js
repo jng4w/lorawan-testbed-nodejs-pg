@@ -5,9 +5,9 @@ const fs = require('fs');
 const emqx_http = require(`${__dirname}/../emqx/http-api/http-api.js`);
 const common_emqx = JSON.parse(fs.readFileSync(`${__dirname  }/../../common/emqx.json`));
 
-const PERIOD = 30000; //ms
-const LIST_LIMIT = 1000;
-
+const PERIOD = 10000; //ms
+const LIST_LIMIT = 2000;
+let i = 0;
 async function collect_garbage() {
     try {
         //get client list currently have session and ACL list
@@ -27,6 +27,8 @@ async function collect_garbage() {
         garbage_acl_list.forEach(async (acl) => {
             await emqx_http.delete_acl_clientid_on_topic(acl.clientid, acl.topic);
         });
+	i = i + 1;
+	console.log(`${i * LIST_LIMIT} have been deleted`);
     } catch (err) {
         console.log(err);
     }

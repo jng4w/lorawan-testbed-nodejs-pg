@@ -46,5 +46,7 @@
 	"Toggle": "Đảo",
 	"Delete this board": "Xóa bảng này",
 	"Delete this board?": "Muốn xóa bảng này?",
-	"Delete this device?": "Delete this device?"
+	"Delete this device?": "Delete this device?",
+	"Config this board": "Config this board",
+	"Confirm changes": "Confirm changes"
 }
