@@ -84,7 +84,7 @@
 |Components |Spec Descriptions |
 | :---      |   :---            |
 |Application Server| *VPS (dual-core CPU, 2GB RAM)* |
-|Streaming Broker| <div style=" background-color: #FFFFFF; padding: 0px 6px; border: 1px solid; width:80px; height:30px;" width="80" height="30">[![EMQX][EMQX]][EMQX-url]</div>|
+|Streaming Broker| <div style=" background-color: #FFFFFF; padding: 0px 6px; border: 1px solid;" width="8" height="3">[![EMQX][EMQX]][EMQX-url]</div>|
 |Database|[![PostgreSQL][postgresql]][postgresql-url]|
 |Web Server| [![NodeJS][nodejs]][nodejs-url]|
 |Web Application|[![ExpressJS][Expressjs]][Expressjs-url]|
@@ -92,7 +92,7 @@
 *Duy Tinh Nguyen - [@xdtn7](https://www.linkedin.com/in/xdtn7/) - duytinhnguyenforwork@gmail.com*
 
 ![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
-
+[[https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=400px]]
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
