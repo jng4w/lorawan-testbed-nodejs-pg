@@ -29,7 +29,7 @@
   <h3 align="center">LoRaWAN Testbed</h3>
 
   <p align="center">
-    Solution for a problem in a Leetcode problem compilation.
+    LoRaWAN-based IoT testbed for performance investigation.
     <br />
     <a href=""><strong>Explore the docs »</strong></a>
     <br />
@@ -59,6 +59,8 @@
     </li>
   </ol>
 </details>
+
+---
 
 # About
 
