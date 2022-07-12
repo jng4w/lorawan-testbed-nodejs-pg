@@ -52,7 +52,7 @@
       <a href="#about">About</a>
     </li>
     <li>
-      <a href="#problem">Problem</a>
+      <a href="#built-with">Built with</a>
     </li>
     <li>
       <a href="#contact">Contact</a>
@@ -78,7 +78,7 @@
 ## Network Infrastructure
 |Components |Spec Descriptions |
 | :---      |   :---            |
-|Network Server| *The Things Stack* |
+|Network Server| <div style="padding: 4px 6px; border: 0px solid blue;  height:30px;">[![tts][tts]][tts-url]</div> |
 
 ## Software-base Infrastructure
 |Components |Spec Descriptions |
@@ -117,6 +117,8 @@
 [nodejs-url]: https://nodejs.org/dist/latest-v18.x/docs/api/
 [Expressjs]: https://img.shields.io/badge/ExpressJS-F7DF1E?style=for-the-badge&logo=express&logoColor=black
 [Expressjs-url]: https://nodejs.org/dist/latest-v18.x/docs/api/
+[tts]: https://www.thethingsnetwork.org/docs/quick-start/tts-ce.png
+[tts-url]: https://nodejs.org/dist/latest-v18.x/docs/api/
 
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
