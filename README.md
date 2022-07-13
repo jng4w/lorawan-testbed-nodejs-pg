@@ -2,7 +2,6 @@
 [projectauthor]: kysudua
 [linkedin]: xdtn7
 
-<link href="style.css" rel="stylesheet"></link>
 
 <!-- PROJECT SHIELDS -->
 <!--
