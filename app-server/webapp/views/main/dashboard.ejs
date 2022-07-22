@@ -4,15 +4,12 @@
 
     <title>LoraWAN TestBed - <%=title%></title>
  
-
-    
-    <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
-    <!-- Global level stylesheet -->
     <script src="https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     <script type="text/javascript" src="js/base64ArrayBuffer.js"></script>
-    
+    <!-- <link rel="stylesheet" href="./../../public/stylesheets/dashboard.css"> -->
+
+    <!-- Global level stylesheet -->
     <%- include('../partials/libs.ejs') %>
 
 </head>
@@ -80,7 +77,6 @@
                             </script>
                             <%if(board.length){%>
                             
-
                             <div class="d-none d-sm-inline-block btn btn-sm">
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="this-board-configure"
@@ -90,7 +86,6 @@
                                     <!-- Configure dropdown menu -->
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="this-board-configure">
-
                                         <a class="dropdown-item"
                                         role="button" data-toggle="modal" data-target="#configBoardModal">
             
@@ -116,7 +111,6 @@
                         
                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp;<%= __('Add widget') %>
                         </a>
-
                         <%}%>
                         <!-- Add Board Modal-->
                         <div class="modal fade" id="addBoardModal" tabindex="-1" role="dialog" aria-labelledby="addBoardModalLabel"
@@ -188,7 +182,6 @@
                         <!-- Delete Board Modal-->
                         <div class="modal fade" id="deleteBoardModal" tabindex="-1"
                             role="dialog" aria-labelledby="deleteBoardModalLabel" aria-hidden="true">
-
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <!-- Modal header -->
@@ -217,7 +210,6 @@
                                 </div>
                             </div>
                         </div>
-
                         
                         <%}%>
                         <!-- Add Widget Modal-->
@@ -285,7 +277,6 @@
                                                         
                                                     });
                                                     document.getElementById(`addWidgetType-group-${val}`).hidden = false;
-
                                                     document.getElementById('no_sensor').value = "1";
                                                     
                                                     var newNode = document.createElement('div');
@@ -342,11 +333,9 @@
                                                         document.getElementById('no_sensor').value = no_sensor;
                                                         document.getElementById('addSensorButton').hidden = false;
                                                     }
-
                                                     
                                                 }
                                                 
-
                                                 function addDeviceTrigger(replace){
                                                     var sensor_list = JSON.parse(document.getElementById(`addDevice${replace}`).value).sensor_arr;
                                                     
@@ -356,17 +345,14 @@
                                                         Sensordata.innerHTML += `<option value="${item.sensor_key}">${item.sensor_key} (${item.sensor_type})</option>`;
                                                     })
                                                 }
-
                                                 function check_no_sensor(){
                                                     if(parseInt(document.getElementById('no_sensor').value) >= parseInt(document.getElementById('addWidgetType').value.split('-')[1])){
                                                         document.getElementById('addSensorButton').hidden = true;
                                                         return;
                                                     }
                                                 }
-
                                                 function add_sensor(){
                                                     // mydiv.appendChild(document.createTextNode("bar"))
-
                                                     var no_sensor = parseInt(document.getElementById('no_sensor').value);
                                                     
                                                     var newNode = document.createElement('div');
@@ -377,9 +363,7 @@
                                                     document.getElementById('no_sensor').value = no_sensor;  
                                                               
                                                     document.getElementById("addData").appendChild(newNode);
-
                                                     check_no_sensor();
-
                                                     
                                                 }
                                             </script>
@@ -413,7 +397,7 @@
                                 <!-- Card -->
                                 
                                 <%if(config.type == 'Card'){%>
-                                    <div class="col-xl-3 col-md-6 mb-4">
+                                    <div class="col-xl-3 col-md-6 mb-4 dashboard-card">
                                         <div class="card border-left-<%=config.view['Color of card']%> shadow h-100 py-2">
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center">
@@ -432,10 +416,8 @@
                                                             <!-- Configure dropdown menu -->
                                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                             aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
                                                                 onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
                                                                 onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
                                                                 <script>
@@ -444,7 +426,6 @@
                                                                         $("#widget_id").html(str);
                                                                         document.getElementById(`edit-widget_id`).value = widget_id;
                                                                     }
-
                                                                     function openDeleteWidgetModal(widget_id) {
                                                                         document.getElementById(`delete-widget_id`).value = widget_id;
                                                                     }
@@ -458,7 +439,6 @@
                                     </div>
                                 
                                 <!------------------------------------------------------------------------------------------------------------------------>
-
                                 <%}else if(config.type == 'Chart'){%>
                                     <div class="card shadow col-md-12 mb-4">
                             
@@ -475,7 +455,6 @@
                                                     <!-- <div class="dropdown-header">Dropdown Header:</div> -->
                                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
                                                                 onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
                                                                 onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
                                                                 <script>
@@ -484,7 +463,6 @@
                                                                         $("#widget_id").html(str);
                                                                         document.getElementById(`edit-widget_id`).value = widget_id;
                                                                     }
-
                                                                     function openDeleteWidgetModal(widget_id) {
                                                                         document.getElementById(`delete-widget_id`).value = widget_id;
                                                                     }
@@ -518,10 +496,9 @@
                                     </div>
                                 
                                 <!------------------------------------------------------------------------------------------------------------------------>
-
                                 <%}else if(config.type == "Thresholds"){%>
-                                    <div class="card shadow mb-4">
-                            
+                                <div class="col-xl-2 col-md-6 mb-4">
+                                    <div class="card shadow">
                                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                             <h6 class="m-0 font-weight-bold text-primary">Thresholds</h6>
                                             <div class="dropdown no-arrow">
@@ -547,44 +524,42 @@
                                                     aria-valuenow="31.2" aria-valuemin="0" aria-valuemax="50">31.2&#176;C</div>
                                             </div>
                                             <div class="mb-1 small">Humidity</div>
-                                            <div class="progress mb-4">
+                                            <div class="progress">
                                                 <div class="progress-bar" role="progressbar" style="width: 58.5%"
                                                     aria-valuenow="58.5" aria-valuemin="0" aria-valuemax="100">58.5%</div>
                                             </div>
                 
                                         </div>
                                     </div>
+                                </div>
                                 
                                 <!------------------------------------------------------------------------------------------------------------------------>
-
                                 <%}else if(config.type == 'Button'){%>
-                                    <div class="col-xl-2 col-md-6 mb-4">
-                                        <div class="card shadow h-100 py-0">
-                                            <div class="card-body">
-                                                <div class="row no-gutters align-items-center">
+                                    <div class="col-xl-2 col-md-6 mb-4 dashboard-card">
+                                        <div class="card shadow py-0">
+                                            <div class="card-body text-center">
+                                                <div class="d-inline no-gutters">
                                                     <div class="col mr-2">
                                                         <div class="text-xs font-weight-bold text-primary text-uppercase text-center">
                                                             <%=boardWidget[j].w_display_name%></div>
                                                             <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].w_id%>">UPDATED</div>
-                                                        <hr class="sidebar-divider">
-                                                        
-                                                        <div class="align-items-center">
-                                                            <a  id="btn-payload-data-<%=boardWidget[j].w_id%>"
-                                                                class="btn btn-lg btn-<%=config.view['Color of button']%> shadow-sm controller" role="button" 
+                                                        <!-- <hr class="sidebar-divider"> -->
+                                                        <div class="mt-2">
+                                                            <button  id="btn-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].w_id%>"
+                                                                class="btn btn-lg btn-<%=config.view['Color of button']%> shadow-sm controller" role="button"
                                                                 onclick="buttonManager('<%=boardWidget[j].e_dev_id[0]%>',
                                                                 '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
                                                                 '<%=boardWidget[j].w_id%>')">
-                                                                <span class="text"><%= __('Trigger') %></span>
-                                                            </a>
+                                                                <span class="text text-lg"><%= __('Trigger') %></span>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 <%}else if(config.type == 'Switch 1'){%>
-                                    <div class="col-xl-2 col-md-6 mb-4">
+                                    <div class="col-xl-2 col-md-6 mb-4 dashboard-card">
                                         <div class="card shadow h-100 py-0">
                                             <div class="card-body">
                                                 <div class="row no-gutters">
@@ -601,9 +576,8 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 <%}else if(config.type == 'Toggle button'){%>
-                                    <!-- <div class="col-xl-2 col-md-6 mb-4">
+                                    <!-- <div class="col-xl-2 col-md-6 mb-4 dashboard-card">
                                         <div class="card shadow h-100 py-0">
                                             <div class="card-body">
                                                 <div class="row no-gutters">
@@ -617,7 +591,6 @@
                                                             id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>">
                                                                 <%= __('State')%>: ___</label>
                                                         </div>
-
                                                         <div id="buttontime-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>" 
                                                             class="text-xs text-muted text-center"
                                                             style="visibility: hidden;"><span>0</span><span>s</span>
@@ -639,21 +612,17 @@
                                             </div>
                                         </div>
                                     </div> -->
-
-
-
-                                    <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-left-<%=config.view['Color of button state 1']%> shadow h-100 py-2">
-                                            <div class="card-body">
-                                                <div class="row no-gutters align-items-center">
-                                                    <div class="col mr-2">
-                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    <div class="col-xl-3 col-md-6 mb-4 dashboard-card">
+                                        <div class="card border-left-<%=config.view['Color of button state 1']%> shadow">
+                                            <div class="card-body d-flex align-item-center">
+                                                <div class="d-flex flex-row no-gutters align-items-center justify-content-between">
+                                                    <div class="col-auto mr-4">
+                                                        <div class="text-med font-weight-bold text-primary text-uppercase mb-1">
                                                             <%=boardWidget[j].w_display_name%></div>
     
-                                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>"><%= __('State')%>: ___</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-med text-gray-800" id="buttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>"><%= __('State')%>: ___</div>
                                                         <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key%>-<%=boardWidget[j].w_id%>">UPDATED</div>
                                                     </div>
-
                                                     <div class="col-auto">
                                                         <div class="text-center">
                                                             <button class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
@@ -661,12 +630,11 @@
                                                                 role="button" aria-describedby="button_toggle" name="button_toggle" onclick="toggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
                                                                                                                                                             '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
                                                                                                                                                             '<%=boardWidget[j].w_id%>')">
-                                                                <span class="text"><%= __('Toggle') %></span>
+                                                                <span class="text-med"><%= __('Toggle') %></span>
                                                             </button>
                                                         </div>
                                                     </div>
-
-                                                    <div class="col-auto">
+                                                    <div class="col-auto ml-4">
                                                         <div class="dropdown no-arrow">
                                                             <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>-configure"
                                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -675,10 +643,8 @@
                                                             <!-- Configure dropdown menu -->
                                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                             aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
                                                                 onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
                                                                 onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
                                                                 <script>
@@ -687,7 +653,6 @@
                                                                         $("#widget_id").html(str);
                                                                         document.getElementById(`edit-widget_id`).value = widget_id;
                                                                     }
-
                                                                     function openDeleteWidgetModal(widget_id) {
                                                                         document.getElementById(`delete-widget_id`).value = widget_id;
                                                                     }
@@ -700,11 +665,11 @@
                                         </div>
                                     </div>
                                     <%}else if(config.type == '3-way toggle button'){%> 
-                                    <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-left-<%=config.view['Color of button state 1']%> shadow h-100 py-2">
-                                            <div class="card-body">
-                                                <div class="row no-gutters align-items-center">
-                                                    <div class="col mr-2">
+                                    <div class="col-xl-3 col-md-6 mb-4 dashboard-card">
+                                        <div class="card border-left-<%=config.view['Color of button state 1']%> shadow">
+                                            <div class="card-body d-flex align-item-center">
+                                                <div class="d-flex flex-row no-gutters align-items-center justify-content-between">
+                                                    <div class="col-auto mr-4">
                                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                             <%=boardWidget[j].w_display_name%></div>
     
@@ -712,8 +677,7 @@
                                                         <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[1]%>-<%=boardWidget[j].w_id%>"></div>
                                                         <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].w_id%>">UPDATED</div>
                                                     </div>
-
-                                                    <div class="col-auto">
+                                                    <div class="d-flex flex-row align-items-center col-auto">
                                                         <div class="text-center">
                                                             <button class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
                                                                 id="button-payload-data-<%=boardWidget[j].w_id%>"
@@ -724,8 +688,7 @@
                                                             </button>
                                                         </div>
                                                     </div>
-
-                                                    <div class="col-auto">
+                                                    <div class="col-auto ml-4">
                                                         <div class="dropdown no-arrow">
                                                             <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>-configure"
                                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -734,10 +697,8 @@
                                                             <!-- Configure dropdown menu -->
                                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                             aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
                                                                 onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
                                                                 onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
                                                                 <script>
@@ -746,7 +707,6 @@
                                                                         $("#widget_id").html(str);
                                                                         document.getElementById(`edit-widget_id`).value = widget_id;
                                                                     }
-
                                                                     function openDeleteWidgetModal(widget_id) {
                                                                         document.getElementById(`delete-widget_id`).value = widget_id;
                                                                     }
@@ -759,21 +719,20 @@
                                         </div>
                                     </div>
                                     <%}else if(config.type == '3-way toggle switch'){%> 
-                                    <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-left-<%=config.view['Color of button state 1']%> shadow h-100 py-2">
-                                            <div class="card-body">
-                                                <div class="row no-gutters align-items-center">
-                                                    <div class="col mr-2">
-                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    <div class="col-xl-3 col-md-6 mb-4 dashboard-card">
+                                        <div class="card border-left-<%=config.view['Color of button state 1']%> shadow">
+                                            <div class="card-body d-flex align-item-center">
+                                                <div class="d-flex flex-row no-gutters align-items-center justify-content-between">
+                                                    <div class="col-auto mr-4">
+                                                        <div class="text-med font-weight-bold text-primary text-uppercase mb-1">
                                                             <%=boardWidget[j].w_display_name%></div>
                                                             <!-- style="display: none;" -->
                                                         <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[0]%>-<%=boardWidget[j].w_id%>"></div>
                                                         <div style="display: none;" class="h5 mb-0 font-weight-bold text-gray-800" id="triplewaybuttonstate-payload-data-<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].sensor_config[0].status_key[1]%>-<%=boardWidget[j].w_id%>"></div>
                                                         <div class="p mb-0 text-xs text-black-50" id="buttontime-payload-data-<%=boardWidget[j].w_id%>">UPDATED</div>
                                                     </div>
-
-                                                    <div class="col-auto">
-                                                        <div class="text-center">
+                                                    <div class="d-flex flex-row align-items-center col-auto">
+                                                        
                                                             <!-- <button class="btn btn-lg btn-<%=config.view['Color of button state 1']%> shadow-sm controller"
                                                                 id="button-payload-data-<%=boardWidget[j].w_id%>"
                                                                 role="button" aria-describedby="button_toggle" name="button_toggle" onclick="tripleWayToggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
@@ -781,20 +740,18 @@
                                                                                                                                                             '<%=boardWidget[j].w_id%>')">
                                                                 <span class="text"><%= __('Toggle') %></span>
                                                             </button> -->
-
-                                                            <span class="p text-xs"
+                                                            <span class="p text-xs mr-2"
                                                             id="triplewaybuttonstate-payload-data-state0-<%=boardWidget[j].w_id%>"><%=boardWidget[j].sensor_config[0].status_val[0].state%></span>
-                                                            <label class="switch">
+                                                            <label class="switch mb-0">
                                                                 <input id="button-payload-data-<%=boardWidget[j].w_id%>" type="checkbox" onclick="tripleWayToggleButtonManager('<%=boardWidget[j].e_dev_id[0]%>',
                                                                 '<%=JSON.stringify(boardWidget[j].sensor_config)%>',
                                                                 '<%=boardWidget[j].w_id%>')" checked>
                                                                 <span class="slider round" id="slider-payload-data-<%=boardWidget[j].w_id%>"></span>
                                                             </label>
-                                                            <span class="p text-xs" id="triplewaybuttonstate-payload-data-state1-<%=boardWidget[j].w_id%>"><%=boardWidget[j].sensor_config[0].status_val[1].state%></span>
-                                                        </div>
+                                                            <span class="p text-xs ml-2" id="triplewaybuttonstate-payload-data-state1-<%=boardWidget[j].w_id%>"><%=boardWidget[j].sensor_config[0].status_val[1].state%></span>
+                                                        
                                                     </div>
-
-                                                    <div class="col-auto">
+                                                    <div class="col-auto ml-4">
                                                         <div class="dropdown no-arrow">
                                                             <a class="dropdown-toggle" href="#" role="button" id="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-<%=boardWidget[j].w_id%>-configure"
                                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -804,10 +761,8 @@
                                                             <!-- Configure dropdown menu -->
                                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                             aria-labelledby="<%=boardWidget[j].e_dev_id[0]%>-<%=boardWidget[j].s_sensor_key[0]%>-configure">
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editWidgetModal"
                                                                 onclick="openEditWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Configure widget') %></a>
-
                                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteWidgetModal"
                                                                 onclick="openDeleteWidgetModal('<%=boardWidget[j].w_id%>')"><%= __('Delete widget') %></a>
                                                                 <script defer>
@@ -816,13 +771,11 @@
                                                                     );
                                                                     console.log(`#button-payload-data-<%=boardWidget[j].w_id%>`);
                                                                     console.log( $(`#button-payload-data-<%=boardWidget[j].w_id%>`).data('id'));
-
                                                                     function openEditWidgetModal(widget_id) {
                                                                         var str = "Widget ID: " + widget_id;
                                                                         $("#widget_id").html(str);
                                                                         document.getElementById(`edit-widget_id`).value = widget_id;
                                                                     }
-
                                                                     function openDeleteWidgetModal(widget_id) {
                                                                         document.getElementById(`delete-widget_id`).value = widget_id;
                                                                     }
@@ -1149,13 +1102,10 @@
     const streaming_broker_protocol = "ws"; //pass from server
     const streaming_broker_addr = '<%= broker.addr %>'; //pass from server
     const streaming_broker_port = '<%= broker.port %>'; //pass from server
-
     const STORAGE_KEY = 'payload-storage';
     const MAX_SESSION_STORAGE_LENGTH = 20;
-
     const devices = JSON.parse(`<%= dev_list %>`.replace(/&#34;/g, '"'));
     const device_type = JSON.parse(`<%= dev_type_id %>`.replace(/&#34;/g, '"'));
-
     const streaming_broker_options = {
         clientId: '<%= client_id %>',
         username: '<%= broker.id %>',
@@ -1168,7 +1118,6 @@
         }
         // resubscribe: false
     }
-
     const sub_topics = [];
     devices.forEach((device_id) => {
         sub_topics.push(
@@ -1178,56 +1127,48 @@
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/join`,
                 'options': {
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/down/ack`,
                 'options': {
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/down/nack`,
                 'options': {
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/down/queued`,
                 'options': {
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/down/sent`,
                 'options': {
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/down/failed`,
                 'options': {
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/service/data`,
                 'options': {
                     'qos': 0
                 }
             },
-
             {
                 'topic': `devices/${device_id}/location/solved`,
                 'options': {
@@ -1250,7 +1191,6 @@
     
     //create browser storage instance
     const clientStorage = localStorage;
-
     //handle incoming connect
     function streaming_broker_connect_handler(connack)
     {
@@ -1307,11 +1247,9 @@
                                     }
                                     
                                 });
-
                                 
                             }
                         });
-
                         // GRAPH
                         document.querySelectorAll(`[id^=timestamp-payload-data-${i}-${j}]`).forEach((item)=>{
                             item.innerHTML = `<%= __('Last updated') %>: ${storage.payload[i].recv_timestamp.at(-1)}`;                                 
@@ -1321,7 +1259,6 @@
                         });
                         document.querySelectorAll(`[id^="chart payload-data"]`).forEach((item)=>{        
                             let id = $(item).data('id');
-
                             try {
                                 for(let k in id.dev){
                                     if(id.dev[k]==i && id.sensor[k]==j){
@@ -1340,7 +1277,6 @@
                                                 });
                                     
                                             }
-
                                             else {
                                             //     item.data = NaN;
                                             }
@@ -1370,11 +1306,9 @@
             var recv_topic = topic.split('/');
             var dev_id = recv_topic[1];
             console.log(topic);
-
             if (topic == `devices/${dev_id}/up/payload`) {
                 //parse msg
                 let parsed_message = JSON.parse(message);
-
                 //CONTINUE
                 console.log('parsed_message', parsed_message);
         
@@ -1398,7 +1332,6 @@
                 }
                 parsed_message.recv_timestamp = timestamp_format(parsed_message.recv_timestamp);
                 storage.payload[dev_id].recv_timestamp.push(parsed_message.recv_timestamp);
-
                 for(var i in parsed_message.payload_data){
                     //STORAGE
                     if(length_flag==1){
@@ -1407,7 +1340,6 @@
                         storage.payload[dev_id].payload_data[i].shift();
                     }
                     storage.payload[dev_id].payload_data[i].push(parsed_message.payload_data[i]);
-
                     //TOGGLE BUTTON
                     document.querySelectorAll(`[id^=buttonstate-payload-data-${dev_id}-${i}]`).forEach((item)=>{
                         try {
@@ -1425,7 +1357,6 @@
                                 
                         }
                         catch (err) {
-
                         }
                                                         
                         
@@ -1439,20 +1370,16 @@
                                 if(data) {
     
                                     
-
                                     clearInterval(data.interval);
                                     
                                     document.getElementById(`buttontime-payload-data-${path}`).innerHTML = 'UPDATED';
                                     document.getElementById(`button-payload-data-${path}`)["disabled"] = false;
                                     document.getElementById(`button-payload-data-${path}`).style.pointerEvents="auto";
                                     document.getElementById(`slider-payload-data-${path}`).style["background-color"]="#2196F3";
-
                                 }
                                 item.innerHTML = `${parsed_message.payload_data[i]}`;
-
                                 let sensor_config = $(`#button-payload-data-${path}`).data('id');
                                     
-
                                 //FIND CURRENT STATE
                                 if(sensor_config) {
                                     if(i != sensor_config[0].status_key.at(-1)) return;
@@ -1475,7 +1402,6 @@
                                         }
                                         
                                     });
-
                                     
                                 }
                                 
@@ -1490,7 +1416,35 @@
                                                         
                         
                     });
-
+                    document.querySelectorAll(`[id^=btn-payload-data-${dev_id}]`).forEach((item)=>{
+                        try {
+                                var data = $(`#${item.id}`).data('id');
+                                var path = item.id.split('-').pop();
+                                
+                                if(data) {
+    
+                                    
+                                    clearInterval(data.interval);
+                                    
+                                    document.getElementById(`buttontime-payload-data-${path}`).innerHTML = 'UPDATED';
+                                    item["disabled"] = false;
+                                }
+                                // item.innerHTML = `${parsed_message.payload_data[i]}`;
+                                // let sensor_config = $(`#button-payload-data-${path}`).data('id');
+                                    
+                
+                                
+                                
+                                // console.log(path);
+                                
+                                
+                        }
+                        catch (err) {
+                            console.log(err)
+                        }
+                                                        
+                        
+                    });
                     //GRAPH
                     document.querySelectorAll(`[id^=timestamp-payload-data-${dev_id}-${i}]`).forEach((item)=>{
                                                         item.innerHTML = `<%= __('Last updated') %>: ${parsed_message.recv_timestamp}`;                                  
@@ -1502,7 +1456,6 @@
                     document.querySelectorAll('[id^="chart payload-data"]').forEach((item)=>{
                                 
                         let id = $(item).data('id');
-
                         try {
                             for(let j in id.dev){
                                 if(id.dev[j]==dev_id && id.sensor[j]==i){
@@ -1530,10 +1483,8 @@
                         }           
                     });
                 }
-
                 clientStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
             }
-
             else if (topic == `devices/${dev_id}/join`) {
                 // devices.forEach((element, index) => {
                 //     if(element==dev_id && device_type[index]==4){
@@ -1542,52 +1493,39 @@
                 //     }
                 // });
             }
-
             else if (topic == `devices/${dev_id}/down/ack`) {
-
             }
-
             else if (topic == `devices/${dev_id}/down/nack`) {
                 
             }
-
             else if (topic == `devices/${dev_id}/down/failed`) {
                 
             }
-
             else if (topic == `devices/${dev_id}/down/queued`) {
                 
             }
-
             else if (topic == `devices/${dev_id}/down/sent`) {
                 
             }
-
             else if (topic == `devices/${dev_id}/service/data`) {
                 
             }
-
             else if (topic == `devices/${dev_id}/location/solved`) {
                 
             }
-
             else {
-
             }
         }
-
         catch(err){
             console.log(err);
         }
     }
-
     // handle error
     function streaming_broker_error_handler(error)
     {
         console.log("Can't connect to streaming broker" + error);
         //process.exit(1);
     }
-
     function timestamp_format(str){
         var arr = new Date(str).toLocaleString(NaN,{ hour12: false }).split(', ');
         arr[0] = arr[0].split('/');
@@ -1596,8 +1534,6 @@
         arr[1] = arr[1].slice(0, 5);
         return `${arr[0]} ${arr[1]}`
     }
-
-
     function mqtt_publish(topic, msg) {
         streaming_broker_mqttclient.publish(topic, msg, {
             qos: 0,
@@ -1606,20 +1542,15 @@
         }, (err) => {
             console.log(err);
         });
-
     }
-
     function toggleButtonManager(dev_id, sensor_config, w_id) {
         let storage = clientStorage.getItem(STORAGE_KEY);
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
-
         document.getElementById(`button-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`)["disabled"] = true;
         document.getElementById(`button-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`).style.pointerEvents="none";
-
         let status = storage.payload[dev_id].payload_data[sensor_config.status_key].at(-1);
         delete sensor_config.cmd[status];
-
         let downlink_cmd = sensor_config.cmd[Object.keys(sensor_config.cmd)[0]];
         
         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
@@ -1631,11 +1562,9 @@
             if(timetag.innerHTML=='UPDATED' || timetag.innerHTML=='0' || timetag.innerHTML=='EXPIRED') {
                 timetag.innerHTML = sensor_config.uplink_timeout;
             }
-
             else if (timevalue!=0) {
                 timetag.innerHTML = (timevalue - 0.1).toFixed(1);
             }
-
             else {
                 timetag.innerHTML = "EXPIRED";
                 clearInterval(interval);
@@ -1644,7 +1573,6 @@
             }
             
         }, 100);
-
         $(`#buttonstate-payload-data-${dev_id}-${sensor_config.status_key}-${w_id}`).data('id', {
             interval: interval
         });
@@ -1656,7 +1584,6 @@
         let storage = clientStorage.getItem(STORAGE_KEY);
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
-
         document.getElementById(`button-payload-data-${w_id}`)["disabled"] = true;
         document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="none";
         document.getElementById(`slider-payload-data-${w_id}`).style["background-color"]="#B1D9FA";
@@ -1679,7 +1606,6 @@
             }
             
         });
-
         mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
         
         let interval = setInterval(function(){
@@ -1697,36 +1623,61 @@
                 timetag.innerHTML = "EXPIRED";
                 clearInterval(interval);
                 document.getElementById(`button-payload-data-${w_id}`)["disabled"] = false;
-                document.getElementById(`btn-payload-data-${w_id}`).style.pointerEvents="auto";
+                document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="auto";
                 document.getElementById(`slider-payload-data-${w_id}`).style["background-color"]="#2196F3";
                 document.getElementById(`button-payload-data-${w_id}`).checked = !document.getElementById(`button-payload-data-${w_id}`).checked;
             }
             
         }, 100);
-
         $(`#triplewaybuttonstate-payload-data-${dev_id}-${sensor_config.status_key[sensor_config.status_key.length-1]}-${w_id}`).data('id', {
             interval: interval
         });
     }
-
     function buttonManager(dev_id, sensor_config, w_id) {
         console.log(sensor_config)
         
         let storage = clientStorage.getItem(STORAGE_KEY);
         storage = JSON.parse(storage);
         sensor_config = JSON.parse(sensor_config.replace(/&#34;/g, '"'))[0];
-
-        document.getElementById(`btn-payload-data-${w_id}`)["disabled"] = true;
+        document.getElementById(`btn-payload-data-${dev_id}-${w_id}`)["disabled"] = true;
         // document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="none";
         // document.getElementById(`slider-payload-data-${w_id}`).style["background-color"]="#B1D9FA";
         // let status = []
-        console.log(sensor_config);
+        // console.log(`btn-payload-data-${dev_id}-${w_id}`);
         // sensor_config.status_key.forEach(element => {
         //     status.push(storage.payload[dev_id].payload_data[element].at(-1))
         // });
         
         // // delete sensor_config.cmd[];
         // let downlink_cmd=sensor_config.cmd[sensor_config.status_val[0].state];
+        let downlink_cmd = sensor_config.cmd.OFF?sensor_config.cmd.OFF:sensor_config.cmd.TOGGLE;
+        console.log('cmd', downlink_cmd)
+        let oldData = '';
+        if(sensor_config.status_key)
+            oldData = storage.payload[dev_id].payload_data[sensor_config.status_key].at(-1)
+        if(oldData){
+            switch (oldData) {
+                case 'ON':
+                    downlink_cmd=sensor_config.cmd.OFF;
+                    break;
+                case 'OFF':
+                    downlink_cmd=sensor_config.cmd.ON;
+                    break;
+                default:
+                    downlink_cmd=sensor_config.cmd.TOGGLE;
+                    break;
+            }
+        }
+        // let downlink_cmd = {
+        //         "downlinks": [
+        //             {
+        //             "f_port": 200,
+        //             "priority": "HIGHEST",
+        //             "confirmed": true,
+        //             "frm_payload": "qAEGAQUAAlUAAQ=="
+        //             }
+        //         ]
+        //     };
         // sensor_config.status_val.forEach((element, index) => {
         //     //Find current state
             
@@ -1738,8 +1689,7 @@
         //     }
             
         // });
-
-        // mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
+        mqtt_publish(`devices/${dev_id}/down/push`, JSON.stringify(downlink_cmd));
         
         let interval = setInterval(function(){
             let timetag = document.getElementById(`buttontime-payload-data-${w_id}`);
@@ -1755,19 +1705,17 @@
             else {
                 timetag.innerHTML = "EXPIRED";
                 clearInterval(interval);
-                document.getElementById(`btn-payload-data-${w_id}`)["disabled"] = false;
+                document.getElementById(`btn-payload-data-${dev_id}-${w_id}`)["disabled"] = false;
                 // document.getElementById(`button-payload-data-${w_id}`).style.pointerEvents="auto";
                 // document.getElementById(`slider-payload-data-${w_id}`).style["background-color"]="#2196F3";
                 // document.getElementById(`button-payload-data-${w_id}`).checked = !document.getElementById(`button-payload-data-${w_id}`).checked;
             }
             
         }, 100);
-
-        $(`#triplewaybuttonstate-payload-data-${dev_id}-${sensor_config.status_key[sensor_config.status_key.length-1]}-${w_id}`).data('id', {
+        $(`#btn-payload-data-${dev_id}-${w_id}`).data('id', {
             interval: interval
         });
     }
-
 </script>
 </body>
 
